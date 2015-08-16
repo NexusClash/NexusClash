@@ -1,0 +1,22 @@
+!!!
+%html(lang="en")
+	%head
+		%title
+			Nexus Clash
+		%link(rel="stylesheet" href="/css/sass/absolution.css?1")
+		%link(rel="stylesheet" href="/css/main_styles.css?1")
+		%meta(charset="utf-8")
+	%body
+		.margin-10.padding-10(style="bottom:0px;padding-top:0px")
+			%h1.ui-corner-top.ui-widget-header Nexus Clash
+			.ui-widget-content.padding-10#quicklinks
+				%a.ui-button.ui-widget.ui-corner-all.ui-button-text-only(href="/account/characters") Game
+				%a.ui-button.ui-widget.ui-corner-all.ui-button-text-only(href="/account/logout") Logout
+				- if role? :admin
+					%a.ui-button.ui-widget.ui-corner-all.ui-button-text-only(href="/admin") Admin
+			.ui-corner-bottom.ui-widget-content.padding-10(style="bottom:0px")
+				#page_content
+					= yield
+		- #%script(src="//cdn.opalrb.org/opal/current/opal.min.js")
+		- #%script(src="//cdn.opalrb.org/external/0.6.2/opal-browser-0.2.0.beta1.js")
+		%script(src="/rb/zapdash.js")

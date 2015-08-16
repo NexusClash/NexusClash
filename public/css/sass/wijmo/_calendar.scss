@@ -1,0 +1,160 @@
+.wijmo-wijcalendar
+{
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    display:block;
+    
+    .ui-datepicker-header
+    {
+        padding: 1px;
+        
+        .ui-state-default
+        {
+            border-color: transparent;
+            background: none;
+            color: inherit;
+        }
+    }
+    
+    .wijmo-wijcalendar-table
+    {
+        table-layout: fixed;
+    }
+}
+
+.wijmo-wijcalendar-header
+{
+    position: relative;
+    border: none;
+    @include border-radius(0px);
+    @include gradientTopToBottom($dialog-title-bg, darken($dialog-title-bg,$gradient));
+    color: $dialog-title-text;
+    
+    /*
+    .ui-icon-seek-next { background-position: -32px -160px; }
+    .ui-icon-seek-prev { background-position: -48px -160px; }
+    .ui-icon-seek-end { background-position: -64px -160px; }
+    .ui-icon-seek-first, .ui-icon-seek-start { background-position: -80px -160px; }
+    .ui-icon-stop { background-position: -96px -160px; }
+    */
+    
+    .ui-icon {
+    	background-image: url(images/ui-icons_ffffff_256x240.png);
+    }
+    
+    & > .ui-datepicker-prev .ui-icon {
+    	background-position: -48px -160px;
+    	width:  16px;
+    }
+    
+    & > .ui-datepicker-next .ui-icon {
+    	background-position: -32px -160px;
+    	width:  16px;
+    }
+}
+
+.wijmo-wijcalendar-header-inner
+{
+    margin: 0 2.2em;
+    line-height: 1.8em;
+}
+
+.wijmo-wijcalendar-prevpreview-button, .wijmo-wijcalendar-nextpreview-button
+{
+    width: 16px;
+    margin-top: 35%;
+    float: left;
+}
+
+.wijmo-wijcalendar-nextpreview-button
+{
+    float: right;
+}
+
+.wijmo-wijcalendar-preview-wrapper .wijmo-wijcalendar
+{
+    float: left;
+    width: 18em;
+}
+
+.wijmo-wijcalendar-preview-wrapper .wijmo-wijcalendar .ui-datepicker-calendar
+{
+    width: 80%;
+    float: left;
+}
+
+.wijmo-wijcalendar-table th {
+	border-bottom: 1px solid #a9a9a9;
+	background: #E0DCE0;
+}
+
+.wijmo-wijcalendar-title, .wijmo-wijcalendar-selectable
+{
+    cursor: pointer;
+}
+
+.ui-datepicker-other-month
+{
+    text-align: right;
+}
+
+.wijmo-wijcalendar-mygrid td span, .wijmo-wijcalendar-mygrid td a
+{
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    padding: 0;
+}
+
+.wijmo-wijcalendar-mygrid .ui-state-default a,
+.wijmo-wijcalendar-mygrid .ui-state-default a:hover,
+.wijmo-wijcalendar-mygrid .ui-state-hover a,
+.wijmo-wijcalendar-mygrid .ui-state-hover a:hover
+{
+    color: inherit;
+}
+
+.ui-header-custom img, .ui-footer-custom img
+{
+    width: 100%;
+}
+
+.wijmo-wijcalendar
+{
+	table.wijmo-wijcalendar-mygrid
+	{
+	    margin-top: 2px;
+	    border-collapse: separate;
+	    table-layout: fixed;
+	    
+	    .ui-datepicker-week-day
+	    {
+	        cursor: pointer;
+	    }
+	}
+}
+
+.wijmo-wijcalendar-aniwrapper
+{
+    position: relative;
+    left: 0;
+    top: 0;
+}
+
+.wijmo-wijcalendar-multi-aniwrapper
+{
+    position: absolute;
+    overflow: hidden;
+}
+
+.ui-datepicker-rtl .ui-datepicker-prev .ui-icon,
+.ui-datepicker-rtl .ui-datepicker-next .ui-icon
+{
+    direction: rtl;
+}
+
+.wijmo-wijcalendar .ui-datepicker-group .ui-datepicker-header {
+	@include border-radius(0px);
+}
+
+.ui-datepicker-title.wijmo-wijcalendar-title { line-height: 2.3em; }

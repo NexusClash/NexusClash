@@ -1,0 +1,10 @@
+%form(method="post")
+	- if defined? errors then
+		.ui-state-error.ui-corner-all.padding-10
+			%ul
+				- errors.each do |error|
+					%li= error
+	%p
+		%label(for="charname") Character Name:
+		%input(name="charname")
+	%input(type="submit" value="Create")

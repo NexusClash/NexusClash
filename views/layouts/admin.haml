@@ -1,0 +1,26 @@
+!!!
+%html(lang="en")
+	%head
+		%title
+			Nexus Clash
+		%link(rel="stylesheet" href="/css/sass/absolution.css?1")
+		%link(rel="stylesheet" href="/css/main_styles.css?1")
+		%link(rel="stylesheet" href="/css/jquery.dataTables.min.css")
+		%link(rel="stylesheet" href="/css/dataTables.tableTools.min.css")
+		%link(rel="stylesheet" href="/css/dataTables.editor.min.css")
+		%script(src="/js/jquery.js")
+		%script(src="/js/jquery.dataTables.js")
+		%script(src="/js/dataTables.tableTools.js")
+		%script(src="/js/dataTables.editor.js")
+		%meta(charset="utf-8")
+	%body
+		.margin-10.padding-10(style="bottom:0px;padding-top:0px")
+			%h1.ui-corner-top.ui-widget-header Nexus Clash
+			.ui-widget-content.padding-10#quicklinks
+				%a.ui-button.ui-widget.ui-corner-all.ui-button-text-only(href="/account/characters") Game
+				%a.ui-button.ui-widget.ui-corner-all.ui-button-text-only(href="/account/logout") Logout
+				- if role? :admin
+					%a.ui-button.ui-widget.ui-corner-all.ui-button-text-only(href="/admin") Admin
+			.ui-corner-bottom.ui-widget-content.padding-10(style="bottom:0px")
+				#page_content
+					= yield
