@@ -1,0 +1,25 @@
+%h1(style="color:red") In Development - Not the final character selection interface
+- characters.each do |char|
+	%a(href="/game/#{char.id}")
+		.div-30.character-select
+			%img(src="/icons/lorc/originals/svg/robe.svg" style="width:80%;padding:15% 0% 5% 20%")
+			%div
+				%p
+					=char.name
+				%p
+					%img(src="/icons/lorc/originals/svg/half-heart.svg")
+					=char.hp
+				%p
+					%img(src="/icons/lorc/originals/svg/wingfoot.svg")
+					=char.ap
+				%p
+					%img(src="/icons/lorc/originals/svg/jigsaw-piece.svg")
+					=char.xp
+				%p
+					%img(src="/icons/lorc/originals/svg/open-book.svg")
+					=char.level
+				%p
+					%img(src="/icons/lorc/originals/svg/light-bulb.svg")
+					=char.cp
+.clear-left.padding-10
+%a.ui-button.ui-corner-all(href="/account/characters/create") New Character

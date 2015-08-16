@@ -1,0 +1,128 @@
+#game.ui-helper-hidden
+	#hud_player_vitals
+		.ui-hud-name.ui-corner-left
+			%span.name
+		.ui-hud-level
+			Level
+			%span.level
+
+			%span.class
+		.ui-hud-xp
+			%span.xp
+			XP
+		.ui-hud-hp
+			%span.hp
+			HP
+		.ui-hud-mp
+			%span.mp
+			MP
+		.ui-hud-mo
+			%span.mo
+			MO
+		.ui-hud-ap
+			%span.ap
+			AP
+		.ui-hud-cp.ui-corner-right(data-cp="0")
+			%span.cp
+			CP
+		#developer_mode_message.ui-helper-hidden
+			%h2(style="color:red") Developer Mode ENABLED
+		.clear-left
+	#left_panel
+		%h3.ui-corner-top.ui-widget-header
+			Details
+		.ui-corner-bottom.ui-widget-content
+			#activity_log.ui-corner-all.ui-widget-content.margin-10
+				%ul.list-plain
+			#play_pane
+				#details_pane_alive
+					#speech_action(style="padding-left:10px")
+						%input(type="text" style="width:calc(100% - 90px)" data-enter-trigger-action="#speech_action button")
+						%button(data-action-type="speech" data-action-user-vars="message:#speech_action input")
+							Speak
+					#description_panel.padding-10
+						#tile_description
+						%ul#tile_occupants_players.list-plain.list-horizontal
+						%ul#tile_portals.list-plain.list-horizontal
+				#details_pane_dead.ui-helper-hidden
+					.padding-10
+						%p You are dead!
+						%button(data-action-type="respawn") Respawn
+			#skills_pane.ui-helper-hidden
+				.padding-10
+					%button.return_to_game Return to Game
+					%h4 Skill Tree
+					#skill_tree
+						.sk-folding-cube
+							.sk-cube.sk-cube1
+							.sk-cube.sk-cube2
+							.sk-cube.sk-cube4
+							.sk-cube.sk-cube3
+						%p(style="text-align:center") Loading...
+					#skill_desc
+	#right_panel
+		%ul.css-tabs
+			%li
+				%input(type="radio" name="css-tab-right" id="css-tab-r1" checked)
+				%label(for="css-tab-r1")
+					Map
+				#css-tab-content-r1.css-tab-content
+					#map(style="padding:0px")
+			%li
+				%input(type="radio" name="css-tab-right" id="css-tab-r2")
+				%label(for="css-tab-r2")
+					Inventory
+				#css-tab-content-r2.css-tab-content
+					.ui-widget-content.ui-corner-all.padding-10
+						#inventory
+							%p.encumbrance
+							%ol#inventory_accordion.css-accordion
+			%li
+				%input(type="radio" name="css-tab-right" id="css-tab-r3")
+				%label(for="css-tab-r3")
+					Target
+				#css-tab-content-r3.css-tab-content
+					#target_information.ui-widget-content.ui-corner-all.padding-10(data-target-type="")
+						.target-character
+							%img.class_image(style="float:right")
+							%h4.name
+							%ul.list-plain.stats
+							%ul.list-plain.clear-left.actions
+							.clear-left
+						.target-tile-dev
+							.tile(style="float:right")
+							%h4
+								Editing Tile
+								%span.x(style="margin-left:5px")
+								,
+								%span.y(style="margin-left:5px")
+								,
+								%span.z(style="margin-left:5px")
+							%p
+								%label(for="tile-dev-name") Name:
+								%input.tname(name="tile-dev-name" type="text")
+							%p
+								Type:
+								%select.type_id
+							%p
+								Description:
+							%p.description
+								%textarea
+							%ul.list-plain.list-horizontal
+								%li
+									%button(data-action-trigger-click="css-tab-r1" data-action-type="dev_tile" data-action-vars="edit:1" data-action-user-vars="x:#target_information .target-tile-dev .x,y:#target_information .target-tile-dev .y,z:#target_information .target-tile-dev .z,name:#target_information .target-tile-dev .tname,type_id:#target_information .target-tile-dev .type_id option:checked,description:#target_information .target-tile-dev .description textarea") Save
+								%li
+									%button(data-action-type="dev_tile" data-action-vars="z:0" data-action-user-vars="x:#target_information .target-tile-dev .x,y:#target_information .target-tile-dev .y") Edit Exterior
+								%li
+									%button(data-action-type="dev_tile" data-action-vars="z:1" data-action-user-vars="x:#target_information .target-tile-dev .x,y:#target_information .target-tile-dev .y") Edit Interior
+							.clear-left
+#game_loading
+	.sk-folding-cube
+		.sk-cube.sk-cube1
+		.sk-cube.sk-cube2
+		.sk-cube.sk-cube4
+		.sk-cube.sk-cube3
+	.message
+		Initialising...
+#char_id.ui-helper-hidden
+	= char_id

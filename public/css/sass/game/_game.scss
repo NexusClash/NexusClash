@@ -1,0 +1,29 @@
+.ui-hud-ap
+{
+  @extend .ui-state-success;
+}
+
+.ui-hud-cp
+{
+  @extend .ui-state-warning;
+}
+
+.ui-hud-mp
+{
+  @extend .ui-state-highlight;
+}
+
+.ui-hud-hp
+{
+  @extend .ui-state-error;
+}
+
+.ui-hud-ap, .ui-hud-cp, .ui-hud-mp, .ui-hud-hp, .ui-hud-level, .ui-hud-class, .ui-hud-mo, .ui-hud-name, .ui-hud-xp
+{
+  padding: 10px;
+}
+
+.ui-hud-level, .ui-hud-class, .ui-hud-mo, .ui-hud-xp, .ui-hud-name
+{
+  @extend .ui-widget-content;
+}

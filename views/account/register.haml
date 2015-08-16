@@ -1,0 +1,14 @@
+%form(method="post")
+	- if defined? errors then
+		.ui-state-error.ui-corner-all.padding-10
+			%ul
+				- errors.each do |error|
+					%li= error
+	%h2 Register
+	%p
+		%label(for="username") Username:
+		%input(name="username")
+	%p
+		%label(for="password") Password:
+		%input(name="password" type="password")
+	%input(type="submit" value="Register")

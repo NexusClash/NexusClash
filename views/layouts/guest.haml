@@ -1,0 +1,17 @@
+!!!
+%html(lang="en")
+	%head
+		%title
+			Nexus Clash
+		%link(rel="stylesheet" href="/css/sass/absolution.css?1")
+		%link(rel="stylesheet" href="/css/main_styles.css?1")
+		%meta(charset="utf-8")
+	%body
+		.margin-10.padding-10(style="bottom:0px;padding-top:0px")
+			%h1.ui-corner-top.ui-widget-header Nexus Clash
+			.ui-widget-content.padding-10#quicklinks
+				%a.ui-button.ui-corner-all(href="/account/login") Login
+				%a.ui-button.ui-corner-all(href="/account/register") Register
+			.ui-corner-bottom.ui-widget-content.padding-10(style="bottom:0px")
+				#page_content
+					= yield
