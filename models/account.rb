@@ -29,6 +29,7 @@ module Entity
 		end
 
 		after_find do |document|
+			document.roles = [] if document.roles === nil
 			document.roles.map! {|role| role.to_sym}
 		end
 		after_initialize do |document|
