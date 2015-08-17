@@ -5,6 +5,7 @@ require 'browser/console'
 require 'browser/dom'
 require 'browser/dom/document'
 require 'browser/http'
+require 'browser/delay'
 require 'browser/dom/event'
 puts 'wow, running ruby!'
 
@@ -265,19 +266,59 @@ class Voyager
 		@@developer_mode
 	end
 
-	def initialize(addr)
+	def state=(state)
+		return if @state == :error && state == :disconnected
+		@state = state
+		case state
+			when :error, :disconnected
+				$window.after @recon_delay do
+					unless @req_in_air
+						@req_in_air = true
+						@recon_delay = @recon_delay + 1 if @recon_delay < @recon_delay_max
+						Browser::HTTP.get("/validate/#{$document['char_id'].inner_html.to_s.strip}").then {|resp|
+							@req_in_air = false
+							if resp.text == 'ok'
+								self.connect
+							else
+								self.state = :error
+							end
 
+						}.rescue{
+							@req_in_air = false
+							self.state = :error
+						}
+					end
+
+				end
+				$document['#ws-connection']['data-state'] = state.to_s
+			when :connected
+				$document['#ws-connection']['data-state'] = state.to_s
+				@recon_delay = @recon_delay_min
+			when :unsupported
+				$document['#ws-connection']['data-state'] = 'error'
+		end
+	end
+
+	def initialize(addr)
+		@address = addr
+		@req_in_air = false
+		@recon_delay = 3
+		@recon_delay_min = 3
+		@recon_delay_max = 6
+		self.connect
+	end
+
+	def connect
 		unless Browser::Socket.supported?
 			@state = :unsupported
 			return
 		end
 
-		@state = :connecting
-
-		@socket = Browser::Socket.new addr do |socket|
+		self.state = :connecting
+		@socket = Browser::Socket.new @address do |socket|
 
 			socket.on :open do
-				@state = :connected
+				self.state = :connected
 				$document['#game_loading .message'].inner_html = 'Connected!'
 			end
 
@@ -287,11 +328,11 @@ class Voyager
 			end
 
 			socket.on :error do
-				@state = :error
+				self.state = :error
 			end
 
 			socket.on :close do
-				@state = :closed
+				self.state = :disconnected
 			end
 		end
 	end
@@ -329,6 +370,8 @@ class Voyager
 					else
 						@adventurer.update ent['character']
 						@adventurer.render
+						$document['#activity_log ul'].inner_html = ''
+						write_messages([{type: 'refresh_map'}, {type: 'sync_messages', from: (Time.now - (2*24*60*60))}])
 					end
 				when 'character'
 					data = ent['character']
@@ -486,6 +529,7 @@ puts 'socket opened!'
 #end
 
 $document.on :click, '[data-char-link]' do |event|
+	return unless voyager.state == :connected
 	return unless event.button == 0 || event.button == 1
 	if voyager.adventurer.neighbours.has_key? event.target['data-char-link']
 		$document['css-tab-r3'].trigger :click
@@ -503,6 +547,7 @@ end
 #end
 
 $document.on :click, 'button[data-action-type], .action[data-action-type]' do |event|
+	return unless voyager.state == :connected
 		return unless event.button == 0 || event.button == 1 || (event.button == 2 && Voyager.developer_mode && event.target['data-dev-action-type'] != nil)
 
 		target = event.target['data-action-type']
@@ -549,6 +594,7 @@ $document.on :keyup, 'input[data-enter-trigger-action]' do |event|
 end
 
 $document.on :click, '#hud_player_vitals .ui-hud-cp' do |event|
+	return unless voyager.state == :connected
 	$document['#play_pane'].attributes[:class] = 'ui-helper-hidden'
 	$document['#skills_pane'].attributes[:class] = ''
 	voyager.write_message({type: 'request_skill_tree'})

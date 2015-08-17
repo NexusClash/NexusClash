@@ -800,3 +800,93 @@ img[src=""]
 {
 	position:absolute;height:100%;left:10px;right:405px;padding:10px;
 }
+
+/**
+ * Just for fun: Wifi icon with pure CSS
+ */
+
+.ui-ws-signal {
+	padding: 5px 5px 0px;
+	margin-top:5px;
+	margin-bottom:-10px;
+}
+
+.ui-ws-signal, .ui-ws-signal:before {
+	display: inline-block;
+	border: 10px double transparent;
+	border-top-color: grey;
+	border-radius: 50%;
+}
+
+.ui-ws-signal[data-state=connected], .ui-ws-signal[data-state=connected]:before
+{
+	animation: ws-connected 2s ease-in-out 2s;
+	animation-fill-mode: forwards;
+}
+
+.ui-ws-signal + span
+{
+	position:relative;
+	top:-15px;
+	left:-5px;
+}
+
+.ui-ws-signal[data-state=connected] + span
+{
+	opacity:1;
+	color:green;
+	animation: ws-connected 2s ease-in-out 0s;
+	animation-fill-mode: forwards;
+}
+
+.ui-ws-signal[data-state=disconnected] + span, .ui-ws-signal[data-state=error] + span
+{
+	transition:opacity 1s;
+	opacity:1;
+	color:red;
+}
+
+.ui-ws-signal[data-state=disconnected] + span:before
+{
+	content:"Connection lost...";
+}
+.ui-ws-signal[data-state=connected] + span:before
+{
+	content:"Connected!";
+}
+.ui-ws-signal[data-state=error] + span:before
+{
+	content:"Attempting to reconnect...";
+}
+
+.ui-ws-signal[data-state=disconnected], .ui-ws-signal[data-state=disconnected]:before, .ui-ws-signal[data-state=error], .ui-ws-signal[data-state=error]:before
+{
+	animation: ws-disconnected 1s ease-out 0s infinite alternate;
+}
+
+.ui-ws-signal
+{
+	animation-delay:200ms !important;
+}
+
+.ui-ws-signal:before {
+	content: '';
+	width: 0; height: 0;
+}
+
+.ui-ws-signal:hover, .ui-ws-signal:hover:before {
+	border-top-color: red;
+}
+
+@keyframes ws-disconnected {
+	from {border-top-color: red;}
+	to {border-top-color: grey;}
+}
+
+@keyframes ws-connected {
+	0%{border-top-color: grey;opacity:1;}
+	30% {border-top-color: green;opacity:1;}
+	60%{border-top-color: grey;opacity:0.5;}
+	80% {border-top-color: green;opacity:1;}
+	100%{border-top-color: green;opacity:0;}
+}
