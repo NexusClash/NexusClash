@@ -163,7 +163,7 @@ opal = Opal::Server.new {|s|
 }
 
 
-ws_app_sessioned = Rack::Session::UnifiedPool.new(ws_app, :domain => 'ruby.windrunner.mx', :expire_after => 60 * 60 * 24 * 365)
+ws_app_sessioned = Rack::Session::UnifiedPool.new(ws_app, :domain => Instance.domain, :expire_after => 60 * 60 * 24 * 365)
 
 
 dispatch = Rack::Builder.app do
