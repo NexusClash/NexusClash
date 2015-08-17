@@ -1,6 +1,16 @@
 require 'rack/session/abstract/id'
 require 'thread'
 
+class Instance
+	def self.plane
+		1
+	end
+
+	def self.domain
+		'ruby.windrunner.mx' #also needs changing in zapdash.rb
+	end
+end
+
 module Rack
 	module Session
 		# Rack::Session::Pool provides simple cookie based session management.
@@ -81,11 +91,5 @@ end
 
 
 class Dash < Sinatra::Application
-	use Rack::Session::UnifiedPool, :domain => 'ruby.windrunner.mx', :expire_after => 60 * 60 * 24 * 365
-end
-
-class Instance
-	def self.plane
-		1
-	end
+	use Rack::Session::UnifiedPool, :domain => Instance.domain, :expire_after => 60 * 60 * 24 * 365
 end
