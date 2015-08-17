@@ -127,4 +127,15 @@ class Dash < Sinatra::Application
 		redirect to('/')
 	end
 
+	get '/validate/:id' do
+		protected!
+
+		char = Entity::Character.find(params[:id].to_i)
+		if char.account.username == session[:username]
+			'ok'
+		else
+			'no'
+		end
+	end
+
 end

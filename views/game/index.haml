@@ -25,8 +25,10 @@
 		.ui-hud-cp.ui-corner-right(data-cp="0")
 			%span.cp
 			CP
-		#developer_mode_message.ui-helper-hidden
-			%h2(style="color:red") Developer Mode ENABLED
+		%span#ws-connection.ui-ws-signal(data-state="disconnected")
+		%span
+		#developer_mode_message.ui-helper-hidden(style="margin-left:5px;")
+			%h2(style="color:red") DevMode ON
 		.clear-left
 	#left_panel
 		%h3.ui-corner-top.ui-widget-header
