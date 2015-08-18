@@ -33,6 +33,15 @@ module Entity
 			@@skills
 		end
 
+		def describe(flatten = nil)
+			desc = []
+			self.impacts.each do |impact|
+				desc << Effect::Base.regenerate(self, impact).describe
+			end
+			return desc.join(flatten) unless flatten === nil
+			desc
+		end
+
 		def self.load_types
 			StatusType.each do |type|
 				@@types[type.id] = type
