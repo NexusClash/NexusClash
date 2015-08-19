@@ -5,6 +5,7 @@ module Entity
 		include Unobservable::Support
 		include Entity::ObservedFields
 		include Mongoid::Autoinc
+		include Pronouns
 
 		attr_accessor :socket
 
@@ -17,11 +18,12 @@ module Entity
 		field :level, type: Integer, default: 1
 		field :mo, type: Integer, default: 0
 		field :cp, type: Integer, default: 10
-
 		field :x, type: Integer, default: 1
 		field :y, type: Integer, default: 1
 		field :z, type: Integer, default: 0
 		field :plane, type: Integer, default: 1
+
+		field :gender, type: Integer, default: Gender::PLURAL
 
 		field :last_tick, type:Time, default: ->{Time.now}
 

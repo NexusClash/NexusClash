@@ -17,7 +17,6 @@ module Intent
 			message_death = nil
 			attack_text = @attack.describe(BroadcastScope::SELF)
 			if @attack.target.dead?
-				attack_text << ' They have died!'
 
 				notify = Array.new
 
