@@ -58,7 +58,7 @@ module Intent
 			xp_message = " You gain #{@xp_granted.to_s} XP." if @xp_granted > 0
 			case scope
 				when BroadcastScope::SELF
-					kill_msg = ', killing them' if @target.dead?
+					kill_msg = ", killing #{@target.pronoun(:him)}" if @target.dead?
 					if hit?
 						return "You attack #{@target.name_link} with your #{@weapon.name} and hit, dealing #{@damage.to_s} #{@damage_type.to_s} damage#{kill_msg}!#{xp_message}"
 					else
@@ -67,16 +67,16 @@ module Intent
 				when BroadcastScope::TARGET
 					kill_msg = '. This was enough to kill you' if @target.dead?
 					if hit?
-						return "#{@entity.name_link} attacked you with their #{@weapon.name} and hit, dealing #{@damage.to_s} #{@damage_type.to_s} damage#{kill_msg}!"
+						return "#{@entity.name_link} attacked you with #{@entity.pronoun(:their)} #{@weapon.name} and hit, dealing #{@damage.to_s} #{@damage_type.to_s} damage#{kill_msg}!"
 					else
-						return "#{@entity.name_link} attacked you with their #{@weapon.name} and missed!"
+						return "#{@entity.name_link} attacked you with #{@entity.pronoun(:their)} #{@weapon.name} and missed!"
 					end
 				when BroadcastScope::TILE
-					kill_msg = ', killing them' if @target.dead?
+					kill_msg = ", killing #{@target.pronoun(:him)}" if @target.dead?
 					if hit?
-						return "#{@entity.name_link} attacked #{@target.name_link} with their #{@weapon.name} and hit#{kill_msg}!"
+						return "#{@entity.name_link} attacked #{@target.name_link} with #{@entity.pronoun(:their)} #{@weapon.name} and hit#{kill_msg}!"
 					else
-						return "#{@entity.name_link} attacked #{@target.name_link} with their #{@weapon.name} and missed#{kill_msg}!"
+						return "#{@entity.name_link} attacked #{@target.name_link} with #{@entity.pronoun(:their)} #{@weapon.name} and missed#{kill_msg}!"
 					end
 			end
 		end
