@@ -3,6 +3,7 @@ module Entity
 		include Mongoid::Document
 		include Unobservable::Support
 		include Entity::ObservedFields
+		include IndefiniteArticle
 
 		field :name, type: String, default: nil
 		field :type_id, type: Integer
@@ -52,6 +53,11 @@ module Entity
 		def self.source_from(id)
 			item = Item.new
 			item.type_id = id
+			item.type_statuses = ThreadSafe::Array.new
+			item.type.statuses.each do |statid|
+				state = Entity::Status.source_from statid
+				item.type_statuses << state
+			end
 			return item
 		end
 

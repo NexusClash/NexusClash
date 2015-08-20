@@ -4,6 +4,7 @@ module Entity
 		include Mongoid::Document
 		include Unobservable::Support
 		include Mongoid::Autoinc
+		include IndefiniteArticle
 
 		field :id, type: Integer
 		increments :id
@@ -11,6 +12,9 @@ module Entity
 		field :name, type: String
 		field :description, type: String
 		field :colour, type: String
+
+		field :search_rate, as: :s_rate, type: Integer, default: 0
+		field :search_table, as: :s_table, type: Array, default: []
 
 		@@types = ThreadSafe::Cache.new do |hash, typeident|
 			if Entity::TileType.where({id: typeident}).exists? then
@@ -30,6 +34,24 @@ module Entity
 			end
 		end
 
+		def search_roll
+			return rand(0..99) < self.search_rate
+		end
+
+		def search_roll_item
+			rnd_max = self.search_table.inject(0) { |sum, itm| sum + itm[1] }
+			return nil unless rnd_max > 0
+
+			roll = rand(1..rnd_max)
+
+			self.search_table.each do |possibility|
+				roll -= possibility[1]
+				return Entity::Item.source_from(possibility[0]) unless roll > 0
+			end
+
+			return nil
+		end
+
 		def traversible?
 			true
 		end
@@ -42,6 +64,13 @@ module Entity
 
 		def to_s
 			self.name
+		end
+
+		after_find do |document|
+			document.search_table = [] if document.search_table === nil
+		end
+		after_initialize do |document|
+			document.search_table = [] if document.search_table === nil
 		end
 	end
 end
