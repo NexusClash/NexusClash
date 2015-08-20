@@ -3,6 +3,7 @@ module Entity
 		include Mongoid::Document
 		include Unobservable::Support
 		include Entity::ObservedFields
+		include IndefiniteArticle
 
 		field :plane, type: Integer
 		field :name, type: String

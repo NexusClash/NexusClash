@@ -6,7 +6,7 @@
 	%tbody
 	%tfoot
 :javascript
-	var editor;
+	var editor, subtable, status_effect_sub_id;
 	var status_effects = $('#status_effects').DataTable({  "dom": '<"status_effect_buttons">T<"clear">lfrtip',
 		"tableTools": { "aButtons": [ 'xls', 'print' ],
 						"deferRender": true,
@@ -79,7 +79,7 @@
 					} );
 
 				editor.dependent('type', '/admin/datatable/effect/define');
-					$('#status_effect_subtable_' + status_effect_sub_id).DataTable({  "dom": 'T<"clear">lfrtip',
+				subtable = $('#status_effect_subtable_' + status_effect_sub_id).DataTable({  "dom": 'T<"clear">lfrtip',
 						"tableTools": { "aButtons": [ { sExtends: "editor_create", editor: editor },{ sExtends: "editor_edit",   editor: editor },{ sExtends: "editor_remove", editor: editor }, 'xls', 'print' ],
 										"deferRender": true,
 										"sSwfPath": "/swf/copy_csv_xls.swf",
@@ -97,6 +97,25 @@
 				editor.on('postRemove', function(e, json, data){
 					var api = new $.fn.dataTable.Api('#status_effect_subtable_' + status_effect_sub_id);
 					api.ajax.reload();
+				});
+
+				editor.on('postCreate postEdit', function(e, json, data){
+
+					$.getJSON( "/admin/datasource/status_effect/" + status_effect_sub_id, function( data ) {
+
+						var nData = data.data;
+
+						status_effects.rows().eq(0).each(function(idx){
+
+	                        var row = status_effects.row(idx);
+
+	                        if(row.data().id == nData.id)
+	                        {
+	                            row.data(nData);
+	                        }
+
+	                    });
+					});
 				});
 
 			});

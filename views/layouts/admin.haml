@@ -21,6 +21,12 @@
 				%a.ui-button.ui-widget.ui-corner-all.ui-button-text-only(href="/account/logout") Logout
 				- if role? :admin
 					%a.ui-button.ui-widget.ui-corner-all.ui-button-text-only(href="/admin") Admin
+			.ui-widget-content.padding-10
+				%a.ui-button.ui-widget.ui-corner-all.ui-button-text-only(href="/admin/tile_type") Tile Types
+				%a.ui-button.ui-widget.ui-corner-all.ui-button-text-only(href="/admin/item_type") Item Types
+				%a.ui-button.ui-widget.ui-corner-all.ui-button-text-only(href="/admin/status_effect") Status Effects
+				%a.ui-button.ui-widget.ui-corner-all.ui-button-text-only(href="/admin/save") Save to Database
+				%a.ui-button.ui-widget.ui-corner-all.ui-button-text-only(href="/admin/sync") Synchronise Status Effects
 			.ui-corner-bottom.ui-widget-content.padding-10(style="bottom:0px")
-				#page_content
+				#page_content.clear-left
 					= yield

@@ -4,6 +4,7 @@ module Entity
 		include Mongoid::Document
 		include Unobservable::Support
 		include Mongoid::Autoinc
+		include IndefiniteArticle
 
 		field :id, type: Integer
 		increments :id

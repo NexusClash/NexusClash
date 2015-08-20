@@ -166,6 +166,29 @@ module Wayfarer
 
 
 				end
+			when 'search'
+				if ws.character.ap < 1	|| ws.character.location.is_a?(VoidTile)
+					Entity::Message.send_transient([ws.character.id], 'You cannot search at this time!', 'message-failed')
+					return
+				end
+
+				ws.character.ap -= 1
+
+				item_drop = nil
+				item_drop = ws.character.location.type.search_roll_item if ws.character.location.type.search_roll
+
+				if item_drop === nil
+					message_ent = Entity::Message.new({characters: [ws.character.id], message: 'You search and find nothing.', type: 'search-nothing'})
+					message_ent.save
+				else
+					message_ent = Entity::Message.new({characters: [ws.character.id], message: "You search and find #{item_drop.a_or_an} #{item_drop.name}.", type: 'search-success'})
+					message_ent.save
+					item_drop.carrier = ws.character
+					#TODO: Send inventory update command
+				end
+
+				ws.character.broadcast_self BroadcastScope::SELF
+
 			when 'dev_tile'
 				if ws.character.account.has_role?(:admin) || ws.character.has_nexus_class?(:Developer)
 					game = Firmament::Plane.fetch Instance.plane

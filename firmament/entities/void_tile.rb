@@ -1,4 +1,5 @@
 class VoidTile
+	include IndefiniteArticle
 
 	DEAD_COORDINATE = -9001
 

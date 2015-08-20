@@ -2,7 +2,7 @@ class Dash < Sinatra::Application
 	get '/admin' do
 		protected! :admin
 
-		haml :'admin/menu', :layout => :'layouts/admin', :locals => {}
+		haml :'admin/index', :layout => :'layouts/admin', :locals => {}
 	end
 
 	get '/admin/save' do
