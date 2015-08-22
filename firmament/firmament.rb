@@ -69,7 +69,6 @@ module Firmament
 			end
 
 			@characters = ThreadSafe::Cache.new do |hash, char_id|
-				#puts "Loading character ##{char_id}"
 				newchar = Entity::Character.find(char_id)
 				hash[newchar.id.to_i] = newchar
 				newchar.location = @locations[newchar.x.to_i][newchar.y.to_i][newchar.z.to_i]
@@ -126,14 +125,14 @@ module Firmament
 		def sync
 			@characters.keys.each do |id|
 				@characters[id].statuses.each do |status|
-					status.regenerate unless status.custom
+					status.unserialize
 				end
 				@characters[id].items.each do |item|
 					item.statuses.each do |status|
-						status.regenerate unless status.custom
+						status.unserialize
 					end
 					item.type_statuses.each do |status|
-						status.regenerate unless status.custom
+						status.unserialize
 					end
 				end
 			end

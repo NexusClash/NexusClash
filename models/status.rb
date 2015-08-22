@@ -4,33 +4,49 @@ module Entity
 
 		embedded_in :stateful, polymorphic: true
 
-		field :name, type: String
 		field :link, type: Integer
-		field :impacts, type: Array
-		field :custom, type: Boolean
 
-		field :family, type: Symbol
+		#field :name, type: String
+		#field :impacts, type: Array
+		#field :custom, type: Boolean
+		#field :family, type: Symbol
+
+		def name
+			self.type.name
+		end
+
+		def family
+			self.type.family
+		end
+
+		def type
+			@type ||= Entity::StatusType.find self.link
+		end
+
+		def link=(link_id)
+			self[:link] = link_id
+			self.unserialize
+		end
 
 		attr_accessor :effects
 
 		after_initialize do |document|
-			document.effects = ThreadSafe::Array.new
+
 		end
 
 		before_save do |document|
-			document.generate
+			document.serialize
 		end
 
 		# Handled by parent
 		#after_find do |document|
-			#document.regenerate
+		#document.unserialize
 		#end
 
-		def self.source_from(id)
+		def self.source_from(link_id)
 			new_status = Entity::Status.new
-			new_status.link = id
-			new_status.custom = false
-			new_status.regenerate
+			new_status.link = link_id
+			new_status.unserialize
 			return new_status
 		end
 
@@ -57,52 +73,17 @@ module Entity
 			return line
 		end
 
-		def generate
-
-			base_status = Entity::StatusType.find(link) unless link == nil
-
-			if base_status == nil || base_status.locked == false
-				state = Array.new
-				effects.each do |effect|
-					state << effect.save_state
-				end
-
-				if base_status.impacts == state then
-					self.custom = false
-					self.impacts = nil
-				else
-					self.custom = true
-					self.impacts = state
-				end
-
-				self.name = base_status.name unless base_status == nil
-				self.family = base_status.family unless base_status == nil
-
-			else
-				self.impacts = nil
-				self.custom = false
-				self.name = base_status.name
-				self.family = base_status.family
-			end
-
+		def serialize
+			#TODO: Come up with new state saving method (for any custom data effects need to save)
 		end
 
-		def regenerate
+		def unserialize
+			@type = Entity::StatusType.find(self.link.to_i)
 			new_effects = ThreadSafe::Array.new
-			if self.custom
-				self.impacts.each do |impact|
-					new_effects << Effect::Base.regenerate(self, impact)
-				end
-				@effects = new_effects
-			else
-				base_status = Entity::StatusType.find(link)
-				self.name = base_status.name
-				self.family = base_status.family
-				base_status.impacts.each do |impact|
-					new_effects << Effect::Base.regenerate(self, impact)
-				end
-				@effects = new_effects
+			@type.impacts.each do |impact|
+				new_effects << Effect::Base.unserialize(self, impact)
 			end
+			@effects = new_effects
 		end
 
 		def self.tick(char, interval)
@@ -117,16 +98,6 @@ module Entity
 			end
 			return changed
 		end
-
-		#def self.generate(name)
-		#	status = Entity::Status.new
-		#	status.status_name = name.to_s
-		#	case name
-		#		when :Mortal
-		#			status.impacts << Entity::Impact.link(Effect::Regen.new(status, :minute, :ap, 1))
-		#	end
-		#	return status
-		#end
 
 
 
