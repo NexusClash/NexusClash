@@ -20,3 +20,8 @@ Then(/(\S+) should be at full HP/) do |char_name|
 	character = @characters[char_name]
 	character.hp == character.hp_max
 end
+
+Then(/(\S+) should be at (\d+) HP/) do |char_name, hp|
+	character = @characters[char_name]
+	character.hp == hp.to_i
+end
