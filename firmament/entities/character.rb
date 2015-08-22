@@ -136,6 +136,10 @@ module Entity
 			packets
 		end
 
+		def location
+			@location || VoidTile.new(Instance.plane, VoidTile::DEAD_COORDINATE, VoidTile::DEAD_COORDINATE, VoidTile::DEAD_COORDINATE)
+		end
+
 		def location=(loc)
 			if @location === nil
 				@location = loc
