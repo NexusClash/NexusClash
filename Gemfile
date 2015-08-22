@@ -17,3 +17,5 @@ gem 'opal'
 gem 'opal-browser', '~> 0.2.0.beta1'
 gem 'unobservable'
 gem 'mongoid-autoinc'
+
+gem 'cucumber'
