@@ -31,7 +31,7 @@ module Entity
 		attr_accessor :effects
 
 		after_initialize do |document|
-
+			@effects = ThreadSafe::Array.new
 		end
 
 		before_save do |document|
@@ -98,8 +98,6 @@ module Entity
 			end
 			return changed
 		end
-
-
 
 	end
 end

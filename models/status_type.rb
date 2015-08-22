@@ -20,6 +20,8 @@ module Entity
 			if Entity::StatusType.where({id: typeident}).exists? then
 				eff = Entity::StatusType.find_by({id: typeident})
 				hash[typeident] = eff
+			else
+				InvalidStatusType
 			end
 		end
 
@@ -46,6 +48,18 @@ module Entity
 			StatusType.each do |type|
 				@@types[type.id] = type
 				@@skills << type if type.family.to_sym == :skill
+			end
+		end
+
+		class InvalidStatusType
+			def self.name
+				'Invalid'
+			end
+			def self.family
+				:invalid
+			end
+			def self.impacts
+				[]
 			end
 		end
 
