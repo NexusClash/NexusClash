@@ -16,3 +16,17 @@ Given(/(\S+) is affected by a (\d+) HP per (\S+) tick poison/) do |char_name, am
 	regeneration.effects << Effect::Regen.new(regeneration, interval.to_s, :hp, 0 - amount.to_i)
 	regeneration.stateful = character
 end
+
+Given(/(\S+) has an innate (\S+) attack \((\d+) (\S+) @ (\d+)%\)/) do |char_name, family, amount, type, hit_chance|
+	character = @characters[char_name]
+	weapon = Entity::Status.new
+	weapon.effects << Effect::Weapon.new(weapon, family.to_sym, hit_chance.to_i, type.to_sym, amount.to_i, 'Test weapon')
+	weapon.stateful = character
+end
+
+When(/(\S+) attacks (\S+)/) do |char_name, defender_name|
+	attacker = @characters[char_name]
+	defender = @characters[defender_name]
+	weapon = attacker.weaponry?.keys[0]
+	attacker.attack(defender, weapon)
+end

@@ -7,6 +7,8 @@ require 'websocket/extensions'
 require 'permessage_deflate'
 Bundler.require
 
+Mongoid.load!('mongoid.yml')
+
 require_rel '../../enums'
 require_rel '../../config'
 require_rel '../../behaviour/core'
