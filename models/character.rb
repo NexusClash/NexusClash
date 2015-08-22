@@ -29,6 +29,10 @@ module Entity
 
 		attr_reader :location
 
+		def shard
+			@shard ||= Firmament::Plane.fetch self.plane
+		end
+
 		index({:name => 1}, :unique => true)
 
 		#observe_fields :name, :hp, :ap, :mp, :xp, :level, :mo, :cp
@@ -50,7 +54,7 @@ module Entity
 		after_find do |document|
 
 			document.statuses.each do |status|
-				status.regenerate
+				status.unserialize
 			end
 
 			minutes_elapsed = ((Time.now - document.last_tick) / 60).floor

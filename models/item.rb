@@ -38,7 +38,7 @@ module Entity
 		after_find do |document|
 
 			document.statuses.each do |status|
-				status.regenerate
+				status.unserialize
 			end
 
 			document.type_statuses = ThreadSafe::Array.new

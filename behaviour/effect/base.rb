@@ -1,7 +1,7 @@
 module Effect
 	class Base
 
-		def self.regenerate(parent, object)
+		def self.unserialize(parent, object)
 			object = object.clone
 			type = object.shift
 			object.unshift(parent)

@@ -12,7 +12,7 @@ module Entity
 
 		field :impacts, type: Array, default: []
 
-		field :locked, type: Boolean
+		#field :locked, type: Boolean
 
 		field :activation, type: Symbol, default: :standard
 
@@ -36,7 +36,7 @@ module Entity
 		def describe(flatten = nil)
 			desc = []
 			self.impacts.each do |impact|
-				desc << Effect::Base.regenerate(self, impact).describe
+				desc << Effect::Base.unserialize(self, impact).describe
 			end
 			return desc.join(flatten) unless flatten === nil
 			desc
