@@ -18,4 +18,8 @@ gem 'opal-browser', '~> 0.2.0.beta1'
 gem 'unobservable'
 gem 'mongoid-autoinc'
 
-gem 'cucumber'
+gem 'cucumber', :require => false, :group => :test
+
+gem 'simplecov', :require => false, :group => :test
+gem 'simplecov-json', :require => false, :group => :test
+gem 'simplecov-rcov', :require => false, :group => :test
