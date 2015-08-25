@@ -1,8 +1,7 @@
 module Intent
-	class Attack
+	class Attack < Action
 
 		attr_reader :weapon
-		attr_accessor :costs
 		attr_accessor :message
 
 		attr_accessor :family
@@ -18,7 +17,7 @@ module Intent
 		attr_accessor :debug_log
 
 		def initialize(entity, target = nil)
-			@entity = entity
+			super entity
 			@target = target
 			@attack_roll = rand(1..101)
 			@costs = Hash.new{|hash, key| hash[key] = 0}
@@ -38,13 +37,6 @@ module Intent
 
 				@debug_log << weap.describe
 			end
-		end
-
-		def apply_costs
-			@entity.ap -= @costs[:ap] unless @costs[:ap] == 0
-			@entity.mp -= @costs[:mp] unless @costs[:mp] == 0
-			@entity.hp -= @costs[:hp] unless @costs[:hp] == 0
-			@entity.mo -= @costs[:mo] unless @costs[:mo] == 0
 		end
 
 		def grant_attacker_xp(xp_amount)

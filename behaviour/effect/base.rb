@@ -10,7 +10,7 @@ module Effect
 		end
 
 		def self.effect_list
-			['Regen', 'Weapon', 'WeaponBuff', 'SkillPrerequisite', 'SkillPurchasable', 'CustomText']
+			Foo.constants.select {|c| Foo.const_get(c).is_a?(Class) && c != :Base}
 		end
 	end
 end

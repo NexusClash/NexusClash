@@ -1,5 +1,5 @@
 module Intent
-	class Combat
+	class Combat < Action
 
 		def initialize(attack, defend)
 			@attack = attack
@@ -10,10 +10,16 @@ module Intent
 			@attack.apply_costs
 		end
 
-		def resolve
-			if @attack.hit?
-				@defend.take_hit @attack
-			end
+		def possible?
+			@attack.possible?
+		end
+
+		def take_action
+			@defend.take_hit(@attack) if @attack.hit?
+		end
+
+		def broadcast_results
+			#TODO: Split into Intent::Attack and Intent::Defend
 			message_death = nil
 			attack_text = @attack.describe(BroadcastScope::SELF)
 			if @attack.target.dead?

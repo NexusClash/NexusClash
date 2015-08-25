@@ -7,8 +7,18 @@
 	%tfoot
 :javascript
 	var editor, subtable, status_effect_sub_id;
+	var status_editor = new $.fn.dataTable.Editor( {
+		ajax: "/admin/editor/status_type",
+		idSrc: 'id',
+		table: '#status_effects',
+		fields: [
+			{label: "Name",name: "name", type: 'text'},
+			{label: "Activation",name: "activation", type: 'select', ipOpts: ['standard']},
+			{label: "Family",name: "family", type: 'select', ipOpts: ['class', 'skill']}
+		]
+		} );
 	var status_effects = $('#status_effects').DataTable({  "dom": '<"status_effect_buttons">T<"clear">lfrtip',
-		"tableTools": { "aButtons": [ 'xls', 'print' ],
+		"tableTools": { aButtons: [{ sExtends: "editor_create", editor: status_editor },{ sExtends: "editor_edit",   editor: status_editor }, 'xls', 'print' ],
 						"deferRender": true,
 						"sSwfPath": "/swf/copy_csv_xls.swf"
 					},
