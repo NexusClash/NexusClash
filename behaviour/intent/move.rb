@@ -1,5 +1,5 @@
 module Intent
-	class Move
+	class Move < Action
 		attr_accessor :entity
 		attr_accessor :start
 		attr_accessor :end
@@ -7,26 +7,15 @@ module Intent
 		attr_accessor :message
 
 		def initialize(entity, destination)
-			@entity = entity
+			super entity
 			@start = entity.location
 			@end = destination
-			@costs = Hash.new{|hash, key| hash[key] = 0}
-			@costs[:ap] = 1 unless @start == @end
+			add_cost :ap, 1 unless @start == @end
 			@message = ''
 		end
 
-		def apply_costs
-			@entity.ap -= @costs[:ap] unless @costs[:ap] == 0
-			@entity.mp -= @costs[:mp] unless @costs[:mp] == 0
-			@entity.hp -= @costs[:hp] unless @costs[:hp] == 0
-			@entity.mo -= @costs[:mo] unless @costs[:mo] == 0
-		end
-
 		def possible?
-			costs = @costs.clone
-			result = @entity.ap >= @costs[:ap] && @entity.mp >= @costs[:mp]
-			@costs = costs
-			return result
+			super && traversible? && adjacent?
 		end
 
 		def traversible?
@@ -39,6 +28,26 @@ module Intent
 			dz = @start.z - @end.z
 
 			(dx.between?(-1,1) && dy.between?(-1,1) && dz == 0 && dx.abs + dy.abs > 0) || ((dx == 0 && dy == 0 && dz.abs == 1))
+		end
+
+		def take_action
+			#TODO: move logic in move! into here and out of Entity::Character
+			@entity.move! @end
+		end
+
+		def broadcast_results
+			z_delta = @end.z - @start.z
+			if @start.x == @end.x && @start.y == @end.y && z_delta.abs == 1
+				if z_delta > 0
+					msg = "You step inside #{destination.name}."
+					msg_type = MessageType::STEP_INSIDE
+				else
+					msg = "You step outside of #{self.location.name}."
+					msg_type = MessageType::STEP_OUTSIDE
+				end
+				message_mov = Entity::Message.new({characters: [@entity.id], message: msg, type: msg_type})
+				message_mov.save
+			end
 		end
 	end
 end

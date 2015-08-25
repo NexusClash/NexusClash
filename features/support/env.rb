@@ -34,3 +34,8 @@ require_rel '../../firmament/entities'
 require_rel '../../firmament'
 require_rel '../../wayfarer'
 #require_rel '../../datatables'
+
+p = Entity::Plane.new
+p.plane = 1
+p.name = 'Testville'
+p.save

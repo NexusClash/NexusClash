@@ -41,9 +41,7 @@ module Behaviour
 		end
 
 		def attack(target, weapon_id)
-
 			weapons = self.weaponry(target)
-
 			unless weapons.has_key? weapon_id
 				Entity::Message.new({characters: [self.id], message: 'Unable to find that weapon!', type: MessageType::FAILED})
 				return
@@ -60,8 +58,7 @@ module Behaviour
 			attack = weapons[weapon_id]
 
 			combat = Intent::Combat.new(attack, Intent::Defend.new(target))
-			combat.apply_costs
-			combat.resolve
+			combat.realise
 			attack.entity.broadcast_self BroadcastScope::SELF
 		end
 	end

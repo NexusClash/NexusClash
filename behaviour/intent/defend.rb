@@ -1,7 +1,7 @@
 module Intent
-	class Defend
+	class Defend < Action
 		def initialize(entity)
-			@entity = entity
+			super entity
 		end
 
 		attr_reader :damage_taken
