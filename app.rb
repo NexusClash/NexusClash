@@ -33,6 +33,7 @@ Entity::TileType.load_types
 
 Firmament::Plane.new Instance.plane
 
+
 Faye::WebSocket.load_adapter('puma')
 #use Faye::RackAdapter, :mount => '/42', :timeout => 25
 
@@ -45,7 +46,6 @@ class Dash < Sinatra::Application
 	set :threaded, true
 	set :environment, :production
 	}
-
 
 	helpers do
 		def esc(text)
