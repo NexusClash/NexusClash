@@ -39,10 +39,10 @@ module Intent
 			z_delta = @end.z - @start.z
 			if @start.x == @end.x && @start.y == @end.y && z_delta.abs == 1
 				if z_delta > 0
-					msg = "You step inside #{destination.name}."
+					msg = "You step inside #{@end.name}."
 					msg_type = MessageType::STEP_INSIDE
 				else
-					msg = "You step outside of #{self.location.name}."
+					msg = "You step outside of #{@start.name}."
 					msg_type = MessageType::STEP_OUTSIDE
 				end
 				message_mov = Entity::Message.new({characters: [@entity.id], message: msg, type: msg_type})
