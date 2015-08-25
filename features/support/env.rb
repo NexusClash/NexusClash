@@ -18,7 +18,7 @@ SimpleCov.formatters = [
 ]
 SimpleCov.start
 
-Mongoid.load!('mongoid.yml')
+Mongoid.load!('mongoid_testing.yml')
 
 Mongoid.purge! if Mongoid.default_session.options[:database] == 'nexusdash_test' # Lets be EXTRA SAFE
 
