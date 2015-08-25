@@ -24,12 +24,12 @@ module Intent
 					notify << char.id unless char == @attack.entity || char == @attack.target
 				end
 
-				message_death = Entity::Message.new({characters: notify, type: :combat_attack, message: @attack.describe(BroadcastScope::TILE)}) unless notify.count == 0
+				message_death = Entity::Message.new({characters: notify, type: MessageType::COMBAT_ATTACK, message: @attack.describe(BroadcastScope::TILE)}) unless notify.count == 0
 
 			end
 
-			message_atk = Entity::Message.new({characters: [@attack.entity.id], type: :combat_attack, message: attack_text})
-			message_def = Entity::Message.new({characters: [@attack.target.id], type: :combat_defend, message: @attack.describe(BroadcastScope::TARGET)})
+			message_atk = Entity::Message.new({characters: [@attack.entity.id], type: MessageType::COMBAT_ATTACK, message: attack_text})
+			message_def = Entity::Message.new({characters: [@attack.target.id], type: MessageType::COMBAT_DEFEND, message: @attack.describe(BroadcastScope::TARGET)})
 			@attack.entity.broadcast_self BroadcastScope::TILE
 			@attack.target.broadcast_self BroadcastScope::TILE
 			message_atk.save

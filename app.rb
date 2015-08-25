@@ -76,9 +76,15 @@ class Dash < Sinatra::Application
 			@logged_in = false
 			@layout = :'layouts/guest'
 		else
-			@user = Entity::Account.find_by({username: session[:username]})
-			@logged_in = true
-			@layout = :'layouts/user'
+			if Entity::Account.where({username: session[:username]}).exists?
+				@user = Entity::Account.find_by({username: session[:username]})
+				@logged_in = true
+				@layout = :'layouts/user'
+			else
+				session[:username] = nil
+				@logged_in = false
+				@layout = :'layouts/guest'
+			end
 		end
 
 	end

@@ -27,6 +27,6 @@ end
 When(/(\S+) attacks (\S+)/) do |char_name, defender_name|
 	attacker = @characters[char_name]
 	defender = @characters[defender_name]
-	weapon = attacker.weaponry?.keys[0]
+	weapon = attacker.weaponry.keys[0]
 	attacker.attack(defender, weapon)
 end

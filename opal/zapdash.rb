@@ -7,6 +7,8 @@ require 'browser/dom/document'
 require 'browser/http'
 require 'browser/delay'
 require 'browser/dom/event'
+require 'native'
+
 puts 'wow, running ruby!'
 
 class Tile
@@ -74,21 +76,47 @@ class Item
 		}
 		@node.append_to binding
 	end
+
+	def remove
+		@node.remove
+	end
+
+	attr_accessor :id, :name, :type, :category, :weight
+
 	def render
-		@node.inner_html = 'test'
+		@node.inner_html = "<span>#{name}</span><span>#{weight.to_s}</span><span><button data-action-type='drop' data-action-vars='id:#{id.to_s}'>Drop</button></span>"
 	end
 end
 
 class Luggage
 
+	attr_reader :weight
+	attr_reader :weight_max
+
+	def weight=(weight)
+		@weight = weight
+	end
+
+	def weight_max=(weight_max)
+		@weight_max = weight_max
+	end
+
 	def initialize(binding = nil, encumbrance_binding = nil)
 		binding = $document['#inventory_accordion'] if binding === nil
 		encumbrance_binding = $document['#inventory .encumbrance'] if encumbrance_binding === nil
 		@categories = Hash.new
+		@items_by_id = Hash.new
 		@binding = binding
 		@nodes = Hash.new
 		@node_encumbrance = encumbrance_binding
-		encumbrance_binding.inner_html = 'Encumbrance: 15/50'
+		self.render
+	end
+
+	def clear
+		@items_by_id.clear
+		@categories.clear
+		@nodes.clear
+		@binding.clear
 	end
 
 	def add_category(cat)
@@ -96,27 +124,48 @@ class Luggage
 		node = DOM{
 			li
 		}
-		node.inner_html = "<input id='inv-category-#{cat}' name='inv-category-#{cat}' type='checkbox' checked='checked'/><label for='inv-category-#{cat}'>#{cat}</label><article id='inv-list-#{cat}'><ol></ol></article>"
+		node.inner_html = "<input id='inv-category-#{cat}' name='inv-category-#{cat}' type='checkbox' checked='checked'/><label for='inv-category-#{cat}'><span>#{cat.capitalize}</span><span>Wt</span><span></span></label><article id='inv-list-#{cat}'><ol></ol></article>"
 		node.append_to @binding
 		@nodes[cat] = $document["#inv-list-#{cat} ol"]
 	end
 
-	def test
-		add_category 'Other'
-		add_category 'Weapons'
-		add_category 'Worn'
-		a = Item.new @nodes['Other']
-		a.render
-		a = Item.new @nodes['Other']
-		a.render
-		a = Item.new @nodes['Other']
-		a.render
-		a = Item.new @nodes['Weapons']
-		a.render
-		a = Item.new @nodes['Weapons']
-		a.render
-		a = Item.new @nodes['Weapons']
-		a.render
+	def remove_item(id)
+		id = id.to_i
+		if @items_by_id.has_key? id
+			item = @items_by_id[id]
+			@items_by_id.delete id
+			@categories[item.category].delete item
+			item.remove
+			if @categories[item.category].count == 0
+				@categories.delete item.category
+				@nodes[item.category].remove
+				@nodes.delete item.category
+			end
+		end
+	end
+
+	def parse(item_hash)
+		id = item_hash['id'].to_i
+		if @items_by_id.has_key? id
+			item = @items_by_id[item_hash['id']]
+		else
+			category = item_hash['category'].to_sym
+			add_category category unless @categories.has_key? category
+			item = Item.new @nodes[category]
+			@categories[category] << item
+			@items_by_id[id] = item
+		end
+		item.id = id
+		item.name = item_hash['name'] if item_hash.has_key? 'name'
+		item.type = item_hash['type'] if item_hash.has_key? 'type'
+		item.category = item_hash['category'] if item_hash.has_key? 'category'
+		item.weight = item_hash['weight'].to_i if item_hash.has_key? 'weight'
+		item.render
+		render
+	end
+
+	def render
+		@node_encumbrance.inner_html = "Encumbrance: #{@weight.to_s}/#{@weight_max.to_s}"
 	end
 
 end
@@ -365,13 +414,12 @@ class Voyager
 						$document['#game_loading .message'].inner_html = 'Loading character...'
 						@adventurer = Adventurer.new ent['character'], true
 						@luggage = Luggage.new
-						@luggage.test
-						write_messages([{type: 'refresh_map'}, {type: 'sync_messages', from: (Time.now - (2*24*60*60))}])
+						write_messages([{type: 'refresh_map'}, {type: 'sync_messages', from: (Time.now - (2*24*60*60))}, {type: 'refresh_inventory'}])
 					else
 						@adventurer.update ent['character']
 						@adventurer.render
 						$document['#activity_log ul'].inner_html = ''
-						write_messages([{type: 'refresh_map'}, {type: 'sync_messages', from: (Time.now - (2*24*60*60))}])
+						write_messages([{type: 'refresh_map'}, {type: 'sync_messages', from: (Time.now - (2*24*60*60))}, {type: 'refresh_inventory'}])
 					end
 				when 'character'
 					data = ent['character']
@@ -417,7 +465,21 @@ class Voyager
 					html = html + '</select></li>'
 					$document['#target_information .actions'].inner_html = html
 				when 'message'
-					$document['#activity_log ul'].inner_html = '<li data-message-family="' + ent['class'] + '">- ' + ent['message'] + ' <sup>(' + Time::at(ent['timestamp'].to_i).strftime('%Y-%m-%d %H:%M:%S') + ')</sup></li>' + $document['#activity_log ul'].inner_html
+
+					node = DOM{
+						li
+					}
+					node['data-message-family'] = ent['class']
+					node.inner_html = ent['message'] + ' <sup>(' + Time::at(ent['timestamp'].to_i).strftime('%Y-%m-%d %H:%M:%S') + ')</sup>'
+					target_node = Native.convert $document['#activity_log ul']
+					native_node = Native.convert node
+
+					if `target_node.firstChild == null`
+						`target_node.appendChild(native_node)`
+					else
+						`target_node.insertBefore(native_node, target_node.firstChild)`
+					end
+
 					$document['#activity_log'].scroll.to({x: 0, y: 0})
 				when 'portals'
 					tile_portals = $document['#tile_portals']
@@ -486,6 +548,21 @@ class Voyager
 
 						append.call(root, skill)
 
+					end
+				when 'inventory'
+					@luggage.weight = ent['weight'].to_i if ent.has_key? 'weight'
+					@luggage.weight_max = ent['weight_max'].to_i if ent.has_key? 'weight_max'
+					@luggage.render
+					case ent['list']
+						when 'clear', 'add'
+							@luggage.clear if ent['list'] == 'clear'
+							ent['items'].each do |item|
+								@luggage.parse item
+							end
+						when 'remove'
+							ent['items'].each do |item|
+								@luggage.remove_item item
+							end
 					end
 				when 'dev_tile'
 					$document['#target_information .tname'].value = ent['tile']['name']

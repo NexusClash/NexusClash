@@ -20,7 +20,7 @@ module Wayfarer
 				target = game.character(json['char_id'])
 				ws.target = target
 				weaps_hash = Hash.new
-				weaps = ws.character.weaponry?
+				weaps = ws.character.weaponry
 				weaps.keys.each do |weapi|
 					weaps_hash[weapi] = weaps[weapi].to_hash
 				end
@@ -35,10 +35,10 @@ module Wayfarer
 					end
 					if message.start_with? '/me'
 						message = "#{ws.character.name_link}#{Rack::Utils.escape_html(message[3..-1])}"
-						msg_type = :speech_emote
+						msg_type = MessageType::SPEECH_EMOTE
 					else
 						message = "#{ws.character.name_link} said \"#{Rack::Utils.escape_html(message)}\""
-						msg_type = :speech
+						msg_type = MessageType::SPEECH
 					end
 					message_ent = Entity::Message.new({characters: targets, message: message, type: msg_type})
 					message_ent.save
@@ -157,18 +157,18 @@ module Wayfarer
 						ws.character.cp -= cp_cost
 						nskill.stateful = ws.character
 						ws.character.broadcast_self BroadcastScope::SELF
-						message_ent = Entity::Message.new({characters: [ws.character.id], message: "You have learnt #{nskill.name}.", type: 'skill-learnt'})
+						message_ent = Entity::Message.new({characters: [ws.character.id], message: "You have learnt #{nskill.name}.", type: MessageType::SKILL_LEARNT})
 						message_ent.save
 						process_message(ws, {'type' => 'request_skill_tree'})
 					else
-						Entity::Message.send_transient([ws.character.id], 'You cannot learn this skill at this time!', 'message-failed')
+						Entity::Message.send_transient([ws.character.id], 'You cannot learn this skill at this time!', MessageType::FAILED)
 					end
 
 
 				end
 			when 'search'
 				if ws.character.ap < 1	|| ws.character.location.is_a?(VoidTile)
-					Entity::Message.send_transient([ws.character.id], 'You cannot search at this time!', 'message-failed')
+					Entity::Message.send_transient([ws.character.id], 'You cannot search at this time!', MessageType::FAILED)
 					return
 				end
 
@@ -178,17 +178,31 @@ module Wayfarer
 				item_drop = ws.character.location.type.search_roll_item if ws.character.location.type.search_roll
 
 				if item_drop === nil
-					message_ent = Entity::Message.new({characters: [ws.character.id], message: 'You search and find nothing.', type: 'search-nothing'})
+					message_ent = Entity::Message.new({characters: [ws.character.id], message: 'You search and find nothing.', type: MessageType::SEARCH_NOTHING})
 					message_ent.save
 				else
-					message_ent = Entity::Message.new({characters: [ws.character.id], message: "You search and find #{item_drop.a_or_an} #{item_drop.name}.", type: 'search-success'})
+					message_ent = Entity::Message.new({characters: [ws.character.id], message: "You search and find #{item_drop.a_or_an} #{item_drop.name}.", type: MessageType::SEARCH_SUCCESS})
 					message_ent.save
 					item_drop.carrier = ws.character
-					#TODO: Send inventory update command
+
+					packet = {packets:[{type: 'inventory', weight: ws.character.weight, weight_max: ws.character.weight_max, list: 'add', items: [item_drop.to_h]}]}
+
+					ws.send(packet.to_json)
 				end
 
 				ws.character.broadcast_self BroadcastScope::SELF
+			when 'drop'
+				id = json['id'].to_i
 
+				ws.character.items.each do |item_drop|
+					if item_drop.object_id == id
+						message_drop = Entity::Message.new({characters: [ws.character.id], message: "You drop your #{item_drop.name}.", type: MessageType::ITEM_DROP})
+						message_drop.save
+						ws.send({packets:[{type: 'inventory', weight: ws.character.weight, weight_max: ws.character.weight_max, list: 'remove', items: [item_drop.object_id]}]}.to_json)
+						ws.character.remove_item item_drop
+						return
+					end
+				end
 			when 'dev_tile'
 				if ws.character.account.has_role?(:admin) || ws.character.has_nexus_class?(:Developer)
 					game = Firmament::Plane.fetch Instance.plane
@@ -252,6 +266,18 @@ module Wayfarer
 
 					ws.send({packets:[{type:'dev_tile', types: types, tile: tile.to_h}]}.to_json)
 				end
+			when 'refresh_inventory'
+
+				items = []
+
+				ws.character.items.each do |item|
+					items << item.to_h
+				end
+
+				packet = {packets:[{type: 'inventory', weight: ws.character.weight, weight_max: ws.character.weight_max, list: 'clear', items: items}]}
+
+				ws.send(packet.to_json)
+
 		end
 
 

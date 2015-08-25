@@ -41,7 +41,23 @@ module Entity
 
 		embeds_many :statuses, as: :stateful, cascade_callbacks: true
 
-		embeds_many :items, as: :carrier, cascade_callbacks: true
+		embeds_many :items, as: :carrier, cascade_callbacks: true, after_add: :add_weight, after_remove: :remove_weight
+
+		def weight
+			@weight ||= self.items.inject(0){ |sum, an_item| sum + an_item.weight }
+		end
+
+		def weight_max
+			50
+		end
+
+		def add_weight(item)
+			@weight += item.weight if @weight
+		end
+
+		def remove_weight(item)
+			@weight -= item.weight if @weight
+		end
 
 		before_save do |document|
 			self.last_tick = Time.now

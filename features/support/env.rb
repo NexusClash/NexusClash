@@ -20,6 +20,8 @@ SimpleCov.start
 
 Mongoid.load!('mongoid.yml')
 
+Mongoid.purge! if Mongoid.default_session.current_database == 'nexusdash_test' # Lets be EXTRA SAFE
+
 require_rel '../../enums'
 require_rel '../../config'
 require_rel '../../behaviour/core'

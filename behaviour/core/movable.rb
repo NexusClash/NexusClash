@@ -13,10 +13,10 @@ module Behaviour
 				if self.location.x == destination.x && self.location.y == destination.y && z_delta.abs == 1
 					if z_delta > 0
 						msg = "You step inside #{destination.name}."
-						msg_type = :step_inside
+						msg_type = MessageType::STEP_INSIDE
 					else
 						msg = "You step outside of #{self.location.name}."
-						msg_type = :step_outside
+						msg_type = MessageType::STEP_INSIDE
 					end
 					message_mov = Entity::Message.new({characters: [self.id], message: msg, type: msg_type})
 					message_mov.save

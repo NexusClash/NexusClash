@@ -1,6 +1,6 @@
 module Behaviour
 	module Aggressor
-		def weaponry?(target = nil)
+		def weaponry(target = nil)
 			weaps = {}
 			alters = []
 			weapons = []
@@ -42,14 +42,18 @@ module Behaviour
 
 		def attack(target, weapon_id)
 
-			weapons = self.weaponry?(target)
+			weapons = self.weaponry(target)
 
 			unless weapons.has_key? weapon_id
-				Entity::Message.new({characters: [self.id], message: 'Unable to find that weapon!'})
+				Entity::Message.new({characters: [self.id], message: 'Unable to find that weapon!', type: MessageType::FAILED})
 				return
 			end
 			if self.location != target.location
-				Entity::Message.new({characters: [self.id], message: 'Your target is no longer in this location!'})
+				Entity::Message.new({characters: [self.id], message: 'Your target is no longer in this location!', type: MessageType::FAILED})
+				return
+			end
+			if self.respond_to?(:weight) && self.respond_to?(:weight_max) &&  self.weight > self.weight_max
+				Entity::Message.send_transient([self.id],'You are carrying too much weight to do this!', MessageType::FAILED)
 				return
 			end
 

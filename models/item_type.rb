@@ -20,7 +20,7 @@ module Entity
 				eff = Entity::ItemType.find_by({id: typeident})
 				hash[typeident] = eff
 			else
-				nil
+				InvalidItemType
 			end
 		end
 
@@ -41,6 +41,28 @@ module Entity
 
 		def to_s
 			self.name
+		end
+
+		class InvalidItemType
+			def self.d
+				-1
+			end
+
+			def self.name
+				'Invalid Item - Bug Report Please!'
+			end
+
+			def self.category
+				:mundane
+			end
+
+			def self.statuses
+				[]
+			end
+
+			def self.weight
+				0
+			end
 		end
 	end
 end

@@ -7,7 +7,12 @@ module Firmament
 
 		@@planes = ThreadSafe::Cache.new
 
+		attr_reader :pending_deletion, :pending_save
+
 		def initialize(plane)
+
+			@pending_deletion = Queue.new
+			@pending_save = Queue.new
 
 			@plane = Entity::Plane.where({plane: plane.to_i}).first
 			@@planes[plane.to_i] = self
@@ -33,10 +38,7 @@ module Firmament
 			end
 
 			@scheduler.every '15m', :blocking => true do
-				@characters.keys.each do |id|
-					@characters[id].save
-				end
-
+				save
 			end
 
 			@locations = ThreadSafe::Cache.new do |hashx, x|
@@ -108,6 +110,12 @@ module Firmament
 		end
 
 		def save
+			until @pending_deletion.empty? do
+				@pending_deletion.pop.delete
+			end
+			until @pending_save.empty? do
+				@pending_save.pop.save
+			end
 			@characters.keys.each do |id|
 				@characters[id].save
 			end
@@ -137,6 +145,5 @@ module Firmament
 				end
 			end
 		end
-
 	end
 end

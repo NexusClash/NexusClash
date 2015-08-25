@@ -799,6 +799,10 @@ img[src=""]
 #inventory_accordion > li > article > ol, #inventory_accordion > li > article > ul
 {
 	list-style-type:none;
+	padding-left:0px;
+}
+#inventory_accordion > li > article > ol > li, #inventory_accordion > li > article > ul > li
+{
 	padding-left:5px;
 }
 #right_panel
@@ -899,4 +903,36 @@ img[src=""]
 	60%{border-top-color: grey;opacity:0.5;}
 	80% {border-top-color: green;opacity:1;}
 	100%{border-top-color: green;opacity:0;}
+}
+
+#inventory_accordion > li > label > span
+{
+	display:none;
+}
+#inventory_accordion > li > article > ol > li > span:first-child, #inventory_accordion > li > label > span:first-child
+{
+	display:inline-block;
+	width:70%;
+}
+#inventory_accordion > li > article > ol > li > span:nth-child(2), #inventory_accordion > li > input:checked ~ label > span:nth-child(2)
+{
+	display:inline-block;
+	width:20%;
+}
+#inventory_accordion > li > article > ol > li > span:nth-child(3), #inventory_accordion > li > input:checked ~ label > span:nth-child(3)
+{
+	display:inline-block;
+	width:10%;
+}
+#inventory_accordion > li > article > ol > li:nth-child(even)
+{
+	background-color:#F3F3F4;
+}
+
+#inventory_accordion > li > article > ol > li > span > button
+{
+	font-size:90%;
+	padding: 1px;
+	margin:1px;
+
 }

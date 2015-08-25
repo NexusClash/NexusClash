@@ -11,9 +11,14 @@ Given(/(\S+) is badly wounded/) do |char_name|
 	character.hp = rand(2...max)
 end
 
-Given(/(\S+) is at (\d+) HP/) do |char_name, hp|
+Given(/(\S+) has (\d+) HP/) do |char_name, hp|
 	character = @characters[char_name]
 	character.hp = hp.to_i
+end
+
+Given(/(\S+) has (\d+) AP/) do |char_name, ap|
+	character = @characters[char_name]
+	character.ap = ap.to_i
 end
 
 Then(/(\S+) should be at full HP/) do |char_name|
@@ -21,7 +26,7 @@ Then(/(\S+) should be at full HP/) do |char_name|
 	character.hp == character.hp_max
 end
 
-Then(/(\S+) should be at (\d+) HP/) do |char_name, hp|
+Then(/(\S+) should have (\d+) HP/) do |char_name, hp|
 	character = @characters[char_name]
 	character.hp == hp.to_i
 end
