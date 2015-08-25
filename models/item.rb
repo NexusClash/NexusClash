@@ -61,5 +61,9 @@ module Entity
 			return item
 		end
 
+		def to_h
+			{id: self.object_id, name: self.name, type: self.type.name, category: self.type.category, weight: self.weight}
+		end
+
 	end
 end

@@ -52,7 +52,7 @@ module Entity
 				msg_lvlup = "You have levelled up! You are now level #{self.level}! You have gained #{cp_bonus} Character Points. Your new total is #{self.cp} CP."
 				msg_lvlup << "As you have reached level #{self.level}, you may now select a tier #{(self.level / 10).floor + 1} class!" if self.level == 10 || self.level == 20
 				msg_lvlup << " You are #{self.level_xp_required?(self.level + 1) - self.xp} XP away from gaining another level." if self.level < 30
-				msg = Entity::Message.new({characters: [self.id], type: :level_up_self, message: msg_lvlup})
+				msg = Entity::Message.new({characters: [self.id], type: MessageType::LEVEL_SELF, message: msg_lvlup})
 				self.broadcast_self BroadcastScope::SELF
 				msg.save
 				occs = []
@@ -60,7 +60,7 @@ module Entity
 					occs << char.id unless char === self
 				end
 				if occs.length > 0
-					msg_area = Entity::Message.new({characters: occs, type: :level_up, message: "#{self.name_link} has levelled up!"})
+					msg_area = Entity::Message.new({characters: occs, type: MessageType::LEVEL_OTHER, message: "#{self.name_link} has levelled up!"})
 					msg_area.save
 				end
 				self.broadcast_self BroadcastScope::TILE
@@ -96,7 +96,7 @@ module Entity
 				self.hp = self.hp_max
 				game = Firmament::Plane.fetch Instance.plane
 				move! game.map(1,1,0)
-				msg = Entity::Message.new({characters: [self.id], type: :respawn, message: 'Your spirit feels drawn to a new body and you quickly enter it. You have respawned.'})
+				msg = Entity::Message.new({characters: [self.id], type: MessageType::SPAWN_SELF, message: 'Your spirit feels drawn to a new body and you quickly enter it. You have respawned.'})
 				msg.save
 			end
 		end
@@ -190,6 +190,12 @@ module Entity
 				end
 			end
 
+		end
+
+		def remove_item(item)
+			self.remove_child item
+			@weight -= item.weight if @weight
+			self.shard.pending_deletion << item
 		end
 	end
 end
