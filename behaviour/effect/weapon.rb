@@ -11,7 +11,7 @@ module Effect
 		def initialize(parent, family, hit_chance, damage_type, damage, name = nil)
 			@parent = parent
 			@family = family.to_sym
-			@hit_chance = hit_chance
+			@hit_chance = hit_chance.to_i
 			@damage_type = damage_type.to_sym
 			@damage = damage
 			if name === nil

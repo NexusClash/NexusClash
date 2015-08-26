@@ -9,8 +9,8 @@ module Effect
 		def initialize(parent, family = :all, hit_chance = 0, damage = 0, name = nil)
 			@parent = parent
 			@family = family.to_sym
-			@hit_chance = hit_chance
-			@damage = damage
+			@hit_chance = hit_chance.to_i
+			@damage = damage.to_i
 			@name = name
 		end
 
