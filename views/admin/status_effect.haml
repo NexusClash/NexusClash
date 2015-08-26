@@ -109,7 +109,7 @@
 					api.ajax.reload();
 				});
 
-				editor.on('postCreate postEdit', function(e, json, data){
+				editor.on('postCreate postEdit postRemove', function(e, json, data){
 
 					$.getJSON( "/admin/datasource/status_effect/" + status_effect_sub_id, function( data ) {
 
