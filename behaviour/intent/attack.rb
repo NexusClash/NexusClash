@@ -20,15 +20,23 @@ module Intent
 			super entity
 			@target = target
 			@attack_roll = rand(1..101)
-			@costs = Hash.new{|hash, key| hash[key] = 0}
-			@costs[:ap] = 1
 			@xp_granted = 0
 			@debug_log = Array.new
+			add_cost :ap, 1
 		end
 
 		def weapon=(weap)
 			unless @weapon == weap
 				@weapon = weap
+
+				@weapon.costs.each do |key, value|
+					if value.respond_to? :call
+						@costs[key] = value
+					else
+						@costs[key] += value
+					end
+
+				end
 
 				@family = weap.family
 				@hit_chance = weap.hit_chance

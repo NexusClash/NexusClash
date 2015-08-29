@@ -7,8 +7,10 @@ module Effect
 		attr_reader :damage
 		attr_reader :name
 		attr_reader :parent
+		attr_reader :costs
 
 		def initialize(parent, family, hit_chance, damage_type, damage, name = nil)
+			@costs = {ap: 1}
 			@parent = parent
 			@family = family.to_sym
 			@hit_chance = hit_chance.to_i
@@ -31,7 +33,7 @@ module Effect
 		end
 
 		def save_state
-			if name == parent.name then
+			if @name == parent.name then
 				['Weapon', @family, @hit_chance, @damage_type, @damage]
 			else
 				['Weapon', @family, @hit_chance, @damage_type, @damage, @name]

@@ -14,7 +14,7 @@
 		fields: [
 			{label: "Name",name: "name", type: 'text'},
 			{label: "Activation",name: "activation", type: 'select', ipOpts: ['standard'], def: 'standard'},
-			{label: "Family",name: "family", type: 'select', ipOpts: ['class', 'skill'], def: 'skill'}
+			{label: "Family",name: "family", type: 'select', ipOpts: ['class', 'magical', 'mundane', 'skill'], def: 'skill'}
 		]
 		} );
 	var status_effects = $('#status_effects').DataTable({  "dom": '<"status_effect_buttons">T<"clear">lfrtip',
@@ -78,13 +78,17 @@
 					idSrc: 'index',
 					table: '#status_effect_subtable_' + status_effect_sub_id,
 					fields: [
-						{label: "Type",name: "type", type: 'select', ipOpts:['Regen', 'Weapon', 'WeaponBuff', 'SkillPrerequisite', 'SkillPurchasable', 'CustomText'], def: 'Regen'},
+						{label: "Type",name: "type", type: 'select', ipOpts:['Ammo', 'Regen', 'Weapon', 'WeaponWithAmmo', 'Reloadable', 'WeaponBuff', 'SkillPrerequisite', 'SkillPurchasable', 'CustomText'], def: 'Regen'},
 						{label: "",name: "select_1", type: 'select'},
 						{label: "",name: "text_1", type: 'text'},
 						{label: "",name: "select_2", type: 'select'},
 						{label: "",name: "text_2", type: 'text'},
 						{label: "",name: "select_3", type: 'select'},
-						{label: "",name: "text_3", type: 'text'}
+						{label: "",name: "text_3", type: 'text'},
+						{label: "",name: "select_4", type: 'select'},
+						{label: "",name: "text_4", type: 'text'},
+						{label: "",name: "select_5", type: 'select'},
+						{label: "",name: "text_5", type: 'text'}
 					]
 					} );
 

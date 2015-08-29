@@ -278,6 +278,19 @@ module Wayfarer
 
 				ws.send(packet.to_json)
 
+			when 'activate_item_self'
+				item = nil
+				ws.character.items.each do |e_item|
+					if e_item.object_id == json['id'].to_i
+						item = e_item
+					end
+				end
+				if item === nil
+					Entity::Message.send_transient([ws.character.id],'Unable to find specified item!', MessageType::FAILED)
+				else
+					ws.character.use_item_self item, json['status_id'].to_i
+				end
+
 		end
 
 
