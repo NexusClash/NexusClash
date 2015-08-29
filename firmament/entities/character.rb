@@ -3,6 +3,9 @@ module Entity
 	class Character
 		include Behaviour::Movable
 		include Behaviour::Aggressor
+		include Behaviour::Usable
+		include Pronouns
+		include Behaviour::Activator
 
 		def broadcast(scope, packet)
 			case scope

@@ -30,3 +30,8 @@ Then(/(\S+) should have (\d+) HP/) do |char_name, hp|
 	character = @characters[char_name]
 	character.hp == hp.to_i
 end
+
+Then(/(\S+) should have (\d+) AP/) do |char_name, ap|
+	character = @characters[char_name]
+	character.ap == ap.to_i
+end

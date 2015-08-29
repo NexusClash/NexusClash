@@ -24,6 +24,15 @@ Given(/(\S+) has an innate (\S+) attack \((\d+) (\S+) @ (\d+)%\)/) do |char_name
 	weapon.stateful = character
 end
 
+Given(/(\S+) has an innate ammo-using (\S+) attack \((\d+) (\S+) @ (\d+)%\) loaded with (\d+) ammo/) do |char_name, family, amount, type, hit_chance, ammo|
+	character = @characters[char_name]
+	character.set_tag :ammo, ammo.to_i
+	weapon = Entity::Status.new
+	weapon.effects << Effect::WeaponWithAmmo.new(weapon, family.to_sym, hit_chance.to_i, type.to_sym, amount.to_i, 1, 'Out of ammo!', 'Test weapon')
+	weapon.effects << Effect::Reloadable.new(weapon, 'test_ammo', 10)
+	weapon.stateful = character
+end
+
 When(/(\S+) attacks (\S+)/) do |char_name, defender_name|
 	attacker = @characters[char_name]
 	defender = @characters[defender_name]

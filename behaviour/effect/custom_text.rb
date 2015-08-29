@@ -1,5 +1,5 @@
 module Effect
-	class CustomText < Effect::Base
+	class CustomText
 
 		def initialize(parent, text)
 			@parent = parent

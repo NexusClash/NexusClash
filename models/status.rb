@@ -4,6 +4,8 @@ module Entity
 
 		embedded_in :stateful, polymorphic: true
 
+		attr_accessor :parent
+
 		field :link, type: Integer
 
 		#field :name, type: String

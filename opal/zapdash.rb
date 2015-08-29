@@ -75,16 +75,31 @@ class Item
 			li
 		}
 		@node.append_to binding
+		@actions = []
 	end
 
 	def remove
 		@node.remove
 	end
 
-	attr_accessor :id, :name, :type, :category, :weight
+	attr_accessor :id, :name, :type, :category, :weight, :actions
 
 	def render
-		@node.inner_html = "<span>#{name}</span><span>#{weight.to_s}</span><span><button data-action-type='drop' data-action-vars='id:#{id.to_s}'>Drop</button></span>"
+		actions = ''
+		@actions.each do |action|
+			actions = actions + "<button data-action-type='#{action.type}' data-action-vars='id:#{id.to_s},status_id:#{action.id}'>#{action.name}</button>"
+		end
+		@node.inner_html = "<span>#{name}<span style='float:right'>#{actions}</span></span><span>#{weight.to_s}</span><span><button data-action-type='drop' data-action-vars='id:#{id.to_s}'>Drop</button></span>"
+	end
+
+	class Action
+		attr_reader :name, :type, :id
+
+		def initialize(name, type, id)
+			@name = name
+			@type = type
+			@id = id
+		end
 	end
 end
 
@@ -148,6 +163,7 @@ class Luggage
 		id = item_hash['id'].to_i
 		if @items_by_id.has_key? id
 			item = @items_by_id[item_hash['id']]
+			item.actions.clear
 		else
 			category = item_hash['category'].to_sym
 			add_category category unless @categories.has_key? category
@@ -160,6 +176,11 @@ class Luggage
 		item.type = item_hash['type'] if item_hash.has_key? 'type'
 		item.category = item_hash['category'] if item_hash.has_key? 'category'
 		item.weight = item_hash['weight'].to_i if item_hash.has_key? 'weight'
+		if item_hash.has_key? 'actions'
+			item_hash['actions'].each do |action|
+				item.actions << Item::Action.new(action['name'], 'activate_item_self', action['status_id'])
+			end
+		end
 		item.render
 		render
 	end
@@ -554,7 +575,7 @@ class Voyager
 					@luggage.weight_max = ent['weight_max'].to_i if ent.has_key? 'weight_max'
 					@luggage.render
 					case ent['list']
-						when 'clear', 'add'
+						when 'clear', 'add', 'update'
 							@luggage.clear if ent['list'] == 'clear'
 							ent['items'].each do |item|
 								@luggage.parse item

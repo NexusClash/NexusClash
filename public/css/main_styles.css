@@ -919,7 +919,7 @@ img[src=""]
 	display:inline-block;
 	width:20%;
 }
-#inventory_accordion > li > article > ol > li > span:nth-child(3), #inventory_accordion > li > input:checked ~ label > span:nth-child(3)
+#inventory_accordion > li > article > ol > li > span:nth-child(4), #inventory_accordion > li > input:checked ~ label > span:nth-child(4)
 {
 	display:inline-block;
 	width:10%;
@@ -929,10 +929,9 @@ img[src=""]
 	background-color:#F3F3F4;
 }
 
-#inventory_accordion > li > article > ol > li > span > button
+#inventory_accordion > li > article > ol > li > span button
 {
 	font-size:90%;
 	padding: 1px;
 	margin:1px;
-
 }

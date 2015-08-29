@@ -13,4 +13,6 @@ module MessageType
 	LEVEL_OTHER = :'level-up-other'
 	SPAWN_SELF = :'spawn-self'
 	ITEM_DROP = :'item-drop'
+	RELOAD = :'ammo-reload'
+	AMMO_EMPTIED = :'ammo-emptied'
 end

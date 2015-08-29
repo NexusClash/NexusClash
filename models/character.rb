@@ -5,7 +5,7 @@ module Entity
 		include Unobservable::Support
 		include Entity::ObservedFields
 		include Mongoid::Autoinc
-		include Pronouns
+		include Mongoid::Attributes::Dynamic
 
 		attr_accessor :socket
 
@@ -43,6 +43,14 @@ module Entity
 
 		embeds_many :items, as: :carrier, cascade_callbacks: true, after_add: :add_weight, after_remove: :remove_weight
 
+		def get_tag(tag)
+			read_attribute tag
+		end
+
+		def set_tag(tag, value)
+			write_attribute tag, value
+		end
+
 		def weight
 			@weight ||= self.items.inject(0){ |sum, an_item| sum + an_item.weight }
 		end
@@ -52,11 +60,19 @@ module Entity
 		end
 
 		def add_weight(item)
-			@weight += item.weight if @weight
+			if item.is_a? Entity::Item
+				@weight += item.weight if @weight
+			else
+				@weight += item if @weight
+			end
 		end
 
 		def remove_weight(item)
-			@weight -= item.weight if @weight
+			if item.is_a? Entity::Item
+				@weight -= item.weight if @weight
+			else
+				@weight -= item if @weight
+			end
 		end
 
 		before_save do |document|
@@ -71,6 +87,7 @@ module Entity
 
 			document.statuses.each do |status|
 				status.unserialize
+				status.parent = self
 			end
 
 			minutes_elapsed = ((Time.now - document.last_tick) / 60).floor

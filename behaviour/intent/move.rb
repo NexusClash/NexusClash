@@ -10,12 +10,12 @@ module Intent
 			super entity
 			@start = entity.location
 			@end = destination
-			add_cost :ap, 1 unless @start == @end
 			@message = ''
+			add_cost :ap, 1
 		end
 
 		def possible?
-			super && traversible? && adjacent?
+			super && traversible? && adjacent? && @start != @end
 		end
 
 		def traversible?
