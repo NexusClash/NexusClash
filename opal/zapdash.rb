@@ -688,7 +688,7 @@ $document.on :click, 'button[data-action-type], .action[data-action-type]' do |e
 end
 
 $document.on :keyup, 'input[data-enter-trigger-action]' do |event|
-	$document[event.target['data-enter-trigger-action']].trigger :click if target.code == 13
+	$document[event.target['data-enter-trigger-action']].trigger :click if event.code == 13
 end
 
 $document.on :click, '#hud_player_vitals .ui-hud-cp' do |event|
