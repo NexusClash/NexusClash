@@ -40,6 +40,7 @@ class Tile
 
 	def render
 		@node['title'] = @name
+		@node['tabIndex'] = 0
 		@node['data-x'] = @x
 		@node['data-y'] = @y
 		@node['data-z'] = @z
@@ -689,6 +690,37 @@ end
 
 $document.on :keyup, 'input[data-enter-trigger-action]' do |event|
 	$document[event.target['data-enter-trigger-action']].trigger :click if event.code == 13
+end
+
+$document.on :keyup, '#map .tile' do |event|
+	#send - {"type":"movement", "x":"1", "y":"1", "z":"0"}
+	packet = nil
+	case event.code
+		#when 36
+		#	packet = {x:-1, y:-1, z:0}
+		when 38, 87
+			packet = {x:0, y:-1, z:0}
+		#when 33
+		#	packet = {x:1, y:-1, z:0}
+		when 37, 65
+			packet = {x:-1, y:0, z:0}
+		when 39, 68
+			packet = {x:1, y:0, z:0}
+		#when 35
+		#	packet = {x:-1, y:1, z:0}
+		when 40, 83
+			packet = {x:0, y:1, z:0}
+		#when 34
+		#	packet = {x:1, y:1, z:0}
+	end
+	unless packet === nil
+		packet[:type] = 'movement'
+		packet[:x] += voyager.adventurer.x
+		packet[:y] += voyager.adventurer.y
+		packet[:z] += voyager.adventurer.z
+		voyager.write_message(packet)
+	end
+
 end
 
 $document.on :click, '#hud_player_vitals .ui-hud-cp' do |event|
