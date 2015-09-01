@@ -24,6 +24,7 @@ module Intent
 		end
 
 		def apply_costs
+			super
 			@outcomes.each do |outcome|
 				outcome.call :apply_costs, self
 			end
@@ -33,6 +34,7 @@ module Intent
 			@outcomes.each do |outcome|
 				outcome.call :take_action, self
 			end
+			@entity.broadcast_self Entity::Status.tick(@target, StatusTick::ITEM_ACTIVATED)
 		end
 
 		def broadcast_results

@@ -10,12 +10,21 @@ module Effect
 			@amount = amount.to_i
 
 			define_singleton_method ('tick_' + interval.to_s).to_sym do |target|
+
+				target = target.carrier if target.is_a? Entity::Item
+
 				initialval = target.send @type
 				val = initialval
+				delta = amount
 				if @amount > 0 && target.respond_to?(@type_max) then
 					max = target.send @type_max
 					if val + amount > max then
-						val = max if val < max
+						if val > max
+							delta = 0
+						else
+							delta = max - val
+							val = max
+						end
 					else
 						val += amount
 					end
@@ -23,6 +32,8 @@ module Effect
 					val += amount
 				end
 				target.send @type_set, val
+
+				@parent.temp_effect_vars[@type] = delta
 
 				return BroadcastScope::NONE if val == initialval
 

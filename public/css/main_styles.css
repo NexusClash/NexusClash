@@ -935,3 +935,9 @@ img[src=""]
 	padding: 1px;
 	margin:1px;
 }
+
+#activity_log > ul > li[data-message-family=ammo-emptied]
+{
+	color:red;
+	font-weight:bold;
+}
