@@ -15,4 +15,5 @@ module MessageType
 	ITEM_DROP = :'item-drop'
 	RELOAD = :'ammo-reload'
 	AMMO_EMPTIED = :'ammo-emptied'
+	GENERIC = :generic
 end

@@ -22,7 +22,6 @@ module Intent
 			@attack_roll = rand(1..101)
 			@xp_granted = 0
 			@debug_log = Array.new
-			add_cost :ap, 1
 		end
 
 		def weapon=(weap)

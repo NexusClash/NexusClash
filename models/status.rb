@@ -13,6 +13,8 @@ module Entity
 		#field :custom, type: Boolean
 		#field :family, type: Symbol
 
+		attr_accessor :temp_effect_vars
+
 		def name
 			self.type.name
 		end
@@ -34,6 +36,7 @@ module Entity
 
 		after_initialize do |document|
 			@effects = ThreadSafe::Array.new
+			@temp_effect_vars = ThreadSafe::Cache.new
 		end
 
 		before_save do |document|
@@ -88,17 +91,36 @@ module Entity
 			@effects = new_effects
 		end
 
-		def self.tick(char, interval)
+		def self.tick(entity, interval)
 			type = ('tick_' + interval.to_s).to_sym
 			changed = BroadcastScope::NONE
 			changed2 = BroadcastScope::NONE
-			char.statuses.each do |status|
-				status.effects.each do |effect|
-					changed2 = effect.send(type, char) if effect.respond_to? type
-					changed = changed2 > changed ? changed2 : changed
+
+			if entity.is_a? Entity::Character
+				entity.statuses.each do |status|
+					status.effects.each do |effect|
+						changed2 = effect.send(type, entity) if effect.respond_to? type
+						changed = changed2 > changed ? changed2 : changed
+					end
 				end
+				return changed
 			end
-			return changed
+			if entity.is_a? Entity::Item
+				entity.statuses.each do |status|
+					status.effects.each do |effect|
+						changed2 = effect.send(type, entity) if effect.respond_to? type
+						changed = changed2 > changed ? changed2 : changed
+					end
+				end
+				entity.type_statuses.each do |status|
+					status.effects.each do |effect|
+						changed2 = effect.send(type, entity) if effect.respond_to? type
+						changed = changed2 > changed ? changed2 : changed
+					end
+				end
+				return changed
+			end
+
 		end
 
 	end
