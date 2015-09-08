@@ -1,4 +1,4 @@
-Feature: Effect::Regen
+Feature: Regeneration on Innates
 
   Scenario: Joe is badly wounded and just drank a powerful delayed healing potion. Joe expects this potion to patch him up on the next AP tick.
     Given a character named Joe

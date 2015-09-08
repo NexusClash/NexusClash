@@ -21,6 +21,11 @@ Given(/(\S+) has (\d+) AP/) do |char_name, ap|
 	character.ap = ap.to_i
 end
 
+Given(/(\S+) has (\d+) XP/) do |char_name, xp|
+	character = @characters[char_name]
+	character.xp = xp.to_i
+end
+
 Then(/(\S+) should be at full HP/) do |char_name|
 	character = @characters[char_name]
 	character.hp == character.hp_max
@@ -34,4 +39,9 @@ end
 Then(/(\S+) should have (\d+) AP/) do |char_name, ap|
 	character = @characters[char_name]
 	character.ap == ap.to_i
+end
+
+Then(/(\S+) should have (\d+) XP/) do |char_name, xp|
+	character = @characters[char_name]
+	character.xp == xp.to_i
 end
