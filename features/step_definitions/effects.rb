@@ -95,6 +95,7 @@ Given(/(\S+) has a book/) do |char_name|
 	book.effects << Effect::Activated.new(book, {ap: 1}, 'Read')
 	book.effects << Effect::LimitedUses.new(book, 1)
 	book.effects << Effect::Regen.new(book, :item_activation, :xp, 10)
+	book.effects << Effect::SendMessage.new(book, :item_activation, 'As you read this book you learn how overpowered they are as a levelling method. Gazooks! You have learnt nothing from this book, but gained [xp] XP anyway', BroadcastScope::SELF)
 	item.type_statuses = [book]
 	item.carrier = character
 end
@@ -106,6 +107,7 @@ Given(/(\S+) has a healing potion/) do |char_name|
 	potion.effects << Effect::Activated.new(potion, {ap: 1},'Drink')
 	potion.effects << Effect::LimitedUses.new(potion, 1)
 	potion.effects << Effect::Regen.new(potion, :item_activation, :hp, 30)
+	potion.effects << Effect::SendMessage.new(potion, :item_activation, 'You quaff the potion. As you do so, you feel its magic flow through you, mending flesh and bone. You regain [hp] HP.', BroadcastScope::SELF)
 	item.type_statuses = [potion]
 	item.carrier = character
 end

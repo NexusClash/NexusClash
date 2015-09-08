@@ -2,6 +2,7 @@ Given(/a character named (\S+)/) do |name|
 	@characters = Hash.new if @characters === nil
 	character = Entity::Character.new
 	character.name = name
+	character.save
 	@characters[name] = character
 end
 

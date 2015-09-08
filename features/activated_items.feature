@@ -1,12 +1,12 @@
 Feature: Activated Items
 
-  Scenario: Joe uses a book and then has no items
+  Scenario: Joe uses book and then has no items
     Given a character named Joe
     Given Joe has a book
     When Joe uses their item
     Then Joe should have 0 items
 
-  Scenario: Joe uses a book and still has his other book
+  Scenario: Joe has two books, uses a book and still has his other book
     Given a character named Joe
     Given Joe has a book
     And Joe has a book
