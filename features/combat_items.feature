@@ -1,5 +1,22 @@
 Feature: Combat With Items
 
+  Scenario: Sally hits Joe with a club. She gains XP!
+    Given a character named Joe
+    And a character named Sally
+    Given Sally has an item with a melee attack (5 impact @ 100%)
+    And Sally has 0 XP
+    When Sally attacks Joe with their weapon
+    Then Sally should have 5 XP
+
+  Scenario: Sally kills Joe and gains more XP!
+    Given a character named Joe
+    And a character named Sally
+    Given Sally has an item with a melee attack (5 impact @ 100%)
+    And Sally has 0 XP
+    And Joe has 5 HP
+    When Sally attacks Joe with their weapon
+    Then Sally should have 6 XP
+
   Scenario: Sally hits Joe with a club. It hurts!
     Given a character named Joe
     And a character named Sally

@@ -81,3 +81,36 @@ When(/(\S+) reloads their weapon/) do |char_name|
 	use = char.activated_uses[0]
 	char.use_item_self char.items[0], use.object_id
 end
+
+When(/(\S+) uses their item/) do |char_name|
+	char = @characters[char_name]
+	use = char.activated_uses[0]
+	char.use_item_self char.items[0], use.object_id
+end
+
+Given(/(\S+) has a book/) do |char_name|
+	character = @characters[char_name]
+	item = Entity::Item.new
+	book = Entity::Status.new
+	book.effects << Effect::Activated.new(book, {ap: 1}, 'Read')
+	book.effects << Effect::LimitedUses.new(book, 1)
+	book.effects << Effect::Regen.new(book, :item_activation, :xp, 10)
+	item.type_statuses = [book]
+	item.carrier = character
+end
+
+Given(/(\S+) has a healing potion/) do |char_name|
+	character = @characters[char_name]
+	item = Entity::Item.new
+	potion = Entity::Status.new
+	potion.effects << Effect::Activated.new(potion, {ap: 1},'Drink')
+	potion.effects << Effect::LimitedUses.new(potion, 1)
+	potion.effects << Effect::Regen.new(potion, :item_activation, :hp, 30)
+	item.type_statuses = [potion]
+	item.carrier = character
+end
+
+Then(/(\S+) should have (\d+) items/) do |char_name, items|
+	character = @characters[char_name]
+	character.items.count == items.to_i
+end
