@@ -23,7 +23,7 @@ module Effect
 		end
 
 		def describe
-			"#{@parent.name.to_s} has an activated ability called #{@name}, costing #{(@costs[:ap] + 1).to_s} AP + #{@costs[:mp].to_s} MP."
+			"#{@parent.name.to_s} has an activated ability called #{@name}, costing #{@costs[:ap].to_s} AP + #{@costs[:mp].to_s} MP."
 		end
 
 		def save_state

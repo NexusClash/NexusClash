@@ -154,7 +154,7 @@ class Luggage
 			item.remove
 			if @categories[item.category].count == 0
 				@categories.delete item.category
-				@nodes[item.category].remove
+				@nodes[item.category].parent.parent.remove
 				@nodes.delete item.category
 			end
 		end
