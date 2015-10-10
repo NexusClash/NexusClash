@@ -106,6 +106,7 @@ module Firmament
 		end
 
 		def remove_void(x, y ,z)
+			return if @locations[x.to_i][y.to_i][z.to_i] === nil
 			@locations[x.to_i][y.to_i].delete(z.to_i) if @locations[x.to_i][y.to_i][z.to_i].instance_of?(VoidTile)
 		end
 

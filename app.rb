@@ -25,6 +25,8 @@ require_rel 'firmament'
 require_rel 'wayfarer'
 require_rel 'datatables'
 
+DB_PERSIST_MODE = DB_PERSIST_IMMEDIATE
+
 puts 'Loading game type definitions...'
 
 Entity::StatusType.load_types
