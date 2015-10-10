@@ -56,6 +56,10 @@ module Entity
 			true
 		end
 
+		def self.purge_cache
+			@@types.clear
+		end
+
 		def self.load_types
 			TileType.each do |type|
 				@@types[type.id] = type

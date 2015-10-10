@@ -1,6 +1,9 @@
 require 'rack/session/abstract/id'
 require 'thread'
 
+DB_PERSIST_DELAYED = 2
+DB_PERSIST_IMMEDIATE = 1
+
 class Instance
 	def self.plane
 		1

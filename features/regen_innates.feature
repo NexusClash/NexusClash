@@ -3,7 +3,7 @@ Feature: Regeneration on Innates
   Scenario: Joe is badly wounded and just drank a powerful delayed healing potion. Joe expects this potion to patch him up on the next AP tick.
     Given a character named Joe
     Given Joe is badly wounded
-    And Joe is affected by extremely powerful regeneration
+    And Joe is affected by a 500 HP per AP tick regeneration
     When there is an AP tick
     Then Joe should be at full HP
 

@@ -44,6 +44,11 @@ module Entity
 			desc
 		end
 
+		def self.purge_cache
+			@@types.clear
+			@@skills.clear
+		end
+
 		def self.load_types
 			StatusType.each do |type|
 				@@types[type.id] = type
