@@ -24,5 +24,9 @@ module Entity
 		def self.a_or_an
 			'a'
 		end
+
+		def self.css
+			'.tile[data-type=Void] { background-color:black; }'
+		end
 	end
 end

@@ -291,6 +291,21 @@ module Wayfarer
 					ws.character.use_item_self item, json['status_id'].to_i
 				end
 
+			when 'request_tile_css'
+
+				if json.has_key? 'coordinates'
+
+					game = Firmament::Plane.fetch Instance.plane
+
+					coords = json['coordinates']
+
+					tile = game.map coords['x'], coords['y'], coords['z']
+
+					type = tile.type
+
+					ws.send({packets: [{type: 'tile_css', tile: type.name, css: type.css}]}.to_json)
+
+				end
 		end
 
 

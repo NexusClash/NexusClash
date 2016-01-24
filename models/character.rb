@@ -52,7 +52,7 @@ module Entity
 		end
 
 		def weight
-			@weight ||= self.items.inject(0){ |sum, an_item| sum + an_item.weight }
+			self.items.inject(0){ |sum, an_item| sum + an_item.weight }
 		end
 
 		def weight_max
