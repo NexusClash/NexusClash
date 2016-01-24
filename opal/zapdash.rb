@@ -23,6 +23,8 @@ class Tile
 	attr_accessor :description
 	attr_accessor :origin_tile
 
+	@@css = Hash.new
+
 	def initialize(binding)
 		@binding = binding
 		@colour = 'black'
@@ -36,6 +38,15 @@ class Tile
 		}
 
 		@node.append_to(binding)
+	end
+
+	def self.add_style(type, style)
+		@@css[type] = style
+		$document['#map_styles'].inner_html = $document['#map_styles'].inner_html + style
+	end
+
+	def self.style_loaded?(style)
+		@@css.has_key? style
 	end
 
 	def render
@@ -463,6 +474,12 @@ class Voyager
 						target.colour = data['colour'] if data.has_key? 'colour'
 						target.name = data['name'] if data.has_key? 'name'
 						target.type = data['type'] if data.has_key? 'type'
+						# If we don't have the tile type's CSS loaded then request from server
+						if data.has_key?('type') && !Tile.style_loaded?(data['type'])
+							write_message({type: 'request_tile_css', coordinates: {x: data['x'], y: data['y'], z:data['z']}})
+							#Cheat by adding a blank entry - This stops us from requesting the same tile over and over if we already have it
+							Tile.add_style data['type'], ''
+						end
 						target.x = data['x']
 						target.y = data['y']
 						target.z = data['z']
@@ -610,6 +627,8 @@ class Voyager
 						@@developer_mode = false
 						$document['#developer_mode_message'].attributes[:class] = 'ui-helper-hidden'
 					end
+				when 'tile_css'
+					Tile.add_style ent['tile'], ent['css']
 			end
 		end
 	end

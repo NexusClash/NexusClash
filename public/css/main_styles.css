@@ -449,45 +449,6 @@ img[src=""]
 	background-color:lightsteelblue;
 }
 
-.tile[data-type=Void]
-{
-	background-color:black;
-}
-
-
-.tile[data-type=Library],.tile[data-type="Library Interior"]
-{
-	background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAIklEQVQImWP4z8DwHxkzMDD8Z0AX+I8syIAsiaICQWOaCQAJ3irWK4ColgAAAABJRU5ErkJggg==) repeat
-}
-
-.tile[data-type=Library]::before,.tile[data-type="Library Interior"]::before
-{
-	border:1px solid white;
-	background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAIklEQVQImWP4z8DwHxkzMDD8Z0AX+I8syIAsiaICQWOaCQAJ3irWK4ColgAAAABJRU5ErkJggg==) repeat;
-}
-
-
-.tile[data-type=Sea]::before
-{
-	border:1px solid white;
-	background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAECAYAAACtBE5DAAAAR0lEQVQImWNQcdj8X8Vh838O1Zn/YWwVh83/GWCC9fc/oEgywAQN1u9AkWTwPnr7v8H6Hf85VGf+N1i/47/30dv/6+9/+A8AMGI4L9HfKDcAAAAASUVORK5CYII=)
-}
-.tile[data-type=Sea]
-{
-	background-color:blue;
-}
-
-.tile[data-type=Jungle]
-{
-	background-color:lightgreen;
-}
-
-.tile[data-type=Jungle]::before
-{
-	border:1px solid white;
-	background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAATklEQVQYlWOoP2T0HxkvrpWGY2RxBmQBdElkjQzYTEI2EUYz4DIJ3RYGbILYnINhNTb3Lq6VRngG3Xp0jQzYBLGZitUz2HzPgG4KLp8DAEZG7OFmhLDJAAAAAElFTkSuQmCC) repeat;
-}
-
 .tile .occupants, .tile .occupants li
 {
 	position:absolute;

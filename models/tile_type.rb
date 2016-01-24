@@ -13,6 +13,8 @@ module Entity
 		field :description, type: String
 		field :colour, type: String
 
+		field :css, type: String
+
 		field :search_rate, as: :s_rate, type: Integer, default: 0
 		field :search_table, as: :s_table, type: Array, default: []
 
