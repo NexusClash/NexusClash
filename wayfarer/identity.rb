@@ -5,6 +5,7 @@ module Wayfarer
 		attr_accessor :character
 		attr_accessor :identifier
 		attr_accessor :target
+		attr_accessor :admin
 
 #		#def character=(char)
 #		#	@character = char

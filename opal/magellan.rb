@@ -11,6 +11,8 @@ require 'native'
 
 require 'tile'
 
+puts 'Loading Magellan...'
+
 class Magellan
 
 	attr_accessor :binding
@@ -26,6 +28,7 @@ class Magellan
 			(-@radius..@radius).each do |x|
 				@surrounds[x][y] = Tile.new @binding
 				@surrounds[x][y].origin_tile = x == 0 && y == 0
+				@surrounds[x][y].clear_left = true if x == -@radius
 			end
 		end
 

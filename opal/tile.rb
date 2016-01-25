@@ -9,6 +9,8 @@ require 'browser/delay'
 require 'browser/dom/event'
 require 'native'
 
+puts 'Loading Tile...'
+
 class Tile
 	attr_reader :binding
 	attr_accessor :type
@@ -20,6 +22,7 @@ class Tile
 	attr_accessor :occupants
 	attr_accessor :description
 	attr_accessor :origin_tile
+	attr_accessor :clear_left
 
 	@@css = Hash.new
 
@@ -30,6 +33,7 @@ class Tile
 		@type = 'Void'
 		@occupants = 0
 		@origin_tile = false
+		@clear_left = false
 
 		@node = DOM{
 			div.tile.action
@@ -54,26 +58,29 @@ class Tile
 		@node['data-y'] = @y
 		@node['data-z'] = @z
 		@node['data-type'] = @type
-		@node['data-action-type'] = 'movement'
-		@node['data-action-vars'] = "x:#{@x},y:#{@y},z:#{@z}"
-		if Voyager.developer_mode
-			@node['data-dev-action-type'] = 'dev_tile'
-			@node['data-dev-action-vars'] = "x:#{@x},y:#{@y},z:#{@z}"
-			@node['oncontextmenu'] = 'return false;'
-		else
-			@node['oncontextmenu'] = nil
-		end
+		@node['style'] = 'clear:left' if @clear_left
 		@node.inner_html = ''
-
-		@crowd = DOM{
-			ul.occupants
-		}
-		DOM{ li.character.self }.append_to(@crowd) if @origin_tile
-		if @occupants > 0
-			(1..@occupants).each do |i|
-				DOM{ li.character }.append_to(@crowd)
+		if Voyager.mode == :game
+			@node['data-action-type'] = 'movement'
+			@node['data-action-vars'] = "x:#{@x},y:#{@y},z:#{@z}"
+			if Voyager.developer_mode
+				@node['data-dev-action-type'] = 'dev_tile'
+				@node['data-dev-action-vars'] = "x:#{@x},y:#{@y},z:#{@z}"
+				@node['oncontextmenu'] = 'return false;'
+			else
+				@node['oncontextmenu'] = nil
 			end
+
+			@crowd = DOM{
+				ul.occupants
+			}
+			DOM{ li.character.self }.append_to(@crowd) if @origin_tile
+			if @occupants > 0
+				(1..@occupants).each do |i|
+					DOM{ li.character }.append_to(@crowd)
+				end
+			end
+			@crowd.append_to(@node) if @occupants > 0 || @origin_tile
 		end
-		@crowd.append_to(@node) if @occupants > 0 || @origin_tile
 	end
 end

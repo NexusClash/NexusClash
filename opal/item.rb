@@ -9,6 +9,8 @@ require 'browser/delay'
 require 'browser/dom/event'
 require 'native'
 
+puts 'Loading Item...'
+
 class Item
 	def initialize(binding)
 		@binding = binding
