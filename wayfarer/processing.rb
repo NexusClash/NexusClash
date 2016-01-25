@@ -306,6 +306,53 @@ module Wayfarer
 					ws.send({packets: [{type: 'tile_css', tile: type.name, css: type.css}]}.to_json)
 
 				end
+
+			when 'admin_map_load'
+
+				#return unless ws.admin
+
+				sx = json['x'].to_i
+				sy = json['y'].to_i
+				z = json['z'].to_i
+
+				game = Firmament::Plane.fetch Instance.plane
+
+
+
+				w = 0
+				h = 0
+				w = json['w'].to_i - 1 if json.has_key? 'w'
+				h = json['h'].to_i - 1 if json.has_key? 'h'
+
+				mx = sx + w
+				my = sy + h
+
+				tiles = Array.new
+				styles = Array.new
+
+				(sy..my).each do |y|
+					(sx..mx).each do |x|
+
+						tile = game.map x, y, z
+
+						# Loading looks more like loading if we don't send these with the tiles
+						#unless styles.include? tile.type.name
+						#	type = tile.type
+						#	tiles << {type: 'tile_css', tile: type.name, css: type.css}
+						#end
+
+						tiles << {type: 'tile', tile: tile.to_h} #unless tile.type.id == -1
+
+						if tiles.count > 24
+							ws.send({packets: tiles}.to_json)
+							tiles.clear
+						end
+
+					end
+				end
+
+				ws.send({packets: tiles}.to_json)
+
 		end
 
 

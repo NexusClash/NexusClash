@@ -11,6 +11,8 @@ require 'native'
 
 require 'item'
 
+puts 'Loading Luggage...'
+
 class Luggage
 
 	attr_reader :weight

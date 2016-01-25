@@ -123,18 +123,32 @@ ws_app = lambda do |env|
 					when 'request_character'
 						ws.send({packets: [{type: 'character', character: ws.character.to_hash}]}.to_json)
 					when 'connect'
-						char = Entity::Character.find(ent['char_id'].to_i)
-						if char.account.username == session[:username]
-							game = Firmament::Plane.fetch Instance.plane
-							ws.character = game.character ent['char_id'].to_i
-							ws.character.socket.send({packets: [{type: 'debug', message: 'Another login has deregistered this character from this connection!'}]}) unless ws.character.socket === nil
-							ws.character.socket = ws
-							ws.send({packets: [{type: 'self', character: ws.character.to_hash }, {type: 'developer_mode', toggle: ( char.account.has_role?(:admin) ? 'on' : 'off' )}]}.to_json)
-						else
-							ws.send({packets: [{type: 'error', message: 'Authentication failiure' }]}.to_json)
+						# Authenticate as admin
+						if ent.has_key? 'admin'
+							user = Entity::Account.where(username: session[:username]).first
+							if user.has_role?(:admin)
+								ws.send({packets: [{type: 'developer_mode', toggle: 'on' }]}.to_json)
+								ws.admin = true
+							else
+								ws.send({packets: [{type: 'error', message: 'Authentication failiure' }]}.to_json)
+							end
+						end
+						# Authenticate as character
+						if ent.has_key? 'char_id'
+							char = Entity::Character.find(ent['char_id'].to_i)
+							if char.account.username == session[:username]
+								game = Firmament::Plane.fetch Instance.plane
+								ws.character = game.character ent['char_id'].to_i
+								ws.character.socket.send({packets: [{type: 'debug', message: 'Another login has deregistered this character from this connection!'}]}) unless ws.character.socket === nil
+								ws.character.socket = ws
+								ws.admin = char.account.has_role?(:admin)
+								ws.send({packets: [{type: 'self', character: ws.character.to_hash }, {type: 'developer_mode', toggle: ( ws.admin ? 'on' : 'off' )}]}.to_json)
+							else
+								ws.send({packets: [{type: 'error', message: 'Authentication failiure' }]}.to_json)
+							end
 						end
 					else
-						Wayfarer.process_message(ws, ent) unless ws.character === nil
+						Wayfarer.process_message(ws, ent) unless ws.character === nil && ws.admin != true
 				end
 			end
 

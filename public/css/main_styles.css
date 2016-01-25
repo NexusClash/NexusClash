@@ -434,11 +434,6 @@ img[src=""]
 	height:16px;
 }
 
-#map .tile:nth-child(5n + 1)
-{
-	clear:left;
-}
-
 .tile::before
 {
 	background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAI0lEQVQYlWNgoAD8R8N4FSHzcSrEpYkok/EqpC4g2lry3QgAgusR7zz7NZgAAAAASUVORK5CYII=) no-repeat;

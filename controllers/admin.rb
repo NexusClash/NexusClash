@@ -31,4 +31,11 @@ class Dash < Sinatra::Application
 		redirect to('/admin')
 	end
 
+	get '/admin/map' do
+		protected! :admin
+
+		haml :'admin/map', :layout => :'layouts/admin', :locals => {}
+
+	end
+
 end
