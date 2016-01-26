@@ -98,7 +98,7 @@ get '/' do
 end
 
 server = 'puma'
-host = '0.0.0.0'
+host = '127.0.0.1'
 port = ENV['OS'] == 'Windows_NT' ? '80' : '4567'
 web_app = Dash.new
 
@@ -129,6 +129,7 @@ ws_app = lambda do |env|
 							if user.has_role?(:admin)
 								ws.send({packets: [{type: 'developer_mode', toggle: 'on' }]}.to_json)
 								ws.admin = true
+								Firmament::Plane.add_admin ws
 							else
 								ws.send({packets: [{type: 'error', message: 'Authentication failiure' }]}.to_json)
 							end
@@ -168,6 +169,7 @@ ws_app = lambda do |env|
 		#ws.character = nil
 		#Dimension::SocketHandler.remove_socket(ws)
 		ws.character.socket = nil unless ws.character === nil
+		Firmament::Plane.remove_admin(ws) if ws.admin
 		ws = nil
 	end
 
@@ -181,7 +183,7 @@ end
 
 opal = Opal::Server.new {|s|
 	s.append_path 'opal'
-	s.main = 'opal/zapdash'
+	s.main = 'zapdash'
 }
 
 
@@ -198,9 +200,9 @@ dispatch = Rack::Builder.app do
 	map '/rb' do
 		run opal.sprockets
 	end
-	map opal.source_maps.prefix do
-		run opal.source_maps
-	end
+	#map opal.source_maps.prefix do
+	#	run opal.source_maps
+	#end
 end
 
 Rack::Server.start({

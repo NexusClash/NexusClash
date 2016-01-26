@@ -6,11 +6,12 @@ require 'browser/dom'
 require 'browser/dom/document'
 require 'browser/http'
 require 'browser/delay'
-require 'browser/dom/event'
+require 'browser/event'
 require 'native'
 
 require 'adventurer'
 require 'luggage'
+require 'settings'
 
 puts 'wow, running ruby!'
 
@@ -320,7 +321,7 @@ $document['css-tab-r1'].trigger :click
 
 $document['#game_loading .message'].inner_html = 'Connecting...'
 
-voyager = Voyager.new 'ws://ruby.windrunner.mx:4020/42'
+voyager = Voyager.new Setting.endpoint
 
 puts 'socket opened!'
 

@@ -16,6 +16,7 @@ module Entity
 		field :css, type: String
 
 		field :search_rate, as: :s_rate, type: Integer, default: 0
+		field :hide_rate, as: :h_rate, type: Integer, default: 0
 		field :search_table, as: :s_table, type: Array, default: []
 
 		@@types = ThreadSafe::Cache.new do |hash, typeident|

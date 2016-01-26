@@ -6,7 +6,6 @@ require 'browser/dom'
 require 'browser/dom/document'
 require 'browser/http'
 require 'browser/delay'
-require 'browser/dom/event'
 require 'native'
 
 puts 'Loading Tile...'
@@ -14,6 +13,7 @@ puts 'Loading Tile...'
 class Tile
 	attr_reader :binding
 	attr_accessor :type
+	attr_accessor :type_id
 	attr_accessor :colour
 	attr_accessor :name
 	attr_accessor :x
@@ -34,6 +34,7 @@ class Tile
 		@occupants = 0
 		@origin_tile = false
 		@clear_left = false
+		@type_id = -1
 
 		@node = DOM{
 			div.tile.action
@@ -81,6 +82,8 @@ class Tile
 				end
 			end
 			@crowd.append_to(@node) if @occupants > 0 || @origin_tile
+		else
+			@node['oncontextmenu'] = 'return false;'
 		end
 	end
 end

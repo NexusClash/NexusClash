@@ -204,7 +204,7 @@ module Wayfarer
 					end
 				end
 			when 'dev_tile'
-				if ws.character.account.has_role?(:admin) || ws.character.has_nexus_class?(:Developer)
+				if ws.admin || ws.character.account.has_role?(:admin) || ws.character.has_nexus_class?(:Developer)
 					game = Firmament::Plane.fetch Instance.plane
 					tile = game.map(json['x'], json['y'], json['z'])
 
@@ -215,9 +215,9 @@ module Wayfarer
 							tile.x = json['x'].to_i
 							tile.y = json['y'].to_i
 							tile.z = json['z'].to_i
-							tile.type_id = json['type_id'].to_i
-							tile.name = json['name']
-							tile.description = json['description']
+							tile.type_id = json['type_id'].to_i if json.has_key? 'type_id'
+							tile.name = json['name'] if json.has_key? 'name'
+							tile.description = Rack::Utils.unescape(self.json_unescape(json['description'])) if json.has_key? 'description'
 							tile.save
 							game.remove_void(tile.x, tile.y, tile.z)
 						else
@@ -225,9 +225,9 @@ module Wayfarer
 							tile.x = json['x'].to_i
 							tile.y = json['y'].to_i
 							tile.z = json['z'].to_i
-							tile.type_id = json['type_id'].to_i
-							tile.name = json['name']
-							tile.description = json['description']
+							tile.type_id = json['type_id'].to_i if json.has_key? 'type_id'
+							tile.name = json['name'] if json.has_key? 'name'
+							tile.description = Rack::Utils.unescape(self.json_unescape(json['description'])) if json.has_key? 'description'
 							tile.save
 						end
 
@@ -252,6 +252,12 @@ module Wayfarer
 
 						chars.each do |char|
 							char.socket.send(packet) unless char.socket === nil
+						end
+
+						packet = {packets:[{ type: 'tile', tile:{ x: tile.x, y: tile.y, z: tile.z, name: tile.name, description: tile.description, colour: tile.colour, type: tile.type.name, type_id: tile.type.id, occupants: tile.characters.count}}]}.to_json
+
+						Firmament::Plane.admins.each do |admin|
+							admin.send(packet)
 						end
 
 					end
