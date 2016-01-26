@@ -14,7 +14,7 @@ gem 'puma'
 gem 'mongoid'
 gem 'opal'
 #gem 'opal-jquery'
-gem 'opal-browser', '~> 0.2.0.beta1'
+gem 'opal-browser'
 gem 'unobservable'
 gem 'mongoid-autoinc'
 

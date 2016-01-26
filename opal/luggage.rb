@@ -6,7 +6,6 @@ require 'browser/dom'
 require 'browser/dom/document'
 require 'browser/http'
 require 'browser/delay'
-require 'browser/dom/event'
 require 'native'
 
 require 'item'

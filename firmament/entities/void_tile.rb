@@ -67,6 +67,6 @@ class VoidTile
 	end
 
 	def to_h
-		{name: self.name, type: self.type.name, type_id: self.type.id, escription: self.description, x: self.x, y: self.y, z: self.z, plane: self.plane}
+		{name: self.name, type: self.type.name, type_id: self.type.id, description: self.description, x: self.x, y: self.y, z: self.z, plane: self.plane}
 	end
 end

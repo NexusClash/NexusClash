@@ -4,8 +4,20 @@ module Firmament
 
 		attr_reader :plane
 		attr_reader :dead_tile
-
 		@@planes = ThreadSafe::Cache.new
+		@@admins = ThreadSafe::Array.new
+
+		def self.admins
+			@@admins
+		end
+
+		def self.add_admin(admin)
+			@@admins << admin
+		end
+
+		def self.remove_admin(admin)
+			@@admins.delete(admin)
+		end
 
 		attr_reader :pending_deletion, :pending_save
 
