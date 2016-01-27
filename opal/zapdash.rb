@@ -221,6 +221,8 @@ class Voyager
 					end
 				when 'skill_tree'
 
+					#TODO: Make a skill tree class
+
 					root = DOM{
 						ul
 					}
@@ -315,6 +317,80 @@ class Voyager
 				when 'warp'
 					url = Native.convert ent['url']
 					`window.location = url`
+				when 'crafting_recipes'
+
+					#TODO: Make a recipes class
+
+					root = DOM{
+						div
+					}
+
+					ent['recipes'].each do |recipe|
+
+						node = DOM{
+							div.crafting_recipe
+						}
+
+						html = "<h4>#{recipe['name']}</h4>"
+
+						missing_reagents = recipe['reagents_missing']
+						missing_catalysts = recipe['catalysts_missing']
+
+						if recipe['outputs'].size > 0
+
+							html = html + '<ul>'
+
+							recipe['outputs'].each do |name, q|
+								html = html + "<li>#{q.to_s} x #{name}</li>"
+							end
+
+						end
+
+						if recipe['costs'].size > 0
+
+							costs = ''
+
+							recipe['costs'].each do |name, q|
+								costs = costs + "#{q.to_s} #{name.to_s.upcase},"
+							end
+
+							html = html + "<p><b>Costs:</b> #{costs.chomp(',')}</p>"
+
+						end
+
+						if recipe['catalysts'].size > 0
+
+							html = html + '<h5>Catalysts:</h5><ul>'
+
+							recipe['catalysts'].each do |name, q|
+								html = html + "<li style='background-color:#{missing_catalysts.has_key?(name) ? '#FFEEEE' : '#EEFFEE'}'>#{q.to_s} x #{name}#{missing_catalysts.has_key?(name) ? '(' + missing_catalysts[name].to_s + ' missing)' : ''}</li>"
+							end
+
+						end
+
+						if recipe['reagents'].size > 0
+
+							html = html + '<h5>Reagents</h5><ul>'
+
+							recipe['reagents'].each do |name, q|
+								html = html + "<li style='background-color:#{missing_reagents.has_key?(name) ? '#FFEEEE' : '#EEFFEE'}'>#{q.to_s} x #{name}#{missing_reagents.has_key?(name) ? '(' + missing_reagents[name].to_s + ' missing)' : ''}</li>"
+							end
+
+						end
+
+						if recipe['possible']
+							html = html + "<button data-action-type='craft' data-action-vars='id:#{recipe['id']}'>Craft #{recipe['name']}</button>"
+						else
+							html = html + '<i>Unable to craft</i>'
+						end
+
+						node.inner_html = html
+						node.append_to root
+					end
+
+
+					$document['#crafting_recipe_list'].inner_html = ''
+					root.append_to($document['#crafting_recipe_list'])
 			end
 		end
 	end
@@ -432,10 +508,21 @@ $document.on :click, '#hud_player_vitals .ui-hud-cp' do |event|
 	return unless voyager.state == :connected
 	$document['#play_pane'].attributes[:class] = 'ui-helper-hidden'
 	$document['#skills_pane'].attributes[:class] = ''
+	$document['#crafting_pane'].attributes[:class] = 'ui-helper-hidden'
 	voyager.write_message({type: 'request_skill_tree'})
 end
 
 $document.on :click, '.return_to_game' do |event|
 	$document['#play_pane'].attributes[:class] = ''
 	$document['#skills_pane'].attributes[:class] = 'ui-helper-hidden'
+	$document['#crafting_pane'].attributes[:class] = 'ui-helper-hidden'
+	return unless voyager.state == :connected
+end
+
+$document.on :click, '#view_crafting_recipes' do |event|
+	return unless voyager.state == :connected
+	$document['#play_pane'].attributes[:class] = 'ui-helper-hidden'
+	$document['#skills_pane'].attributes[:class] = 'ui-helper-hidden'
+	$document['#crafting_pane'].attributes[:class] = ''
+	voyager.write_message({type: 'request_crafting_recipes'})
 end

@@ -50,6 +50,7 @@
 						%ul.list-plain.list-horizontal
 							%li
 								%button(data-action-type="search") Search
+								%button#view_crafting_recipes Crafting
 				#details_pane_dead.ui-helper-hidden
 					.padding-10
 						%p You are dead!
@@ -66,6 +67,17 @@
 							.sk-cube.sk-cube3
 						%p(style="text-align:center") Loading...
 					#skill_desc
+			#crafting_pane.ui-helper-hidden
+				.padding-10
+					%button.return_to_game Return to Game
+					%h4 Crafting Recipes
+					#crafting_recipe_list
+						.sk-folding-cube
+							.sk-cube.sk-cube1
+							.sk-cube.sk-cube2
+							.sk-cube.sk-cube4
+							.sk-cube.sk-cube3
+						%p(style="text-align:center") Loading...
 	#right_panel
 		%ul.css-tabs
 			%li

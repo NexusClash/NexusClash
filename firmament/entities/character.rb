@@ -4,6 +4,7 @@ module Entity
 		include Behaviour::Movable
 		include Behaviour::Aggressor
 		include Behaviour::Usable
+		include Behaviour::Crafter
 		include Pronouns
 		include Behaviour::Activator
 
