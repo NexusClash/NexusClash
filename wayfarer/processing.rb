@@ -58,7 +58,7 @@ module Wayfarer
 						plane = Entity::Plane.where({plane: found.plane}).first
 
 						#TODO: Add warp support for just changing sockets
-						ws.send({packets: [{type: 'warp', url: "http://#{plane.domain}/warp/#{ws.character.account.username}/#{ws.character.id}/#{token}/game" }]}.to_json)
+						ws.send({packets: [{type: 'warp', url: "https://#{plane.domain}/warp/#{ws.character.account.username}/#{ws.character.id}/#{token}/game" }]}.to_json)
 
 						game = Firmament::Plane.fetch Instance.plane
 
@@ -433,6 +433,21 @@ module Wayfarer
 				end
 
 				ws.send({packets: tiles}.to_json)
+			when 'request_crafting_recipes'
+
+				recipes = ws.character.recipes
+
+				recipe_list = []
+
+				recipes.each do |_,recipe|
+					recipe_list << recipe.to_h
+				end
+
+				ws.send({packets: [{type: 'crafting_recipes', recipes: recipe_list }]}.to_json)
+
+			when 'craft' # This is why we use Intents and Behaviours!
+
+				ws.character.craft(json['id'].to_i)
 
 		end
 

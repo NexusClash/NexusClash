@@ -13,7 +13,7 @@ class Dash < Sinatra::Application
 		else
 			#Divert to appropriate plane
 			plane = Entity::Plane.where({plane: char.plane}).first
-			redirect to("http://#{plane.domain}/warp/#{@user.username}/#{char.id}/#{token}/game")
+			redirect to("https://#{plane.domain}/warp/#{@user.username}/#{char.id}/#{token}/game")
 		end
 	end
 end

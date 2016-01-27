@@ -16,5 +16,6 @@ module MessageType
 	RELOAD = :'ammo-reload'
 	AMMO_EMPTIED = :'ammo-emptied'
 	PORTAL_USE = :'step-portal'
+	CRAFT_SUCCESS = :'craft-success'
 	GENERIC = :generic
 end

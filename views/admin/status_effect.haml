@@ -23,7 +23,7 @@
 						"sSwfPath": "/swf/copy_csv_xls.swf",
 						"sRowSelect": "os"
 					},
-		"order": [[2, "asc"], [1, "asc"]],"bJQueryUI": false,"bAutoWidth":false, "bPaginate": true,
+		"order": [[3, "asc"], [2, "asc"]],"bJQueryUI": false,"bAutoWidth":false, "bPaginate": true,
 		"deferRender": true,
 		"ajax":'/admin/datasource/status_effect',
 		"aoColumns": [
@@ -35,6 +35,7 @@
 				},
 				width: '30px'
 			},
+			{ title: "#", data:"id" },
 			{ title: "Name", data:"name" },
 			{ title: "Type", data:"family"},
 			{ title: "Effects", data:"impacts" }
@@ -78,7 +79,7 @@
 					idSrc: 'index',
 					table: '#status_effect_subtable_' + status_effect_sub_id,
 					fields: [
-						{label: "Type",name: "type", type: 'select', ipOpts:['Activated', 'Ammo', 'CustomText', 'LimitedUses', 'Regen', 'Reloadable', 'SendMessage', 'SkillPrerequisite', 'SkillPurchasable', 'Weapon', 'WeaponBuff', 'WeaponWithAmmo'], def: 'Regen'},
+						{label: "Type",name: "type", type: 'select', ipOpts:['Activated', 'Ammo', 'Component', 'CraftingRecipe', 'CustomText', 'LimitedUses', 'Regen', 'Reloadable', 'SendMessage', 'SkillPrerequisite', 'SkillPurchasable', 'Weapon', 'WeaponBuff', 'WeaponWithAmmo'], def: 'Regen'},
 						{label: "",name: "select_1", type: 'select'},
 						{label: "",name: "text_1", type: 'text'},
 						{label: "",name: "select_2", type: 'select'},
@@ -88,7 +89,8 @@
 						{label: "",name: "select_4", type: 'select'},
 						{label: "",name: "text_4", type: 'text'},
 						{label: "",name: "select_5", type: 'select'},
-						{label: "",name: "text_5", type: 'text'}
+						{label: "",name: "text_5", type: 'text'},
+						{label: "",name: "text_6", type: 'text'}
 					]
 					} );
 
