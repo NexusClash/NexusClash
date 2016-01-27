@@ -47,6 +47,7 @@ class Dash < Sinatra::Application
 	set :views, settings.root + '/views'
 	set :threaded, true
 	set :environment, :production
+	set :show_exceptions, Instance.show_exceptions
 	}
 
 	helpers do
@@ -99,7 +100,7 @@ end
 
 server = 'puma'
 host = '127.0.0.1'
-port = ENV['OS'] == 'Windows_NT' ? '80' : '4567'
+port = ENV['OS'] == 'Windows_NT' ? '80' : Instance.port
 web_app = Dash.new
 
 
@@ -123,6 +124,14 @@ ws_app = lambda do |env|
 					when 'request_character'
 						ws.send({packets: [{type: 'character', character: ws.character.to_hash}]}.to_json)
 					when 'connect'
+						# Authenticate as plane server
+						if ent.has_key? 'plane'
+							plane = Entity::Plane.where(plane: ent['plane']).first
+							if plane.token == ent['token']
+								ws.plane = plane.id
+								Firmament::Plane.add_server ws
+							end
+						end
 						# Authenticate as admin
 						if ent.has_key? 'admin'
 							user = Entity::Account.where(username: session[:username]).first

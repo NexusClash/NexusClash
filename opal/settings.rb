@@ -1,5 +1,5 @@
 class Setting
 	def self.endpoint
-		'ws://clash.windrunner.mx/42'
+		'ws://ruby.windrunner.mx:4020/42'
 	end
 end

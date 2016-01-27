@@ -15,6 +15,81 @@ module Wayfarer
 				ws.character.move game.map nx, ny, nz
 				#packets = surrounds_packet(ws.character)
 				#ws.send({packets: packets}.to_json)
+			when 'portal'
+				# TODO: Portal intent with costs etc
+
+				#find portal
+
+				found = nil
+
+				ws.character.location.portals.each do |portal|
+					found = portal if portal.object_id.to_s == json['id']
+				end
+
+				if found === nil
+					# TODO: error
+				else
+
+					if found.plane == Instance.plane
+						game = Firmament::Plane.fetch Instance.plane
+						ws.character.move! game.map found.x, found.y, found.z
+						message = found.use_text
+						msg_type = MessageType::PORTAL_USE
+						message_ent = Entity::Message.new({characters: [ws.character.id], message: message, type: msg_type})
+						message_ent.save
+					else
+						#Generate auth token
+						token = SecureRandom.hex
+						Entity::Account.where(username: ws.character.account.username).update(authentication_token: token)
+
+						# Unload character
+						game = Firmament::Plane.fetch Instance.plane
+						#TODO: Mutex?
+						#TODO: Handling offline / unknown planes
+						ws.character.save
+						Entity::Character.where(id: ws.character.id).update(x: found.x, y: found.y, z: found.z, plane: found.plane)
+						game.unload_character! ws.character.id
+
+						message = found.use_text
+						msg_type = MessageType::PORTAL_USE
+						message_ent = Entity::Message.new({characters: [ws.character.id], message: message, type: msg_type})
+						message_ent.save
+
+						plane = Entity::Plane.where({plane: found.plane}).first
+
+						#TODO: Add warp support for just changing sockets
+						ws.send({packets: [{type: 'warp', url: "http://#{plane.domain}/warp/#{ws.character.account.username}/#{ws.character.id}/#{token}/game" }]}.to_json)
+
+						game = Firmament::Plane.fetch Instance.plane
+
+						rmpacket = {packets:[type:'remove_character', char_id: self.id]}.to_json
+
+						old = ws.character.location
+
+						old.characters.each do |char|
+							char.socket.send(rmpacket) unless char == self || char.socket === nil
+						end
+
+						rmpacket = { type: 'tile', tile:{ x: old.x, y: old.y, z: old.z, occupants: old.characters.count}}
+
+						packet = {packets: rmpacket}.to_json
+						tiles = Set.new
+
+						(-2..2).each do |y|
+							(-2..2).each do |x|
+								tiles.add game.map(old.x + x, old.y + y, old.z)
+							end
+						end
+
+						tiles.each do |tile|
+							tile.characters.each do |char|
+								char.socket.send(packet) unless char == self || char.socket === nil
+							end
+						end
+
+					end
+				end
+
 			when 'target'
 				game = Firmament::Plane.fetch Instance.plane
 				target = game.character(json['char_id'])

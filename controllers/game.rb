@@ -6,6 +6,14 @@ class Dash < Sinatra::Application
 		token = SecureRandom.hex
 		Entity::Account.where(username: @user.username).update(authentication_token: token)
 
-		haml :'game/index', :layout => :'layouts/game', :locals => {:char_id => params[:id], :token => token}
+		char = Entity::Character.where(id: params[:id].to_i).first
+
+		if char.plane == Instance.plane
+			haml :'game/index', :layout => :'layouts/game', :locals => {:char_id => params[:id], :token => token}
+		else
+			#Divert to appropriate plane
+			plane = Entity::Plane.where({plane: char.plane}).first
+			redirect to("http://#{plane.domain}/warp/#{@user.username}/#{char.id}/#{token}/game")
+		end
 	end
 end

@@ -10,7 +10,15 @@ class Instance
 	end
 
 	def self.domain
-		'ruby.windrunner.mx' #also needs changing in zapdash.rb
+		'ruby.windrunner.mx' #also needs changing in opal/settings.rb
+	end
+
+	def self.port
+		4567
+	end
+
+	def self.show_exceptions
+		true
 	end
 end
 

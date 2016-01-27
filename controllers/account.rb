@@ -84,7 +84,7 @@ class Dash < Sinatra::Application
 
 		@user.characters.each do |char|
 			plane = Firmament::Plane.fetch char.plane
-			if plane.character? char.id
+			if plane != nil && plane.character?(char.id)
 				characters_updated << plane.character(char.id)
 			else
 				characters_updated << char
@@ -136,6 +136,22 @@ class Dash < Sinatra::Application
 			'ok'
 		else
 			'no'
+		end
+	end
+
+	get '/warp/:user/:character/:hash/:action' do
+		if Entity::Account.where(username: params[:user]).exists? then
+			user = Entity::Account.where(username: params[:user]).first
+			if user.authentication_token == params[:hash] then
+				token = SecureRandom.hex
+				Entity::Account.where(username: user.username).update(authentication_token: token)
+				session[:username] = user.username
+				redirect to('/game/' + params[:character]) if params[:action] == 'game'
+			else
+				redirect to('/account/login')
+			end
+		else
+			redirect to('/account/login')
 		end
 	end
 

@@ -13,6 +13,8 @@ module Entity
 		field :y, type: Integer
 		field :z, type: Integer
 
+		embeds_many :portals
+
 		index({:plane => 1, :x => 1, :y => 1, :z => 1}, :unique => true)
 
 		def type_id=(type_id)

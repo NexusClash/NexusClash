@@ -312,6 +312,9 @@ class Voyager
 					end
 				when 'tile_css'
 					Tile.add_style ent['tile'], ent['css']
+				when 'warp'
+					url = Native.convert ent['url']
+					`window.location = url`
 			end
 		end
 	end
@@ -329,13 +332,13 @@ puts 'socket opened!'
 #	voyager.write_message({type: 'movement', x: event.target['data-x'].to_i, y: event.target['data-y'].to_i, z: event.target['data-z'].to_i})
 #end
 
-$document.on :click, '[data-char-link]' do |event|
+$document.on :click, 'span[data-char-link]' do |event|
 	return unless voyager.state == :connected
 	return unless event.button == 0 || event.button == 1
-	if voyager.adventurer.neighbours.has_key? event.target['data-char-link']
+	if voyager.adventurer.neighbours.has_key? event.target['data-char-link'].to_i
 		$document['css-tab-r3'].trigger :click
 		$document['target_information']['data-target-type'] = 'character'
-		target = voyager.adventurer.neighbours[event.target['data-char-link']]
+		target = voyager.adventurer.neighbours[event.target['data-char-link'].to_i]
 		voyager.adventurer.target = target
 		voyager.adventurer.render
 		voyager.write_message({type: 'target', char_id: target.id})

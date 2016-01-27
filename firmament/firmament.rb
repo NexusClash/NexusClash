@@ -6,6 +6,7 @@ module Firmament
 		attr_reader :dead_tile
 		@@planes = ThreadSafe::Cache.new
 		@@admins = ThreadSafe::Array.new
+		@@servers = ThreadSafe::Cache.new
 
 		def self.admins
 			@@admins
@@ -17,6 +18,22 @@ module Firmament
 
 		def self.remove_admin(admin)
 			@@admins.delete(admin)
+		end
+
+		def self.servers
+			@@servers
+		end
+
+		def self.server(server)
+			return @@servers.fetch(server.to_i, nil)
+		end
+
+		def self.add_server(server)
+			@@servers[server.plane] = server
+		end
+
+		def self.remove_server(plane)
+			@@servers.delete(plane)
 		end
 
 		attr_reader :pending_deletion, :pending_save
@@ -107,6 +124,15 @@ module Firmament
 
 		def character?(id)
 			@characters.key? id.to_i
+		end
+
+		def unload_character!(id)
+			id = id.to_i
+			if character? id
+				char = character id
+				char.location.characters.delete(char)
+				@characters.delete(id)
+			end
 		end
 
 		def self.fetch(name)
