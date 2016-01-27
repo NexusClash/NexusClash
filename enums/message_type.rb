@@ -15,5 +15,6 @@ module MessageType
 	ITEM_DROP = :'item-drop'
 	RELOAD = :'ammo-reload'
 	AMMO_EMPTIED = :'ammo-emptied'
+	PORTAL_USE = :'step-portal'
 	GENERIC = :generic
 end

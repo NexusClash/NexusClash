@@ -3,7 +3,7 @@ module Entity
 		def portals_packets
 			game = Firmament::Plane.fetch Instance.plane
 
-			portals = []
+			list = []
 
 			dest_z = nil
 			direction = nil
@@ -18,10 +18,14 @@ module Entity
 			end
 
 			if dest_z != nil && game.map?(self.x, self.y, dest_z)
-				portals << {name: "Step #{direction} #{self.name}", destination: {type: 'movement', x: self.x, y: self.y, z: dest_z}}
+				list << {name: "Step #{direction} #{self.name}", destination: {type: 'movement', x: self.x, y: self.y, z: dest_z}}
 			end
 
-			[{type: 'portals', action: 'replace', portals: portals}]
+			self.portals.each do |portal|
+				list << {name: portal.label, destination: {type: 'portal', id: portal.object_id}}
+			end
+
+			[{type: 'portals', action: 'replace', portals: list}]
 		end
 	end
 end

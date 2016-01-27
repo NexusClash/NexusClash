@@ -5,7 +5,12 @@ module Wayfarer
 		attr_accessor :character
 		attr_accessor :identifier
 		attr_accessor :target
+
+		#Used by admin non-game connections
 		attr_accessor :admin
+
+		#Used by server connections
+		attr_accessor :plane
 
 #		#def character=(char)
 #		#	@character = char
