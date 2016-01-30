@@ -202,7 +202,8 @@ class Voyager
 						`target_node.insertBefore(native_node, target_node.firstChild)`
 					end
 
-					$document['#activity_log'].scroll.to({x: 0, y: 0})
+					native_node = Native.convert $document['#activity_log']
+					`native_node.scrollTop = 0`
 				when 'portals'
 					tile_portals = $document['#tile_portals']
 					case ent['action']
