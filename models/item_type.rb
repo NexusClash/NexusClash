@@ -39,6 +39,12 @@ module Entity
 			end
 		end
 
+		def self.reload_types
+			@@types.keys.each do |k|
+				@@types[k].reload
+			end
+		end
+
 		def to_s
 			self.name
 		end

@@ -28,5 +28,13 @@ module Entity
 		def self.css
 			'.tile[data-type=Void] { background-color:black; }'
 		end
+
+		def self.statuses
+			[]
+		end
+
+		def self.unserialise_statuses
+			# do nothing
+		end
 	end
 end
