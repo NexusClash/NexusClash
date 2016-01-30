@@ -75,24 +75,26 @@ module Firmament
 					hashy[y.to_i] = ThreadSafe::Cache.new do |hashz, z|
 						#puts "Loading tile ##{x},#{y},#{z}, #{@plane.plane}"
 
-						if Entity::Tile.where({plane: @plane.plane.to_i, x: x.to_i, y: y.to_i, z:z.to_i}).exists? then
-							newtile = Entity::Tile.find_by({plane: @plane.plane.to_i, x: x.to_i, y: y.to_i, z:z.to_i})
-							newtile.characters = ThreadSafe::Array.new
-						else
-							newtile = VoidTile.new @plane.plane.to_i, x.to_i, y.to_i, z.to_i
-						end
+						newtile = VoidTile.new(@plane.plane.to_i, x.to_i, y.to_i, z.to_i)
 
-						hashz[z.to_i] = newtile
+						#if Entity::Tile.where({plane: @plane.plane.to_i, x: x.to_i, y: y.to_i, z:z.to_i}).exists? then
+						#	newtile = Entity::Tile.find_by({plane: @plane.plane.to_i, x: x.to_i, y: y.to_i, z:z.to_i})
+						#	newtile.characters = ThreadSafe::Array.new
+						#else
+						#	newtile = VoidTile.new @plane.plane.to_i, x.to_i, y.to_i, z.to_i
+						#end
 
-						Entity::Character.where({plane: @plane.plane.to_i, x: x.to_i, y: y.to_i, z:z.to_i}).each do |char|
-							if self.character? char.id.to_i
-								newtile.characters << @characters[char.id.to_i]
-							else
-								char.location = newtile
-								@characters[char.id.to_i] = char
-								newtile.characters << char
-							end
-						end
+						#hashz[z.to_i] = newtile
+
+						#Entity::Character.where({plane: @plane.plane.to_i, x: x.to_i, y: y.to_i, z:z.to_i}).each do |char|
+						#	if self.character? char.id.to_i
+						#		newtile.characters << @characters[char.id.to_i]
+						#	else
+						#		char.location = newtile
+						#		@characters[char.id.to_i] = char
+						#		newtile.characters << char
+						#	end
+						#end
 
 						newtile
 					end
@@ -108,6 +110,24 @@ module Firmament
 			end
 
 			@locations[VoidTile::DEAD_COORDINATE][VoidTile::DEAD_COORDINATE][VoidTile::DEAD_COORDINATE] = @dead_tile
+
+			# Preload all map tiles and all characters
+
+			puts 'Loading Map...'
+
+			Entity::Tile.where({plane: @plane.plane.to_i}).each do |tile|
+				@locations[tile.x][tile.y][tile.z] = tile
+			end
+
+			puts 'Loading Characters...'
+
+			Entity::Character.where({plane: @plane.plane.to_i}).each do |newchar|
+				newchar.location = @locations[newchar.x][newchar.y][newchar.z]
+				@locations[newchar.x][newchar.y][newchar.y].characters << newchar
+				@characters[newchar.id] = newchar
+			end
+
+
 		end
 
 		def map(x, y, z)
@@ -144,8 +164,29 @@ module Firmament
 		end
 
 		def remove_void(x, y ,z)
-			return if @locations[x.to_i][y.to_i][z.to_i] === nil
-			@locations[x.to_i][y.to_i].delete(z.to_i) if @locations[x.to_i][y.to_i][z.to_i].instance_of?(VoidTile)
+
+			x = x.to_i
+			y = y.to_i
+			z = z.to_i
+
+			if Entity::Tile.where({plane: @plane.plane.to_i, x: x, y: y, z:z}).exists? then
+				newtile = Entity::Tile.find_by({plane: @plane.plane.to_i, x: x, y: y, z:z})
+				newtile.characters = ThreadSafe::Array.new
+
+				@locations[x][y][z] = newtile
+
+				Entity::Character.where({plane: @plane.plane.to_i, x: x.to_i, y: y.to_i, z:z.to_i}).each do |char|
+					if self.character? char.id.to_i
+						newtile.characters << @characters[char.id.to_i]
+					else
+						char.location = newtile
+						@characters[char.id.to_i] = char
+						newtile.characters << char
+					end
+				end
+			else
+				@locations[x][y][z] = VoidTile.new @plane.plane.to_i, x.to_i, y.to_i, z.to_i
+			end
 		end
 
 		def save
