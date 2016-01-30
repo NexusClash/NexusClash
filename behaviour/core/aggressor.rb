@@ -6,26 +6,9 @@ module Behaviour
 			weapons = []
 
 
-			# Gather weapon and weapon altering effects
-			self.statuses.each do |status|
-				status.effects.each do |effect|
-					weapons << effect if effect.respond_to?(:weapon_intent)
-					alters << effect if effect.respond_to?(:alter_attack_intent)
-				end
-			end
-			self.items.each do |item|
-				item.statuses.each do |status|
-					status.effects.each do |effect|
-						weapons << effect if effect.respond_to?(:weapon_intent)
-						alters << effect if effect.respond_to?(:alter_attack_intent)
-					end
-				end
-				item.type_statuses.each do |status|
-					status.effects.each do |effect|
-						weapons << effect if effect.respond_to?(:weapon_intent)
-						alters << effect if effect.respond_to?(:alter_attack_intent)
-					end
-				end
+			self.each_applicable_effect do |effect|
+				weapons << effect if effect.respond_to?(:weapon_intent)
+				alters << effect if effect.respond_to?(:alter_attack_intent)
 			end
 
 			# Generate weapons

@@ -6,22 +6,8 @@ module Behaviour
 			intents = {}
 
 			# Gather recipes
-			self.statuses.each do |status|
-				status.effects.each do |effect|
-					recipes << effect if effect.is_a?(Effect::CraftingRecipe)
-				end
-			end
-			self.items.each do |item|
-				item.statuses.each do |status|
-					status.effects.each do |effect|
-						recipes << effect if effect.is_a?(Effect::CraftingRecipe)
-					end
-				end
-				item.type_statuses.each do |status|
-					status.effects.each do |effect|
-						recipes << effect if effect.is_a?(Effect::CraftingRecipe)
-					end
-				end
+			self.each_applicable_effect do |effect|
+				recipes << effect if effect.is_a?(Effect::CraftingRecipe)
 			end
 
 			# Generate intents
