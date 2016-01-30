@@ -337,13 +337,17 @@ module Wayfarer
 
 					end
 
-					types = Hash.new
-
-					types[-1] = '(Void)'
+					types = [[-1, '(Void)']]
 
 					Entity::TileType.each do |type|
-						types[type.id] = type.name
+						types << [type.id, type.name]
 					end
+
+					types.sort! do |a, b|
+						a[1] <=> b[1]
+					end
+
+					types = Hash[types.map {|key, value| [key, value]}]
 
 					ws.send({packets:[{type:'dev_tile', types: types, tile: tile.to_h}]}.to_json)
 				end
