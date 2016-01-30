@@ -7,7 +7,6 @@ module Entity
 
 		field :name, type: String, default: nil
 		field :type_id, type: Integer
-		field :tags, type: Hash
 
 		embeds_many :statuses, as: :stateful, cascade_callbacks: true
 
@@ -53,11 +52,9 @@ module Entity
 		end
 
 		after_initialize do |document|
-			ThreadSafe::Cache.new
 		end
 
 		before_save do |document|
-
 		end
 
 		after_find do |document|
@@ -80,7 +77,6 @@ module Entity
 		def self.source_from(id)
 			item = Item.new
 			item.type_id = id
-			item.tags = ThreadSafe::Hash.new
 			item.type_statuses = ThreadSafe::Array.new
 			item.type.statuses.each do |statid|
 				state = Entity::Status.source_from statid

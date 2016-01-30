@@ -214,6 +214,8 @@ module Entity
 				item.statuses.each(&block)
 				item.type_statuses.each(&block)
 			end
+			self.location.statuses.each(&block)
+			self.location.type_statuses.each(&block)
 		end
 
 	end

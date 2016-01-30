@@ -211,6 +211,8 @@ module Firmament
 		end
 
 		def sync
+			Entity::TileType.reload_types
+			Entity::ItemType.reload_types
 			@characters.keys.each do |id|
 				@characters[id].statuses.each do |status|
 					status.unserialize
@@ -221,6 +223,13 @@ module Firmament
 					end
 					item.type_statuses.each do |status|
 						status.unserialize
+					end
+				end
+			end
+			@locations.keys.each do |x|
+				@locations[x].keys.each do |y|
+					@locations[x][y].keys.each do |z|
+						@locations[x][y][z].unserialise_statuses
 					end
 				end
 			end

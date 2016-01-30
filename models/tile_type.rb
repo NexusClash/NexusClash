@@ -19,6 +19,8 @@ module Entity
 		field :hide_rate, as: :h_rate, type: Integer, default: 0
 		field :search_table, as: :s_table, type: Array, default: []
 
+		field :statuses, type: Array, default: []
+
 		@@types = ThreadSafe::Cache.new do |hash, typeident|
 			if Entity::TileType.where({id: typeident}).exists? then
 				eff = Entity::TileType.find_by({id: typeident})
@@ -66,6 +68,12 @@ module Entity
 		def self.load_types
 			TileType.each do |type|
 				@@types[type.id] = type
+			end
+		end
+
+		def self.reload_types
+			@@types.keys.each do |k|
+				@@types[k].reload
 			end
 		end
 
