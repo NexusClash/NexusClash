@@ -201,5 +201,20 @@ module Entity
 			@weight -= item.weight if @weight
 			self.shard.pending_deletion << item
 		end
+
+		def each_applicable_effect(&block)
+			self.each_applicable_status do |status|
+				status.effects.each(&block)
+			end
+		end
+
+		def each_applicable_status(&block)
+			self.statuses.each(&block)
+			self.items.each do |item|
+				item.statuses.each(&block)
+				item.type_statuses.each(&block)
+			end
+		end
+
 	end
 end
