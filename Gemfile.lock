@@ -123,7 +123,7 @@ DEPENDENCIES
   mongoid
   mongoid-autoinc
   opal
-  opal-browser (~> 0.2.0.beta1)
+  opal-browser
   permessage_deflate
   puma
   require_all
@@ -136,3 +136,6 @@ DEPENDENCIES
   thread_safe
   unobservable
   websocket-extensions
+
+BUNDLED WITH
+   1.10.6
