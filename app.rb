@@ -192,6 +192,7 @@ end
 
 opal = Opal::Server.new {|s|
 	s.append_path 'opal'
+	s.append_path 'enums'
 	s.main = 'zapdash'
 }
 

@@ -256,7 +256,7 @@ p
 	background-image: url(../images/pbar-ani.gif) !important;
 	background-repeat: both !important;
 }
-.list-plain
+.list-plain,.crafting_recipe ul
 {
     list-style-type:none;
 	padding-left:10px;
@@ -377,6 +377,10 @@ select, .ui-button, input[type="button"], input[type="reset"], input[type="submi
     display: inline-block;
     margin-right: 0.1em;
     border-radius: 2px !important;
+}
+button:disabled {
+	background: repeating-linear-gradient(45deg,#FFADBA,#ffadba 10px,#DDD 10px,#EEE 20px);
+	color:black;
 }
 select
 {
@@ -901,4 +905,71 @@ img[src=""]
 {
 	color:red;
 	font-weight:bold;
+}
+
+.crafting_recipe ul li
+{
+	list-style-type:none;
+	display:inline;
+}
+.crafting_recipe ul::after
+{
+	content:'.';
+}
+.crafting_recipe ul li::before
+{
+	content:', ';
+}
+.crafting_recipe ul li:first-child::before
+{
+	content:'' !important;
+}
+.crafting_recipe ul li[data-component-missing], .crafting_recipe ul li[data-component-missing]::after
+{
+	background-color: lightcoral;
+}
+.crafting_recipe ul li[data-component-missing]::after
+{
+	content:' (' attr(data-component-missing) ' missing!)';
+}
+.crafting_recipe ul li[data-component-missing="0"], .crafting_recipe ul li[data-component-missing="0"]::after
+{
+	background-color: transparent;
+}
+.crafting_recipe ul li[data-component-missing="0"]::after
+{
+	content:'';
+}
+#crafting_recipe_list
+{
+	display:flex;
+	flex-wrap:wrap;
+	justify-content:flex-start;
+}
+.crafting_recipe
+{
+	flex:1 0 auto;
+	min-width:150px;
+	max-width:300px;
+	order:0;
+	position:relative;
+	padding-bottom:40px;
+}
+.crafting_recipe[data-craftable="1"]
+{
+	order:-1;
+}
+.crafting_recipe ul
+{
+	display:inline;
+}
+.crafting_recipe button, .crafting_recipe .outputs, .crafting_recipe .reagents, .crafting_recipe .catalysts
+{
+	display:block;
+	margin-top:10px;
+}
+.crafting_recipe button
+{
+	position:absolute;
+	bottom:0px;
 }
