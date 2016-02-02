@@ -8,6 +8,7 @@ require 'browser/http'
 require 'browser/delay'
 require 'browser/event'
 require 'native'
+require 'message_type'
 
 require 'adventurer'
 require 'luggage'
@@ -204,6 +205,8 @@ class Voyager
 
 					native_node = Native.convert $document['#activity_log']
 					`native_node.scrollTop = 0`
+
+					write_message({type:'request_crafting_recipes'}) if ent['class'] == MessageType::CRAFT_SUCCESS.to_s
 				when 'portals'
 					tile_portals = $document['#tile_portals']
 					case ent['action']
@@ -323,7 +326,6 @@ class Voyager
 					#TODO: Make a recipes class
 
 					root = DOM{
-						div
 					}
 
 					ent['recipes'].each do |recipe|
@@ -332,6 +334,8 @@ class Voyager
 							div.crafting_recipe
 						}
 
+						node['data-craftable'] = 1 if recipe['possible']
+
 						html = "<h4>#{recipe['name']}</h4>"
 
 						missing_reagents = recipe['reagents_missing']
@@ -339,50 +343,56 @@ class Voyager
 
 						if recipe['outputs'].size > 0
 
-							html = html + '<ul>'
+							html = html + '<span class="outputs"><span>Creates </span><ul>'
 
 							recipe['outputs'].each do |name, q|
 								html = html + "<li>#{q.to_s} x #{name}</li>"
 							end
 
+							html = html + '</ul></span>'
+
 						end
 
-						if recipe['costs'].size > 0
+						costs = ''
 
-							costs = ''
+						if recipe['costs'].size > 0
 
 							recipe['costs'].each do |name, q|
 								costs = costs + "#{q.to_s} #{name.to_s.upcase},"
 							end
 
-							html = html + "<p><b>Costs:</b> #{costs.chomp(',')}</p>"
+							costs = " (#{costs.chomp(',')})"
 
 						end
 
 						if recipe['catalysts'].size > 0
 
-							html = html + '<h5>Catalysts:</h5><ul>'
+							html = html + '<span class="catalysts"><span>Requires </span><ul>'
 
 							recipe['catalysts'].each do |name, q|
-								html = html + "<li style='background-color:#{missing_catalysts.has_key?(name) ? '#FFEEEE' : '#EEFFEE'}'>#{q.to_s} x #{name}#{missing_catalysts.has_key?(name) ? '(' + missing_catalysts[name].to_s + ' missing)' : ''}</li>"
+								html = html + "<li #{missing_catalysts.has_key?(name) ? "data-craft-missing='#{missing_catalysts[name].to_s}'" : 'data-craft-missing="0"'}'>#{q.to_s} x #{name}#{missing_catalysts.has_key?(name) ? '(' + missing_catalysts[name].to_s + ' missing)' : ''}</li>"
 							end
+
+							html = html + '</ul></span>'
 
 						end
 
 						if recipe['reagents'].size > 0
 
-							html = html + '<h5>Reagents</h5><ul>'
+							html = html + '<span class="reagents"><span>Consumes </span><ul>'
 
 							recipe['reagents'].each do |name, q|
 								html = html + "<li style='background-color:#{missing_reagents.has_key?(name) ? '#FFEEEE' : '#EEFFEE'}'>#{q.to_s} x #{name}#{missing_reagents.has_key?(name) ? '(' + missing_reagents[name].to_s + ' missing)' : ''}</li>"
 							end
 
+							html = html + '</ul></span>'
+
 						end
 
 						if recipe['possible']
-							html = html + "<button data-action-type='craft' data-action-vars='id:#{recipe['id']}'>Craft #{recipe['name']}</button>"
+							html = html + "<button data-action-type='craft' data-action-vars='id:#{recipe['id']}'>Craft#{costs}</button>"
 						else
-							html = html + '<i>Unable to craft</i>'
+							html = html + "<button disabled data-action-type='craft' data-action-vars='id:#{recipe['id']}'>Craft#{costs}</button>"
 						end
 
 						node.inner_html = html
