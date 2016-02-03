@@ -100,7 +100,7 @@ class Adventurer
 				$document['#target_information .actions'].inner_html = ''
 			else
 				$document['#target_information .name'].inner_html = @target.name
-				$document['#target_information .class_image'].attributes['src'] = "/img/class/#{@target.nexus_class}.png"
+				$document['#target_information .class_image'].attributes['src'] = "/img/class/black/#{@target.nexus_class}.png"
 				$document['#target_information .stats'].inner_html = "<li>Level #{target.level} #{@target.nexus_class}</li><li>HP: #{@target.hp_fuzzy}</li>"
 				$document['#target_information .actions'].inner_html = '' unless @neighbours.has_key? @target.id
 			end
