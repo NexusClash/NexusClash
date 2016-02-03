@@ -12,7 +12,7 @@ require 'message_type'
 
 require 'adventurer'
 require 'luggage'
-require 'settings'
+require 'instance'
 
 puts 'wow, running ruby!'
 
@@ -411,7 +411,7 @@ $document['css-tab-r1'].trigger :click
 
 $document['#game_loading .message'].inner_html = 'Connecting...'
 
-voyager = Voyager.new Setting.endpoint
+voyager = Voyager.new Instance.endpoint
 
 puts 'socket opened!'
 
