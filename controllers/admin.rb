@@ -48,6 +48,7 @@ class Dash < Sinatra::Application
 	get '/admin/memory' do
 		if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'jruby'
 			mem_bean = ManagementFactory.memory_mx_bean
+			mem_bean.verbose = true
 			heap = mem_bean.heap_memory_usage.to_s.split
 			heap_used = heap[5].split('(')[0]
 			heap_max = heap[11].split('(')[0]
