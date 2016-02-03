@@ -2,7 +2,7 @@
 - characters.each do |char|
 	%a(href="/game/#{char.id}")
 		.div-30.character-select
-			%img(src="/icons/lorc/originals/svg/robe.svg" style="width:80%;padding:15% 0% 5% 20%")
+			%img(src="/img/class/colour/#{char.nexus_class}.png" style="width:80%;padding:15% 0% 5% 20%")
 			%div
 				%p
 					=char.name

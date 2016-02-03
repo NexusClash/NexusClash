@@ -240,7 +240,7 @@ class Voyager
 						}
 
 						if item['type'] == 'class'
-							node.inner_html = "<h4><img style='display:inline;width:30px;margin-right:5px;margin-bottom:-8px;' src='/img/class/#{item['name']}.png'>#{item['name'].to_s} Skills</h4>"
+							node.inner_html = "<h4><img style='display:inline;width:30px;margin-right:5px;margin-bottom:-8px;' src='/img/class/black/#{item['name']}.png'>#{item['name'].to_s} Skills</h4>"
 						else
 
 							if item['learned']
