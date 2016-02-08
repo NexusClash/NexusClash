@@ -51,31 +51,40 @@ module Intent
 			@entity.xp += xp_amount
 		end
 
-		def describe(scope)
+		def close_combat?
+			return Set[:all, :'hand-to-hand', :melee].include? @family
+		end
+
+		def ranged_combat?
+			return Set[:all, :archery, :firearm, :magical, :thrown ].include? @family
+		end
+
+		def describe(scope, defend)
 			kill_msg = ''
 			xp_message = ''
 			xp_message = " You gain #{@xp_granted.to_s} XP." if @xp_granted > 0
+			defend_msg = defend.describe(scope, self)
 			case scope
 				when BroadcastScope::SELF
-					kill_msg = ", killing #{@target.pronoun(:him)}" if @target.dead?
+					kill_msg = "This was enough to kill #{@target.pronoun(:him)}!" if @target.dead?
 					if hit?
-						return "You attack #{@target.name_link} with your #{@weapon.name} and hit, dealing #{@damage.to_s} #{@damage_type.to_s} damage#{kill_msg}!#{xp_message}"
+						return "You attack #{@target.name_link} with your #{@weapon.name} and hit, dealing #{defend.damage_taken.to_s} #{@damage_type.to_s} damage.#{defend_msg}#{xp_message}#{kill_msg}"
 					else
-						return "You attack #{@target.name_link} with your #{@weapon.name} and miss!"
+						return "You attack #{@target.name_link} with your #{@weapon.name} and miss.#{defend_msg}"
 					end
 				when BroadcastScope::TARGET
-					kill_msg = '. This was enough to kill you' if @target.dead?
+					kill_msg = ' This was enough to kill you' if @target.dead?
 					if hit?
-						return "#{@entity.name_link} attacked you with #{@entity.pronoun(:their)} #{@weapon.name} and hit, dealing #{@damage.to_s} #{@damage_type.to_s} damage#{kill_msg}!"
+						return "#{@entity.name_link} attacked you with #{@entity.pronoun(:their)} #{@weapon.name} and hit, dealing #{defend.damage_taken.to_s} #{@damage_type.to_s} damage.#{defend_msg}#{kill_msg}"
 					else
-						return "#{@entity.name_link} attacked you with #{@entity.pronoun(:their)} #{@weapon.name} and missed!"
+						return "#{@entity.name_link} attacked you with #{@entity.pronoun(:their)} #{@weapon.name} and missed.#{defend_msg}"
 					end
 				when BroadcastScope::TILE
 					kill_msg = ", killing #{@target.pronoun(:him)}" if @target.dead?
 					if hit?
-						return "#{@entity.name_link} attacked #{@target.name_link} with #{@entity.pronoun(:their)} #{@weapon.name} and hit#{kill_msg}!"
+						return "#{@entity.name_link} attacked #{@target.name_link} with #{@entity.pronoun(:their)} #{@weapon.name} and hit#{kill_msg == '' ? '.' : ''}#{kill_msg}"
 					else
-						return "#{@entity.name_link} attacked #{@target.name_link} with #{@entity.pronoun(:their)} #{@weapon.name} and missed#{kill_msg}!"
+						return "#{@entity.name_link} attacked #{@target.name_link} with #{@entity.pronoun(:their)} #{@weapon.name} and missed#{kill_msg == '' ? '.' : ''}#{kill_msg}"
 					end
 			end
 		end
