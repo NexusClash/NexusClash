@@ -123,7 +123,7 @@ module Firmament
 
 			Entity::Character.where({plane: @plane.plane.to_i}).each do |newchar|
 				newchar.location = @locations[newchar.x][newchar.y][newchar.z]
-				@locations[newchar.x][newchar.y][newchar.y].characters << newchar
+				@locations[newchar.x][newchar.y][newchar.z].characters << newchar
 				@characters[newchar.id] = newchar
 			end
 
