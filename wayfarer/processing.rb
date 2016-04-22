@@ -185,6 +185,8 @@ module Wayfarer
 					end
 				end
 
+				unassigned = Array.new
+
 				Entity::StatusType.skills.each do |skill|
 					if skill.family == :skill
 						instance_skill = Entity::Status.source_from(skill.id)
@@ -200,10 +202,27 @@ module Wayfarer
 								tree, node_add = add_to_tree.call(root, {id: skill.id, name: instance_skill.name, description: instance_skill.describe, type: instance_skill.family, learned: false, cost: cp_cost, children: []}, effect.link.id)
 								root = tree if node_add
 
+								unless node_add
+									unassigned << [{id: skill.id, name: instance_skill.name, description: instance_skill.describe, type: instance_skill.family, learned: false, cost: cp_cost, children: []}, effect.link.id]
+								end
+
 							end
 						end
 					end
 				end
+
+
+				old_quantity = 0
+				while old_quantity != unassigned.count do
+					unassigned.each do |element|
+
+						tree, node_add = add_to_tree.call(root, element[0], element[1])
+						root = tree if node_add
+
+						unassigned.delete(element) if node_add
+					end
+				end
+
 				root = [root] unless root.is_a? Array
 				ws.send({packets: [{type: 'skill_tree', tree: root }]}.to_json)
 			when 'learn_skill'
