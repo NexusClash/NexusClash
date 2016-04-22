@@ -336,12 +336,199 @@ a:hover
 
 
 
-.character-select{position:relative;background-color:black;transition: .3s linear;}
-.character-select div{position:absolute;top:0px;color:white;font-size:150%;font-size:2vw;text-shadow:3px 3px 8px black;}
-.character-select:hover{z-index:5;box-shadow: 0px 1px 30px rgba(0, 0, 0, 0.05) inset, 0px 0px 80px rgb(188, 208, 236), 0px 0px 80px rgb(178, 219, 236)
+.character-select {
+	padding: 20px 20px 100px 20px;
+	max-width: 1300px;
+	margin: 0 auto;
+	list-style: none;
+	text-align: center;
 }
-.character-select div img{width:2vw;/*height:3vh*/}
 
+.character-select li {
+	display: inline-block;
+	width: 440px;
+	margin: 0;
+	padding: 20px;
+	text-align: left;
+	position: relative;
+}
+
+.character-select figure {
+	margin: 0;
+	position: relative;
+}
+
+.character-select figure > img {
+	max-width: 100%;
+	display: block;
+	position: relative;
+}
+
+.character-select figcaption {
+	position: absolute;
+	top: 0;
+	left: 0;
+	padding: 20px;
+}
+
+.character-select figcaption h3 {
+	margin: 0;
+	padding: 0;
+	color: #fff;
+}
+
+.character-select figcaption > span {
+	color: #fff;
+	padding-bottom:25px;
+	display:inline-block;
+}
+
+.character-select figcaption a {
+	text-align: center;
+	padding: 5px 10px;
+	border-radius: 2px;
+	display: inline-block;
+	/*background: #ed4e6e;
+	color: #fff;*/
+}
+
+.character-select figcaption ul,  .grid figcaption ul li{
+	width:100%;
+	color:white;
+	margin:0px;
+	padding:0px
+}
+
+
+.cs-style-4 li {
+	-webkit-perspective: 1700px;
+	-moz-perspective: 1700px;
+	perspective: 1700px;
+	-webkit-perspective-origin: 0 50%;
+	-moz-perspective-origin: 0 50%;
+	perspective-origin: 0 50%;
+}
+
+.cs-style-4 figure {
+	-webkit-transform-style: preserve-3d;
+	-moz-transform-style: preserve-3d;
+	transform-style: preserve-3d;
+}
+
+.cs-style-4 figure > div {
+	overflow: hidden;
+}
+
+.cs-style-4 figure img {
+	-webkit-transition: -webkit-transform 0.4s;
+	-moz-transition: -moz-transform 0.4s;
+	transition: transform 0.4s;
+}
+
+.cs-style-4 figure:hover img,.cs-style-4 figure:focus img{
+	-webkit-transform: translateX(25%);
+	-moz-transform: translateX(25%);
+	-ms-transform: translateX(25%);
+	transform: translateX(25%);
+}
+
+
+
+.cs-style-4 figure > div > div {
+	-webkit-transition: -webkit-transform 0.4s;
+	-moz-transition: -moz-transform 0.4s;
+	transition: transform 0.4s;
+	width:330px;
+}
+
+.cs-style-4 figure:hover > div > div, .cs-style-4 figure:focus > div > div {
+	-webkit-transform: translateX(100px);
+	-moz-transform: translateX(100px);
+	-ms-transform: translateX(100px);
+	transform: translateX(100px);
+	text-align:right;
+}
+
+.cs-style-4 figure:hover > div > div > p > img, .cs-style-4 figure:focus > div > div > p > img {
+	float:right;
+}
+
+
+.cs-style-4 figcaption {
+	height: 100%;
+	width: 50%;
+	opacity: 0;
+	-webkit-backface-visibility: hidden;
+	-moz-backface-visibility: hidden;
+	backface-visibility: hidden;
+	-webkit-transform-origin: 0 0;
+	-moz-transform-origin: 0 0;
+	transform-origin: 0 0;
+	-webkit-transform: rotateY(-90deg);
+	-moz-transform: rotateY(-90deg);
+	transform: rotateY(-90deg);
+	-webkit-transition: -webkit-transform 0.4s, opacity 0.1s 0.3s;
+	-moz-transition: -moz-transform 0.4s, opacity 0.1s 0.3s;
+	transition: transform 0.4s, opacity 0.1s 0.3s;
+}
+
+.cs-style-4 figure:hover figcaption{
+	opacity: 1;
+	-webkit-transform: rotateY(0deg);
+	-moz-transform: rotateY(0deg);
+	transform: rotateY(0deg);
+	-webkit-transition: -webkit-transform 0.4s, opacity 0.1s;
+	-moz-transition: -moz-transform 0.4s, opacity 0.1s;
+	transition: transform 0.4s, opacity 0.1s;
+}
+
+.cs-style-4 figcaption a {
+	position: absolute;
+	bottom: 20px;
+	right: 20px;
+}
+
+.character-select li figure > div
+{
+	background-color:black;
+}
+
+.character-select li figure figcaption a
+{
+	position:absolute;bottom:50px;left:25px;width:50px;
+}
+
+.character-select div div {position:absolute;top:0px;color:white;font-size:180%;text-shadow:3px 3px 8px black;}
+.character-select div div img{width:24px;/*height:3vh*/}
+
+
+.character-select figure div > img
+{
+	width:80%;padding:15% 0% 5% 20%;
+}
+
+.character-select figure figcaption ul li sup
+{
+	display:block;
+	color:lightgrey;
+}
+
+.character-select figcaption ul
+{
+	height:300px !important;
+	overflow:hidden;
+}
+.character-select figcaption ul::after
+{
+	position:absolute;
+	height:200px;
+	width:220px;
+	background-image: linear-gradient(to bottom, transparent, black);
+	top:200px;
+	content:' ';
+	color:white;
+	display:block;
+}
 
 
 

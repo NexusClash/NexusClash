@@ -1,25 +1,39 @@
-%h1(style="color:red") In Development - Not the final character selection interface
-- characters.each do |char|
-	%a(href="/game/#{char.id}")
-		.div-30.character-select
-			%img(src="/img/class/colour/#{char.nexus_class}.png" style="width:80%;padding:15% 0% 5% 20%")
-			%div
-				%p
-					=char.name
-				%p
-					%img(src="/icons/lorc/originals/svg/half-heart.svg")
-					=char.hp
-				%p
-					%img(src="/icons/lorc/originals/svg/wingfoot.svg")
-					=char.ap
-				%p
-					%img(src="/icons/lorc/originals/svg/jigsaw-piece.svg")
-					=char.xp
-				%p
-					%img(src="/icons/lorc/originals/svg/open-book.svg")
-					=char.level
-				%p
-					%img(src="/icons/lorc/originals/svg/light-bulb.svg")
-					=char.cp
+%ul.grid.cs-style-4.character-select
+	- characters.each do |char|
+		%li
+			%figure
+				%div
+					%img(src="/img/class/colour/#{char.nexus_class}.png")
+					%div
+						%p
+							=char.name
+						%p
+							%img(src="/icons/lorc/originals/svg/half-heart.svg")
+							=char.hp
+						%p
+							%img(src="/icons/lorc/originals/svg/wingfoot.svg")
+							=char.ap
+						%p
+							%img(src="/icons/lorc/originals/svg/jigsaw-piece.svg")
+							=char.xp
+						%p
+							%img(src="/icons/lorc/originals/svg/open-book.svg")
+							=char.level
+						%p
+							%img(src="/icons/lorc/originals/svg/light-bulb.svg")
+							=char.cp
+				%figcaption
+					%h3
+						="#{char.x}, #{char.y}, #{Entity::Plane.where({plane: char.plane.to_i}).first.name}"
+					%span
+						="Level #{char.level} #{char.nexus_class}"
+					%ul.list-plain
+						- Entity::Message.character(char.id).desc('_id').limit(5).each do |msg|
+							%li(data-message-family="#{msg.type}")
+								=msg.message
+								%sup
+									="(#{Time::at(msg.timestamp.to_i).strftime('%Y-%m-%d %H:%M:%S')})"
+					%a.ui-button(href="/game/#{char.id}")
+						Play
 .clear-left.padding-10
 %a.ui-button.ui-corner-all(href="/account/characters/create") New Character
