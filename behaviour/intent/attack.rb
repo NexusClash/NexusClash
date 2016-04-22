@@ -52,7 +52,7 @@ module Intent
 		end
 
 		def close_combat?
-			return Set[:all, :'hand-to-hand', :heavy, :melee].include? @family
+			return Set[:all, :heavy, :melee, :unarmed].include? @family
 		end
 
 		def ranged_combat?
