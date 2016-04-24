@@ -15,7 +15,7 @@ module Intent
 		attr_accessor :entity
 
 		def initialize(entity, target = nil)
-			super entity
+			super entity, {encumbrance: true, status_tick: true}
 			@target = target
 			@attack_roll = rand(1..101)
 			@xp_granted = 0

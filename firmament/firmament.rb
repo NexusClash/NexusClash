@@ -54,6 +54,7 @@ module Firmament
 				@characters.keys.each do |id|
 					char = @characters[id]
 					result = Entity::Status.tick char, :ap
+					result = Entity::Status.tick char, :status
 					char.broadcast_self result
 				end
 			end

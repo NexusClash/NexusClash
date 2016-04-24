@@ -4,7 +4,7 @@ module Intent
 		attr_reader :recipe
 
 		def initialize(entity, recipe)
-			super entity
+			super entity, {encumbrance: true, status_tick: true}
 			@recipe = recipe
 			# Add conventional costs
 			recipe.costs.each do |type, delta|

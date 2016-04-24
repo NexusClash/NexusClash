@@ -1,7 +1,7 @@
 module Intent
 	class Defend < Action
 		def initialize(entity, damage_intent = nil)
-			super entity
+			super entity, {encumbrance: false, status_tick: false}
 			if damage_intent === nil
 				@damage_intent = Intent::Damage.new entity
 			else
