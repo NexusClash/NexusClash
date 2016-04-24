@@ -33,7 +33,11 @@
 								=msg.message
 								%sup
 									="(#{Time::at(msg.timestamp.to_i).strftime('%Y-%m-%d %H:%M:%S')})"
-					%a.ui-button(href="/game/#{char.id}")
-						Play
+					%p
+						%a.ui-button(href="/game/#{char.id}")
+							Play
+						=' '
+						%a.ui-button(href="/character/#{char.id}")
+							Profile
 .clear-left.padding-10
 %a.ui-button.ui-corner-all(href="/account/characters/create") New Character

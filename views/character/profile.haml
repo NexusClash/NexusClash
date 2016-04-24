@@ -1,0 +1,57 @@
+%div(style="min-height:calc(100vh - 150px)")
+	%div(style="overflow:hidden;position:absolute;left:calc(50% - 20vh);right:10px;;top:75px;bottom:10px;pointer-events:none;")
+		%img(src="/img/class/black/#{char.nexus_class}.png" style="position:absolute;width:100%;opacity:0.5")
+	%h1
+		=char.name
+	%h3
+		="Level #{char.level} #{char.nexus_class}"
+	- if owner
+		%form(method="post")
+			%p
+				%select(name="gender" style="display:inline-block")
+					%option{:value => Gender::PLURAL, :selected => char.gender == Gender::PLURAL}
+						Plural
+					%option{:value => Gender::MALE, :selected => char.gender == Gender::MALE}
+						Male
+					%option{:value => Gender::FEMALE, :selected => char.gender == Gender::FEMALE}
+						Female
+					%option{:value => Gender::NEUTER, :selected => char.gender == Gender::NEUTER}
+						Neuter
+					%option{:value => Gender::EPICENE, :selected => char.gender == Gender::EPICENE}
+						Epicene
+				%input(type="submit" style="display:inline-block" value="Update")
+	%ul.list-plain
+		- skills.each do |skill|
+			- if skill[:learned]
+				%li(title="#{skill[:description]}")
+				- if skill[:type] == :class
+					%h4
+						%img(style="display:inline;width:30px;margin-right:5px;margin-bottom:-8px;" src="/img/class/black/#{skill[:name]}.png")
+						="#{skill[:name]} Skills"
+
+				- else
+					=skill[:name]
+					-if skill[:children].count > 0
+						%ul
+							-skill[:children].each do |skill2|
+								- if skill2[:learned]
+									%li(title="#{skill2[:description]}")
+										=skill2[:name]
+										-if skill2[:children].count > 0
+											%ul
+												-skill2[:children].each do |skill3|
+													- if skill3[:learned]
+														%li(title="#{skill3[:description]}")
+															=skill3[:name]
+															-if skill3[:children].count > 0
+																%ul
+																	-skill3[:children].each do |skill4|
+																		- if skill4[:learned]
+																			%li(title="#{skill4[:description]}")
+																				=skill4[:name]
+																				-if skill4[:children].count > 0
+																					%ul
+																						-skill4[:children].each do |skill5|
+																							- if skill5[:learned]
+																								%li(title="#{skill5[:description]}")
+																								=skill5[:name]
