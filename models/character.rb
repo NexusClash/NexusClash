@@ -96,6 +96,8 @@ module Entity
 			ap_ticks = ((minutes_elapsed - (15 - document.last_tick.min % 15) - (Time.now.min % 15)) / 15).floor
 			ticks_after = (Time.now.min % 15).floor
 
+			ap_ticks = 100 if ap_ticks > 100 #cap the amount of computation on inactive dead characters
+
 			(1..ticks_before).each do |tick|
 				minutes_elapsed -= 1
 				Status.tick(self, :minute) unless minutes_elapsed < 0
