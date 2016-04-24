@@ -4,9 +4,12 @@
 module Intent
 	class Action
 
+		attr_reader :entity
+
 		def initialize(entity)
 			@entity = entity
 			@costs = Hash.new{|hash, key| 0}
+			@debug_log = Array.new
 		end
 
 		##
@@ -71,7 +74,13 @@ module Intent
 				apply_costs
 				take_action if respond_to? :take_action
 				broadcast_results if respond_to? :broadcast_results
+				return true
 			end
+			return false
+		end
+
+		def debug(log)
+			@debug_log << log
 		end
 
 		alias :realize :realise

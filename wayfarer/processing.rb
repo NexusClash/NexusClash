@@ -228,38 +228,13 @@ module Wayfarer
 			when 'learn_skill'
 
 				skill = Entity::StatusType.find json['id']
-
-				if skill.family == :skill
-
-					nskill = Entity::Status.source_from json['id']
-
-					cp_cost = 0
-					has_reqs = true
-
-					nskill.effects.each do |effect|
-
-						cp_cost += effect.cp_cost if effect.is_a?(Effect::SkillPurchasable)
-
-						if effect.is_a?(Effect::SkillPrerequisite)
-							check = ws.character.statuses.index{|e| e.link == effect.link.id}
-							has_reqs = false if check === nil
-						end
-
-					end
-
-					if has_reqs && cp_cost <= ws.character.cp
-						ws.character.cp -= cp_cost
-						nskill.stateful = ws.character
-						ws.character.broadcast_self BroadcastScope::SELF
-						message_ent = Entity::Message.new({characters: [ws.character.id], message: "You have learnt #{nskill.name}.", type: MessageType::SKILL_LEARNT})
-						message_ent.save
-						process_message(ws, {'type' => 'request_skill_tree'})
-					else
-						Entity::Message.send_transient([ws.character.id], 'You cannot learn this skill at this time!', MessageType::FAILED)
-					end
-
-
+				learn = Intent::Learn.new ws.character, skill
+				if learn.realise
+					process_message(ws, {'type' => 'request_skill_tree'})
+				else
+					Entity::Message.send_transient([ws.character.id], 'You cannot learn this skill at this time!', MessageType::FAILED)
 				end
+
 			when 'search'
 				if ws.character.ap < 1	|| ws.character.location.is_a?(VoidTile)
 					Entity::Message.send_transient([ws.character.id], 'You cannot search at this time!', MessageType::FAILED)

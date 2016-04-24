@@ -2,6 +2,7 @@ module Entity
 	class StatusType
 		include Mongoid::Document
 		include Mongoid::Autoinc
+		include IndefiniteArticle
 
 		field :id, type: Integer
 		increments :id

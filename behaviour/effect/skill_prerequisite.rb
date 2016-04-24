@@ -20,6 +20,11 @@ module Effect
 			end
 		end
 
+		# Determine if entity has prerequisite
+		def learn_intent_callback(action, intent)
+			intent.entity.statuses.index{|e| e.link == @link.id} != nil if action == :possible?
+		end
+
 		def save_state
 			['SkillPrerequisite', @link.id]
 		end

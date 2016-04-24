@@ -17,6 +17,7 @@ module Effect
 			end
 		end
 
+		#deprecated
 		def purchase_skill?(target)
 			if target.respond_to? :cp && target.cp >= @cp_cost
 				true
@@ -25,6 +26,7 @@ module Effect
 			end
 		end
 
+		#deprecated
 		def purchase_skill!(target)
 			if target.respond_to? :cp && target.cp >= @cp_cost
 				target.cp -= @cp_cost

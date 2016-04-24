@@ -1,6 +1,7 @@
 module Entity
 	class Status
 		include Mongoid::Document
+		include IndefiniteArticle
 
 		embedded_in :stateful, polymorphic: true
 

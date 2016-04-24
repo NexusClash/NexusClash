@@ -14,14 +14,11 @@ module Intent
 		attr_accessor :target
 		attr_accessor :entity
 
-		attr_accessor :debug_log
-
 		def initialize(entity, target = nil)
 			super entity
 			@target = target
 			@attack_roll = rand(1..101)
 			@xp_granted = 0
-			@debug_log = Array.new
 		end
 
 		def weapon=(weap)
@@ -42,7 +39,7 @@ module Intent
 				@damage_type = weap.damage_type
 				@damage = weap.damage
 
-				@debug_log << weap.describe
+				debug weap.describe
 			end
 		end
 
