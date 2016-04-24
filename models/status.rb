@@ -17,7 +17,27 @@ module Entity
 		attr_accessor :temp_effect_vars
 
 		def name
-			self.type.name
+			if self.suffix.strip != ''
+				"#{self.type.name}#{self.suffix}"
+			else
+				self.type.name
+			end
+		end
+
+		def suffix
+			suffix = ''
+			@effects.each do |e|
+				suffix << ' ' + e.append_status_suffix if e.respond_to? :append_status_suffix
+			end
+			@suffix = suffix
+		end
+
+		def get_tag(tag)
+			read_attribute tag
+		end
+
+		def set_tag(tag, value)
+			write_attribute tag, value
 		end
 
 		def family

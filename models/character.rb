@@ -167,7 +167,14 @@ module Entity
 		end
 
 		def to_hash
-			{id: id, name: name, hp: hp, hp_fuzzy: hp_fuzzy, ap: ap, mp: mp, xp: xp, level: level, mo: mo, cp: cp, x: x, y: y, z: z, plane: plane, nexus_class: nexus_class}
+
+			visible_statuses = Array.new
+
+			self.statuses.each do |status|
+				visible_statuses << {name: status.name, description: status.describe} if status.family == :magical || status.family == :mundane
+			end
+
+			{id: id, name: name, hp: hp, hp_fuzzy: hp_fuzzy, ap: ap, mp: mp, xp: xp, level: level, mo: mo, cp: cp, x: x, y: y, z: z, plane: plane, nexus_class: nexus_class, visible_statuses: visible_statuses}
 		end
 	end
 end

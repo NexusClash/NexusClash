@@ -15,7 +15,7 @@ require 'magellan'
 class Adventurer
 	attr_accessor :id, :name, :hp, :hp_fuzzy, :mp, :xp, :level, :mo, :cp, :nexus_class
 	attr_accessor :x, :y, :z
-	attr_accessor :neighbours, :map, :me, :ap, :target
+	attr_accessor :neighbours, :map, :me, :ap, :target, :statuses
 
 	def type
 		'character'
@@ -40,6 +40,7 @@ class Adventurer
 		self.z = data['z'] if data.has_key? 'z'
 		self.ap = data['ap'] if data.has_key? 'ap'
 		self.nexus_class = data['nexus_class'] if data.has_key? 'nexus_class'
+		self.statuses = data['visible_statuses'] if data.has_key? 'visible_statuses'
 		@id = data['id']
 		@target = nil
 		render
@@ -72,6 +73,7 @@ class Adventurer
 		self.z = data['z'] if data.has_key? 'z'
 		self.ap = data['ap'] if data.has_key? 'ap'
 		self.nexus_class = data['nexus_class'] if data.has_key? 'nexus_class'
+		self.statuses = data['visible_statuses'] if data.has_key? 'visible_statuses'
 		render
 	end
 
@@ -87,6 +89,12 @@ class Adventurer
 			$document['#hud_player_vitals .level'].inner_html = @level
 			$document['#hud_player_vitals .class'].inner_html = @nexus_class
 			$document['#hud_player_vitals .name'].inner_html = @name
+
+			status_text = ''
+			self.statuses.each do |status|
+				status_text += "<li title='#{status[:description]}'>#{status[:name]}</li>"
+			end
+			$document['#hud_player_vitals .statuses'].inner_html = status_text
 			occupants = ''
 			@neighbours.keys.each do |key|
 				neighbour = @neighbours[key]

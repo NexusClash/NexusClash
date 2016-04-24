@@ -16,5 +16,6 @@ module Entity
 				carrier.broadcast BroadcastScope::SELF, {packets:[{type: 'inventory', weight: carrier.weight, list: 'remove', items: [object_id]}]}.to_json
 			end
 		end
+		alias :dispel :despawn
 	end
 end

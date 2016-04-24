@@ -17,5 +17,6 @@ module MessageType
 	AMMO_EMPTIED = :'ammo-emptied'
 	PORTAL_USE = :'step-portal'
 	CRAFT_SUCCESS = :'craft-success'
+	STATUS_EXPIRY = :'status-expiry'
 	GENERIC = :generic
 end
