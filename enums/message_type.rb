@@ -18,5 +18,6 @@ module MessageType
 	PORTAL_USE = :'step-portal'
 	CRAFT_SUCCESS = :'craft-success'
 	STATUS_EXPIRY = :'status-expiry'
+	DEBUG = :'debug'
 	GENERIC = :generic
 end

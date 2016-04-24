@@ -30,13 +30,16 @@ module Intent
 			i = 0
 			@learning.effects.each do |effect|
 				if effect.respond_to? :learn_intent_callback
+					debug effect
 					add_cost "learn_#{i}", effect.method(:learn_intent_callback)
 					i += 1
 				end
 				# CP costs need to be totalled when learning skills
 				@cp_cost += effect.cp_cost if effect.is_a? Effect::SkillPurchasable
 			end
+			debug "Total CP cost: #{@cp_cost}"
 			add_cost :cp, @cp_cost
+			debug_broadcast @entity.id
 		end
 
 	end

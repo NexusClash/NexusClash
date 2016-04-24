@@ -55,7 +55,7 @@ module Intent
 		end
 
 		def avoided?
-			@avoided = rand(1..101) <= @avoidance[DefenceType::GENERIC_COMBAT_AVOIDANCE] if @avoided === nil
+			@avoided = rand(1..100) <= @avoidance[DefenceType::GENERIC_COMBAT_AVOIDANCE] if @avoided === nil
 			return @avoided
 		end
 

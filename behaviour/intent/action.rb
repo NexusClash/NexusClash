@@ -101,7 +101,22 @@ module Intent
 		end
 
 		def debug(log)
-			@debug_log << log
+			return unless Instance.debug
+			@debug_log = Array.new if @debug_log === nil
+			if log.is_a? String
+				@debug_log << log
+			else
+				@debug_log << log.describe
+			end
+		end
+
+		def debug_broadcast(target)
+			return unless Instance.debug
+			@debug_log = Array.new if @debug_log === nil
+			target = [target] unless target.is_a? Array
+			@debug_log.each do |msg|
+				Entity::Message.send_transient(target,msg, MessageType::DEBUG)
+			end
 		end
 
 		alias :realize :realise

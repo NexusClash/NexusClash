@@ -21,6 +21,16 @@ class Instance
 	def self.endpoint
 		'ws://ruby.windrunner.mx:4020/42'
 	end
+
+	@@debug = true
+
+	def self.debug
+		@@debug
+	end
+
+	def self.debug=(val)
+		@@debug = val
+	end
 end
 
 DB_PERSIST_MODE = DB_PERSIST_IMMEDIATE

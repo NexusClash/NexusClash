@@ -30,7 +30,7 @@ module Effect
 				intent.damage += @damage
 				intent.hit_chance += @hit_chance
 
-				intent.debug self.describe
+				intent.debug self
 
 			end
 			return intent

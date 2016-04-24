@@ -2,6 +2,7 @@ module Intent
 	class Combat < Action
 
 		def initialize(attack, defend)
+			super attack.entity, {encumbrance: false, status_tick: false} # checks get done in Attack intent
 			@attack = attack
 			@defend = defend
 			@attack.hit_chance -= defend.attack_penalty?(DefenceType::CLOSE_COMBAT_AVOIDANCE) if @attack.close_combat?
@@ -13,11 +14,18 @@ module Intent
 		end
 
 		def possible?
+			unless @attack.possible?
+				debug 'Not possible to attack'
+				debug_broadcast @attack.entity.id
+			end
 			@attack.possible?
 		end
 
 		def take_action
+			debug "Effective hit % after close/ranged avoidance: #{@attack.hit_chance}"
 			@attack.hit_chance = 0 if @defend.avoided?
+			debug 'Missed due to generic avoidance!' if @defend.avoided?
+			debug 'Attack hit!' if @attack.hit?
 			@defend.take_hit(@attack) if @attack.hit?
 		end
 
@@ -25,6 +33,7 @@ module Intent
 			#TODO: Split into Intent::Attack and Intent::Defend
 			message_death = nil
 			attack_text = @attack.describe(BroadcastScope::SELF, @defend)
+			debug_broadcast @attack.entity.id
 			if @attack.target.dead?
 
 				notify = Array.new

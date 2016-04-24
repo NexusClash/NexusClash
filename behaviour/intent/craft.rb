@@ -10,6 +10,7 @@ module Intent
 			recipe.costs.each do |type, delta|
 				@costs[type.to_sym] = delta.to_i
 			end
+			debug recipe
 		end
 
 		def remaining
@@ -31,8 +32,10 @@ module Intent
 		def apply_costs
 			super
 			@used_items.each do |item|
+				debug "Used up #{item.name}"
 				item.despawn
 			end
+			debug_broadcast @entity.id
 		end
 
 		def take_action
@@ -79,12 +82,14 @@ module Intent
 							if remaining.has_key?(effect.component) && remaining[effect.component] > 0
 								remaining[effect.component] = remaining[effect.component] - 1
 								consumed = true
+								debug effect
 								used_items << item
 								break
 							end
 							# Check for catalyst
 							if remaining_catalysts.has_key?(effect.component) && remaining_catalysts[effect.component] > 0
 								remaining_catalysts[effect.component] = remaining_catalysts[effect.component] - 1
+								debug effect
 								break
 							end
 						end
@@ -99,12 +104,14 @@ module Intent
 								if remaining.has_key?(effect.component) && remaining[effect.component] > 0
 									remaining[effect.component] = remaining[effect.component] - 1
 									consumed = true
+									debug effect
 									used_items << item
 									break
 								end
 								# Check for catalyst
 								if remaining_catalysts.has_key?(effect.component) && remaining_catalysts[effect.component] > 0
 									remaining_catalysts[effect.component] = remaining_catalysts[effect.component] - 1
+									debug effect
 									break
 								end
 							end

@@ -17,7 +17,8 @@ module Intent
 		def initialize(entity, target = nil)
 			super entity, {encumbrance: true, status_tick: true}
 			@target = target
-			@attack_roll = rand(1..101)
+			@attack_roll = rand(1..100)
+			debug "Attack Roll: #{@attack_roll}"
 			@xp_granted = 0
 		end
 
@@ -39,7 +40,7 @@ module Intent
 				@damage_type = weap.damage_type
 				@damage = weap.damage
 
-				debug weap.describe
+				debug weap
 			end
 		end
 
@@ -63,6 +64,7 @@ module Intent
 			defend_msg = defend.describe(scope, self)
 			case scope
 				when BroadcastScope::SELF
+					debug_broadcast(@entity.id)
 					kill_msg = "This was enough to kill #{@target.pronoun(:him)}!" if @target.dead?
 					if hit?
 						return "You attack #{@target.name_link} with your #{@weapon.name} and hit, dealing #{defend.damage_taken.to_s} #{@damage_type.to_s} damage.#{defend_msg}#{xp_message}#{kill_msg}"

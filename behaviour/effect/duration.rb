@@ -6,7 +6,7 @@ module Effect
 			@max_duration = max_duration.to_i
 			@type = type
 
-			@parent.set_tag :duration, @max_duration
+			@parent.set_tag :duration, @max_duration if @parent.respond_to? :set_tag
 
 			define_singleton_method ('tick_' + type.to_s).to_sym do |target|
 

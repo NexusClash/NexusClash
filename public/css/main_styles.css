@@ -278,10 +278,6 @@ p
 {
 	text-align:center;
 }
-.animated-progress
-{
-	background: url{images/pbar-ani.gif} !important;
-}
 .text-centered
 {
 	text-align: center;
@@ -1160,4 +1156,10 @@ img[src=""]
 {
 	position:absolute;
 	bottom:0px;
+}
+#activity_log li[data-message-family="debug"]
+{
+	font-size:75%;
+	color:darkred;
+	font-style:italic;
 }
