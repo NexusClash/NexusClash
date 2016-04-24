@@ -22,8 +22,7 @@
 				%input(type="submit" style="display:inline-block" value="Update")
 	%ul.list-plain
 		- skills.each do |skill|
-			- if skill[:learned]
-				%li(title="#{skill[:description]}")
+			%li(title="#{skill[:description]}")
 				- if skill[:type] == :class
 					%h4
 						%img(style="display:inline;width:30px;margin-right:5px;margin-bottom:-8px;" src="/img/class/black/#{skill[:name]}.png")
@@ -31,27 +30,23 @@
 
 				- else
 					=skill[:name]
-					-if skill[:children].count > 0
-						%ul
-							-skill[:children].each do |skill2|
-								- if skill2[:learned]
-									%li(title="#{skill2[:description]}")
-										=skill2[:name]
-										-if skill2[:children].count > 0
-											%ul
-												-skill2[:children].each do |skill3|
-													- if skill3[:learned]
-														%li(title="#{skill3[:description]}")
-															=skill3[:name]
-															-if skill3[:children].count > 0
-																%ul
-																	-skill3[:children].each do |skill4|
-																		- if skill4[:learned]
-																			%li(title="#{skill4[:description]}")
-																				=skill4[:name]
-																				-if skill4[:children].count > 0
-																					%ul
-																						-skill4[:children].each do |skill5|
-																							- if skill5[:learned]
-																								%li(title="#{skill5[:description]}")
-																								=skill5[:name]
+				- if skill[:children].count > 0
+					%ul
+						-skill[:children].each do |skill2|
+							%li(title="#{skill2[:description]}")
+								=skill2[:name]
+								-if skill2[:children].count > 0
+									%ul
+										-skill2[:children].each do |skill3|
+											%li(title="#{skill3[:description]}")
+												=skill3[:name]
+												-if skill3[:children].count > 0
+													%ul
+														-skill3[:children].each do |skill4|
+															%li(title="#{skill4[:description]}")
+																=skill4[:name]
+																-if skill4[:children].count > 0
+																	%ul
+																		-skill4[:children].each do |skill5|
+																			%li(title="#{skill5[:description]}")
+																			=skill5[:name]
