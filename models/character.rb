@@ -104,6 +104,7 @@ module Entity
 			end
 			(1..ap_ticks).each do |tick|
 				Status.tick self, :ap
+				Status.tick self, :status
 				unless tick == ap_ticks || minutes_elapsed < 0 then
 					(1..15).each do |tick2|
 						minutes_elapsed -= 1
@@ -141,10 +142,11 @@ module Entity
 		end
 
 		def nexus_class
+			nclass = 'Unknown'
 			statuses.each do |status|
-				return status.name if status.family == :class
+				nclass = status.name if status.family == :class
 			end
-			return 'Unknown'
+			nclass
 		end
 
 		def has_nexus_class?(class_name)
@@ -153,6 +155,14 @@ module Entity
 				return true if status.family == :class && status.name == class_name
 			end
 			return false
+		end
+
+		def nexus_classes
+			classes = []
+			statuses.each do |status|
+				classes << status if status.family == :class
+			end
+			return classes
 		end
 
 		def hp_fuzzy

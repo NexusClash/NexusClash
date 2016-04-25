@@ -21,6 +21,15 @@ module Intent
 			text = "You have become #{@learning.a_or_an} #{@learning.name}." if @learning.family == :class
 			message_ent = Entity::Message.new({characters: [@entity.id], message: text, type: MessageType::SKILL_LEARNT})
 			message_ent.save
+			if @learning.family == :class
+				notify = Array.new
+				@entity.location.characters.each do |char|
+					notify << char.id unless char == @entity
+				end
+
+				message_class = Entity::Message.new({characters: notify, type: MessageType::CLASS_LEARNT, message: "#{@entity.name} has become a #{@learning.name}!"}) unless notify.count == 0
+				message_class.save
+			end
 		end
 
 		private

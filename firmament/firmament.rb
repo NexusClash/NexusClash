@@ -214,6 +214,8 @@ module Firmament
 		def sync
 			Entity::TileType.reload_types
 			Entity::ItemType.reload_types
+			Entity::StatusType.purge_cache
+			Entity::StatusType.load_types
 			@characters.keys.each do |id|
 				@characters[id].statuses.each do |status|
 					status.unserialize

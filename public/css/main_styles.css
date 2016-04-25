@@ -1163,3 +1163,11 @@ img[src=""]
 	color:darkred;
 	font-style:italic;
 }
+
+@media only screen and (max-device-width: 960px)
+{
+	#tile_occupants_players
+	{
+		margin-bottom:40px;
+	}
+}

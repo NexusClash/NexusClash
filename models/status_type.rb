@@ -27,6 +27,7 @@ module Entity
 		end
 
 		@@skills = ThreadSafe::Array.new
+		@@classes = ThreadSafe::Array.new
 
 		def self.find(type)
 			@@types[type.to_i]
@@ -34,6 +35,10 @@ module Entity
 
 		def self.skills
 			@@skills
+		end
+
+		def self.classes
+			@@classes
 		end
 
 		def describe(flatten = nil)
@@ -48,12 +53,14 @@ module Entity
 		def self.purge_cache
 			@@types.clear
 			@@skills.clear
+			@@classes.clear
 		end
 
 		def self.load_types
 			StatusType.each do |type|
 				@@types[type.id] = type
 				@@skills << type if type.family.to_sym == :skill
+				@@classes << type if type.family.to_sym == :class
 			end
 		end
 

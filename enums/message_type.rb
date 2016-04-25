@@ -1,5 +1,6 @@
 module MessageType
 	SKILL_LEARNT = :'skill-learnt'
+	CLASS_LEARNT = :'class-learnt'
 	SEARCH_SUCCESS = :'search-success'
 	SEARCH_NOTHING = :'search-nothing'
 	FAILED = :'message-failed'

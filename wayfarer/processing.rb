@@ -225,6 +225,29 @@ module Wayfarer
 
 				root = [root] unless root.is_a? Array
 				ws.send({packets: [{type: 'skill_tree', tree: root }]}.to_json)
+			when 'request_classes'
+				classes = Array.new
+
+				Entity::StatusType.classes.each do |nex_class|
+
+					if nex_class.family == :class
+
+						nex_class_i = Entity::Status.source_from nex_class.id
+
+						if Intent::Learn.new(ws.character, nex_class_i).possible?
+							tier = 0
+
+							attributes = Array.new
+							nex_class_i.effects.each do |eff|
+								attributes << eff.describe if eff.is_a? Effect::CustomText
+								tier = eff.tier if eff.respond_to? :tier
+							end
+							classes << {name: nex_class.name, attributes: attributes, tier: tier, id: nex_class.id}
+						end
+
+					end
+					ws.send({packets: [{type: 'class_choices', classes: classes }]}.to_json)
+				end
 			when 'learn_skill'
 
 				skill = Entity::StatusType.find json['id']

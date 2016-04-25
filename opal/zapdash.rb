@@ -269,7 +269,56 @@ class Voyager
 						end
 
 					}
-					$document['#skill_tree'].inner_html = ''
+					$document['#skill_tree'].inner_html = '<h4>Skill Tree</h4><button data-action-type="request_classes">Classes</button>'
+
+					root.append_to($document['#skill_tree'])
+
+					ent['tree'].each do |skill|
+
+						append.call(root, skill)
+
+					end
+				when 'class_choices'
+
+					#TODO: Make a class choices class
+
+					root = DOM{
+						ul
+					}
+
+					root.attributes[:class] = 'grid cs-style-4 character-select'
+
+
+					if ent['classes'].count == 0
+						node = DOM{
+							li
+						}
+						node.inner_html = 'You are unable to choose an additional class at this time.'
+
+						node.append_to(root)
+					end
+
+					ent['classes'].each do |nexus_class|
+						node = DOM{
+							li
+						}
+
+						ctex = ''
+
+						nexus_class['attributes'].each do |line|
+							ctex += "<li>#{line}</li>"
+						end
+
+						ctex = "<figure><div><img src='/img/class/colour/#{nexus_class['name']}.png'/><div><p>#{nexus_class['name']}</p></div></div><figcaption><h3>Choose Class</h3><span>Tier #{nexus_class['tier']} Class</span><ul class='list-plain'>#{ctex}</ul><p><button data-action-type='learn_skill' data-action-vars='id:#{nexus_class['id']}'>Become a #{nexus_class['name']}</button></p></figcaption></figure>"
+
+
+						node.inner_html = ctex
+
+						node.append_to(root)
+					end
+
+
+					$document['#skill_tree'].inner_html = '<h4>Classes</h4><button data-action-type="request_skill_tree">Return to Skill Tree</button>'
 					root.append_to($document['#skill_tree'])
 
 					ent['tree'].each do |skill|
