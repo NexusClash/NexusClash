@@ -230,14 +230,26 @@ ws_app = lambda do |env|
 						end
 						# Authenticate as character
 						if ent.has_key? 'char_id'
-							char = Entity::Character.find(ent['char_id'].to_i)
-							if char.account.username == session[:username]
-								game = Firmament::Plane.fetch Instance.plane
-								ws.character = game.character ent['char_id'].to_i
-								ws.character.socket.send({packets: [{type: 'debug', message: 'Another login has deregistered this character from this connection!'}]}) unless ws.character.socket === nil
-								ws.character.socket = ws
-								ws.admin = char.account.has_role?(:admin)
-								ws.send({packets: [{type: 'self', character: ws.character.to_hash }, {type: 'developer_mode', toggle: ( ws.admin ? 'on' : 'off' )}]}.to_json)
+							game = Firmament::Plane.fetch Instance.plane
+							if game.character? ent[:char_id]
+								char = game.character ent[:char_id]
+							else
+								char = Entity::Character.find(ent['char_id'].to_i)
+							end
+							unless char.plane === Instance.plane
+								ws.send({packets: [{type: 'error', message: 'Connected to wrong plane server for character!' }]}.to_json)
+								return
+							end
+							if char != nil
+								if char.account.username == session[:username]
+									ws.character = game.character ent['char_id'].to_i
+									ws.character.socket.send({packets: [{type: 'debug', message: 'Another login has deregistered this character from this connection!'}]}) unless ws.character.socket === nil
+									ws.character.socket = ws
+									ws.admin = char.account.has_role?(:admin)
+									ws.send({packets: [{type: 'self', character: ws.character.to_hash }, {type: 'developer_mode', toggle: ( ws.admin ? 'on' : 'off' )}]}.to_json)
+								else
+									ws.send({packets: [{type: 'error', message: 'Authentication failiure' }]}.to_json)
+								end
 							else
 								ws.send({packets: [{type: 'error', message: 'Authentication failiure' }]}.to_json)
 							end
