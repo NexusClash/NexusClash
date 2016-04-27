@@ -6,8 +6,8 @@ require 'securerandom'
 require 'faye/websocket'
 require 'websocket/extensions'
 require 'permessage_deflate'
-Bundler.require
 require 'tilt/haml'
+Bundler.require
 
 puts 'Loading base system...'
 

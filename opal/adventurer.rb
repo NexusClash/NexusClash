@@ -15,7 +15,7 @@ require 'magellan'
 class Adventurer
 	attr_accessor :id, :name, :hp, :hp_fuzzy, :mp, :xp, :level, :mo, :cp, :nexus_class
 	attr_accessor :x, :y, :z
-	attr_accessor :neighbours, :map, :me, :ap, :target, :statuses
+	attr_accessor :neighbours, :map, :me, :ap, :target, :statuses, :abilities
 
 	def type
 		'character'
@@ -26,6 +26,7 @@ class Adventurer
 			@map = Magellan.new $document['map']
 			@neighbours = Hash.new{|hash, charid| hash[charid] = Adventurer.new({id: charid})}
 		end
+		@abilities = Array.new
 		@me = me
 		self.name = data['name'] if data.has_key? 'name'
 		self.hp = data['hp'] if data.has_key? 'hp'
@@ -41,6 +42,7 @@ class Adventurer
 		self.ap = data['ap'] if data.has_key? 'ap'
 		self.nexus_class = data['nexus_class'] if data.has_key? 'nexus_class'
 		self.statuses = data['visible_statuses'] if data.has_key? 'visible_statuses'
+		self.abilities = data['abilities'] if data.has_key? 'abilities'
 		@id = data['id']
 		@target = nil
 		render
@@ -74,6 +76,7 @@ class Adventurer
 		self.ap = data['ap'] if data.has_key? 'ap'
 		self.nexus_class = data['nexus_class'] if data.has_key? 'nexus_class'
 		self.statuses = data['visible_statuses'] if data.has_key? 'visible_statuses'
+		self.abilities = data['abilities'] if data.has_key? 'abilities'
 		render
 	end
 
@@ -101,6 +104,23 @@ class Adventurer
 				occupants += "<li><span data-char-link='#{neighbour.id}'>#{neighbour.name}</span> (#{neighbour.level})<span class='hp-widget' data-state='#{neighbour.hp_fuzzy}'></span></li>"
 			end
 			$document['tile_occupants_players'].inner_html = occupants
+			ability_ul = $document['#abilities']
+			ability_ul.inner_html = ''
+
+			@abilities.each do |ability|
+				node2 = DOM{
+					li
+				}
+				node = DOM{
+					button
+				}
+				node.inner_html = ability['name']
+				node.attributes[:title] = ability['description'] if ability.has_key? 'description'
+				node.attributes[:'data-action-type'] = 'activate_self'
+				node.attributes[:'data-action-vars'] = "status_id:#{ability['status_id']}"
+				node.append_to node2
+				node2.append_to ability_ul
+			end
 			if @target === nil
 				$document['#target_information .name'].inner_html = ''
 				$document['#target_information .class_image'].attributes['src'] = ''

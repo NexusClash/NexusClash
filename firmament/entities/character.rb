@@ -39,7 +39,7 @@ module Entity
 		end
 
 		def broadcast_self(scope = BroadcastScope::NONE)
-			packet = {packets: [{type: 'character', character: self.to_hash}]}.to_json #TODO: Base detail on the broadcast scope
+			packet = {packets: [{type: 'character', character: self.to_hash(scope)}]}.to_json #TODO: Base detail on the broadcast scope
 			broadcast scope, packet
 		end
 
@@ -109,7 +109,7 @@ module Entity
 
 			game = Firmament::Plane.fetch Instance.plane
 
-			packets = [{type: 'character', character: self.to_hash}]
+			packets = [{type: 'character', character: self.to_hash(BroadcastScope::SELF)}]
 
 			if self.z == 0
 				(-2..2).each do |y|
@@ -134,7 +134,7 @@ module Entity
 			packets.concat(@location.portals_packets)
 
 			@location.characters.each do |char|
-				packets << {type: 'character', character: char.to_hash } unless char === self
+				packets << {type: 'character', character: char.to_hash(BroadcastScope::TILE) } unless char === self
 			end
 
 			packets

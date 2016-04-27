@@ -176,15 +176,27 @@ module Entity
 			"<span data-char-link='#{self.id}'>#{self.name}</span>"
 		end
 
-		def to_hash
+		def to_hash(scope = BroadcastScope::NONE)
 
-			visible_statuses = Array.new
+			hash = {id: id, name: name, hp: hp, hp_fuzzy: hp_fuzzy, ap: ap, mp: mp, xp: xp, level: level, mo: mo, cp: cp, x: x, y: y, z: z, plane: plane, nexus_class: nexus_class}
 
-			self.statuses.each do |status|
-				visible_statuses << {name: status.name, description: status.describe} if status.family == :magical || status.family == :mundane
+			if scope == BroadcastScope::SELF
+				visible_statuses = Array.new
+				self.statuses.each do |status|
+					visible_statuses << {name: status.name, description: status.describe} if status.family == :magical || status.family == :mundane
+				end
+
+				abilities = Array.new
+				uses = self.activated_uses
+				uses.each do |k, val|
+					abilities << {name: val.name, status_id: k}
+				end
+
+				hash[:visible_statuses] = visible_statuses
+				hash[:abilities] = abilities
 			end
 
-			{id: id, name: name, hp: hp, hp_fuzzy: hp_fuzzy, ap: ap, mp: mp, xp: xp, level: level, mo: mo, cp: cp, x: x, y: y, z: z, plane: plane, nexus_class: nexus_class, visible_statuses: visible_statuses}
+			hash
 		end
 	end
 end

@@ -392,7 +392,13 @@ module Wayfarer
 				else
 					ws.character.use_item_self item, json['status_id'].to_i
 				end
-
+			when 'activate_self'
+				uses = ws.character.activated_uses
+				if uses.has_key? json['status_id'].to_i
+					uses[json['status_id'].to_i].realise
+				else
+					Entity::Message.send_transient([ws.character.id],'Unable to find specified ability!', MessageType::FAILED)
+				end
 			when 'request_tile_css'
 
 				if json.has_key? 'coordinates'
