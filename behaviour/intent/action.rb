@@ -106,7 +106,11 @@ module Intent
 			if log.is_a? String
 				@debug_log << log
 			else
-				@debug_log << log.describe
+				if log.respond_to? :parent
+					@debug_log << "<b>#{log.parent.name}</b> #{log.describe}"
+				else
+					@debug_log << log.describe
+				end
 			end
 		end
 
@@ -114,7 +118,7 @@ module Intent
 			return unless Instance.debug
 			@debug_log = Array.new if @debug_log === nil
 			target = [target] unless target.is_a? Array
-			@debug_log.each do |msg|
+			@debug_log.reverse_each do |msg|
 				Entity::Message.send_transient(target,msg, MessageType::DEBUG)
 			end
 		end
