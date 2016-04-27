@@ -31,7 +31,7 @@ module Effect
 						end
 					end
 				end
-
+				max_duration = 0
 				# find max duration if relevant
 				if found != nil && (@overlap == :refresh || @overlap == :extend)
 					found.effects.each do |effect|
