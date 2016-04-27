@@ -7,11 +7,13 @@ module Behaviour
 				character = self
 				targets = [self, self.location]
 				intent_type = Intent::ActivateAbilitySelf
+				target_status = true
 			end
 			if self.is_a? Entity::Item
 				character = self.carrier
 				targets = [self]
 				intent_type = Intent::ActivateItemSelf
+				target_status = false
 			end
 
 			intents = Hash.new
@@ -22,7 +24,7 @@ module Behaviour
 					target.statuses.each do |status|
 						status.effects.each do |effect|
 							if effect.respond_to?(:activate_self_intent)
-								intents[status.object_id] = intent_type.new character, target, effect
+								intents[status.object_id] = intent_type.new character, target_status ? status : target, effect
 							end
 						end
 					end
@@ -31,7 +33,7 @@ module Behaviour
 					target.type_statuses.each do |status|
 						status.effects.each do |effect|
 							if effect.respond_to?(:activate_self_intent)
-								intents[status.object_id] = intent_type.new character, target, effect
+								intents[status.object_id] = intent_type.new character, target_status ? status : target, effect
 							end
 						end
 					end

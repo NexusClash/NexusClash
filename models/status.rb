@@ -141,6 +141,13 @@ module Entity
 				end
 				return changed
 			end
+			if entity.is_a? Entity::Status
+				entity.effects.each do |effect|
+					changed2 = effect.send(type, entity) if effect.respond_to? type
+					changed = changed2 > changed ? changed2 : changed
+				end
+				return changed
+			end
 
 		end
 
