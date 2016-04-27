@@ -36,7 +36,7 @@ module Effect
 				if found != nil && (@overlap == :refresh || @overlap == :extend)
 					found.effects.each do |effect|
 						if effect.respond_to? :max_duration
-								max_duration = effect.max_duration
+							max_duration = effect.max_duration
 							break
 						end
 					end
@@ -48,7 +48,7 @@ module Effect
 							apply = false
 							existing_dur = found.get_tag(:duration) if found.respond_to? :get_tag
 							existing_dur = max_duration if existing_dur === nil
-							found.set_tag(:duration, existing_dur + max_duration) if found.respond_to?(:set_tag)
+							found.set_tag(:duration, existing_dur.to_i + max_duration) if found.respond_to?(:set_tag)
 						end
 					when :ignore # Do nothing
 						apply = false unless found === nil
