@@ -221,6 +221,8 @@ module Wayfarer
 
 						unassigned.delete(element) if node_add
 					end
+
+					old_quantity = unassigned.count
 				end
 
 				root = [root] unless root.is_a? Array
