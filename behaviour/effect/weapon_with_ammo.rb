@@ -30,11 +30,6 @@ module Effect
 			result
 		end
 
-		def weapon_intent(intent)
-			intent.weapon = self
-			return intent
-		end
-
 		def describe
 			"#{@name.to_s} is a #{family.to_s} weapon with a base hit chance of #{@hit_chance.to_s}% which deals #{@damage.to_s} #{@damage_type.to_s} damage on hit. Each attack uses #{@ammo_cost.to_s} ammo."
 		end

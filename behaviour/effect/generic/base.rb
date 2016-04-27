@@ -10,7 +10,7 @@ module Effect
 		end
 
 		def self.effect_list
-			Foo.constants.select {|c| Foo.const_get(c).is_a?(Class) && c != :Base}
+			Foo.constants.select {|c| Foo.const_get(c).is_a?(Class) && c != :Base && c != :ActOnTick}
 		end
 	end
 end
