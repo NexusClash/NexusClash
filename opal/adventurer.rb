@@ -27,6 +27,7 @@ class Adventurer
 			@neighbours = Hash.new{|hash, charid| hash[charid] = Adventurer.new({id: charid})}
 		end
 		@abilities = Array.new
+		@statuses = Array.new
 		@me = me
 		self.name = data['name'] if data.has_key? 'name'
 		self.hp = data['hp'] if data.has_key? 'hp'
