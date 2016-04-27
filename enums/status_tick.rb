@@ -8,7 +8,9 @@ module StatusTick
 	# Scope: Item
 	ITEM_ACTIVATED = :item_activation
 
-	LIST = [AP, ITEM_ACTIVATED, MINUTE, STATUS]
+	ACTIVATED = :activation
+
+	LIST = [ACTIVATED, AP, ITEM_ACTIVATED, MINUTE, STATUS]
 
 	def type_list
 		LIST

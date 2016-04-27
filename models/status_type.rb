@@ -33,6 +33,10 @@ module Entity
 			@@types[type.to_i]
 		end
 
+		def self.types
+			@@types.values
+		end
+
 		def self.skills
 			@@skills
 		end

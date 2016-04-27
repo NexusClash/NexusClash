@@ -1,12 +1,19 @@
 module Effect
 	class Duration
 
+		attr_reader :max_duration
+
 		def initialize(parent, max_duration = 1, type = StatusTick::STATUS)
 			@parent = parent
 			@max_duration = max_duration.to_i
-			@type = type
+			@type = type.to_sym
 
-			@parent.set_tag :duration, @max_duration if @parent.respond_to? :set_tag
+			duration = @parent.get_tag(:duration) if @parent.respond_to? :get_tag
+			if duration === nil
+				duration = @max_duration
+				@parent.set_tag :duration, @max_duration if @parent.respond_to? :set_tag
+			end
+
 
 			define_singleton_method ('tick_' + type.to_s).to_sym do |target|
 
@@ -35,7 +42,7 @@ module Effect
 		def append_status_suffix
 			duration = @parent.get_tag :duration
 			return '' if duration === nil || duration.to_i == 0
-			"(#{duration}#{@type == StatusTick::MINUTE ? 'm' : ''})"
+			"(#{duration}#{@type == StatusTick::MINUTE ? 'min' : ''})"
 		end
 
 		def save_state
