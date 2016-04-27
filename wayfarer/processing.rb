@@ -214,6 +214,7 @@ module Wayfarer
 
 				old_quantity = 0
 				while old_quantity != unassigned.count do
+					old_quantity = unassigned.count
 					unassigned.each do |element|
 
 						tree, node_add = add_to_tree.call(root, element[0], element[1])
@@ -221,8 +222,6 @@ module Wayfarer
 
 						unassigned.delete(element) if node_add
 					end
-
-					old_quantity = unassigned.count
 				end
 
 				root = [root] unless root.is_a? Array
