@@ -14,7 +14,7 @@ module Effect
 
 			if target.is_a? Entity::Tile
 				target.characters.each do |char|
-					self.send(('tick_' + interval.to_s).to_sym, char)
+					self.send(('tick_' + @interval.to_s).to_sym, char)
 				end
 			else
 				initialval = target.send @type
