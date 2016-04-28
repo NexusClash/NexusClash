@@ -1,7 +1,13 @@
 class Dash < Sinatra::Application
 	get '/character/:id' do
 
-		char = Entity::Character.where({id: params[:id].to_i}).first
+		if params[:id].to_i == 0
+			char = Entity::Character.where({name: params[:id]}).first
+		else
+			char = Entity::Character.where({id: params[:id].to_i}).first
+		end
+
+		return haml :'character/none', :layout => layout if char === nil
 
 		if char.plane == Instance.plane
 
