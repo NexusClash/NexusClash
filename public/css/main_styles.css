@@ -1281,7 +1281,6 @@ div#slider { overflow: hidden; width:100vw; height:100vh; position:fixed;left:0p
 div#slider figure > div { width: 20%; float: left; height:100%; }
 div#slider figure > div > img { width: 100%; object-fit:cover; object-position:0% 0%; height:100%; }
 div#slider figure > div > div { z-index:1; position:relative;top:calc(100% - 100px);left:30px; margin-bottom:-500px; height:500px; float:left; }
-div#slider figure:first-child > div:first-of-type > div {position:fixed;top:100px;}
 div#slider figure
 {
 	position: relative;
