@@ -11,7 +11,7 @@ module Effect
 		end
 
 		def learn_intent_callback(action, intent)
-			intent.entity.mo >= @mo_min && intent.entity.mo <= @mo_max if action == :possible?
+			intent.entity.mo >= @mo_min * 10 && intent.entity.mo <= @mo_max * 10 if action == :possible?
 		end
 
 		def describe

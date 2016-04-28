@@ -165,6 +165,12 @@ module Entity
 			return classes
 		end
 
+		def alignment
+			return :good if mo >= 200
+			return :evil if mo <= -200
+			return :neutral
+		end
+
 		def hp_fuzzy
 			return 'full' if hp >= hp_max
 			return 'high' if hp > hp_max * 0.5

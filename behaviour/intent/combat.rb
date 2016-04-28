@@ -25,8 +25,18 @@ module Intent
 			debug "Effective hit % after close/ranged avoidance: #{@attack.hit_chance}"
 			@attack.hit_chance = 0 if @defend.avoided?
 			debug 'Missed due to generic avoidance!' if @defend.avoided?
-			debug 'Attack hit!' if @attack.hit?
-			@defend.take_hit(@attack) if @attack.hit?
+			if @attack.hit?
+				debug 'Attack hit!'
+				@defend.take_hit(@attack)
+				case @attack.target.alignment
+					when :good
+						@attack.entity.mo -= @defend.damage_taken * 2
+					when :neutral
+						@attack.entity.mo -= @defend.damage_taken
+					when :evil
+						@attack.entity.mo += @defend.damage_taken # TODO: unless @attack.target.faction.alignment == :evil || @attack.target.is_demon
+				end
+			end
 		end
 
 		def broadcast_results
