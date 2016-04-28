@@ -44,6 +44,8 @@ module Effect
 				end
 
 				case @overlap
+					when :overwrite
+						found.dispel unless found === nil
 					when :extend # Extend found status by max_duration
 						unless found === nil
 							apply = false
