@@ -10,8 +10,9 @@ module Effect
 			end
 		end
 
-		def tick_event(target)
-			# do nothing, stub event
+		def tick_event(target, additional_target = nil)
+			return additional_target unless additional_target === nil
+			return target
 		end
 
 		def describe

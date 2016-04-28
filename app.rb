@@ -16,6 +16,7 @@ Mongoid.load!('mongoid.yml')
 require_rel 'enums'
 require_rel 'config'
 require_rel 'behaviour/core'
+require_rel 'behaviour/intent/generic'
 require_rel 'behaviour/intent'
 require_rel 'behaviour/effect/generic'
 require_rel 'behaviour/effect'
@@ -181,7 +182,30 @@ end
 
 
 get '/' do
-	haml :index, :layout => @layout
+
+	# Collate interesting events for homepage
+
+	#todo: Better way of storing interesting messages
+
+	intro_class = ['Holy Champion', 'Lich', 'Corruptor', 'Seraph', 'Nexus Champion', 'Infernal Behemoth']
+
+	events = []
+
+	Entity::Message.where({type: MessageType::CLASS_LEARNT}).desc('_id').limit(3).each do |msg|
+
+		ele = msg.message.split(' has become a ')
+		ele[1].chomp! '!'
+
+		events << {header: "#{ele[0]} became a #{ele[1]}", time: Time::at(msg.timestamp.to_i).strftime('%Y-%m-%d %H:%M:%S'), image: "/img/class/portrait/#{ele[1]}.png", body:''}
+	end
+
+	while events.count < 4 do
+		events.unshift({header: 'Welcome to Nexus Clash!', time: '', image: "/img/class/portrait/#{intro_class[rand(1..(intro_class.count)) - 1]}.png", body: '<p style="width:33vw">Nexus Clash is a browser-based MMORPG that continues the saga of Nexus War. Each character in the game is a soul entrapped in this eternal struggle that rages across worlds. Characters can choose to become fearsome Demons, mighty Wizards, powerful warriors, or even Angels - and every action is measured in the scales of reality to determine what new worlds will be formed in each new Breath of Creation.</p>'})
+	end
+
+	events << events[0]
+
+	haml :home, :layout => @layout, :locals => {:slides => events}
 end
 
 server = 'puma'

@@ -9,8 +9,9 @@ module StatusTick
 	ITEM_ACTIVATED = :item_activation
 
 	ACTIVATED = :activation
+	ACTIVATED_TARGET = :activation_target # When calling these triggers the target must be passed as an additional argument
 
-	LIST = [ACTIVATED, AP, ITEM_ACTIVATED, MINUTE, STATUS]
+	LIST = [ACTIVATED, ACTIVATED_TARGET, AP, ITEM_ACTIVATED, MINUTE, STATUS]
 
 	def type_list
 		LIST

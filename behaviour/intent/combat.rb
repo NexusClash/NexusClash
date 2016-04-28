@@ -11,6 +11,7 @@ module Intent
 
 		def apply_costs
 			@attack.apply_costs
+			Entity::Status.tick(@attack.target, StatusTick::STATUS)
 		end
 
 		def possible?

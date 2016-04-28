@@ -9,7 +9,8 @@ module Effect
 			@amount = amount.to_i
 		end
 
-		def tick_event(target)
+		def tick_event(*target)
+			target = super *target
 			target = target.carrier if target.is_a? Entity::Item
 
 			if target.is_a? Entity::Tile

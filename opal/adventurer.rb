@@ -87,7 +87,7 @@ class Adventurer
 			$document['#hud_player_vitals .mp'].inner_html = @mp
 			$document['#hud_player_vitals .cp'].inner_html = @cp
 			$document['#hud_player_vitals .ui-hud-cp']['data-player-cp'] = @cp
-			$document['#hud_player_vitals .mo'].inner_html = @mo
+			$document['#hud_player_vitals .mo'].inner_html = sprintf '%.1f' ,@mo / 10
 			$document['#hud_player_vitals .xp'].inner_html = @xp
 			$document['#hud_player_vitals .hp'].inner_html = @hp
 			$document['#hud_player_vitals .level'].inner_html = @level

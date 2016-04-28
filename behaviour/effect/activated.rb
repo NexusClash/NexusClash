@@ -3,8 +3,9 @@ module Effect
 
 		attr_reader :name
 
-		def initialize(parent, costs = nil, name = nil)
+		def initialize(parent, costs = nil, name = nil, targets = Array.new([:self]))
 			@parent = parent
+			@targets = Set.new targets
 			@costs = Hash.new{|hash, key| 0}
 			unless costs === nil
 				costs.each do |cost, delta|
@@ -15,7 +16,18 @@ module Effect
 			@name = @parent.name if @name === nil
 		end
 
+		def can_target?(tar)
+			@targets.include? tar
+		end
+
 		def activate_self_intent(intent)
+			intent.name = name
+			@costs.each do |cost, delta|
+				intent.add_cost cost, delta
+			end
+		end
+
+		def activate_target_intent(intent)
 			intent.name = name
 			@costs.each do |cost, delta|
 				intent.add_cost cost, delta

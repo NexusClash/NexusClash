@@ -112,7 +112,7 @@ module Entity
 			@effects = new_effects
 		end
 
-		def self.tick(entity, interval)
+		def self.tick(entity, interval, *args)
 			type = ('tick_' + interval.to_s).to_sym
 			changed = BroadcastScope::NONE
 			changed2 = BroadcastScope::NONE
@@ -120,7 +120,7 @@ module Entity
 			if entity.is_a? Entity::Character
 				entity.statuses.each do |status|
 					status.effects.each do |effect|
-						changed2 = effect.send(type, entity) if effect.respond_to? type
+						changed2 = effect.send(type, entity, *args) if effect.respond_to? type
 						changed = changed2 > changed ? changed2 : changed
 					end
 				end
@@ -129,13 +129,13 @@ module Entity
 			if entity.is_a? Entity::Item
 				entity.statuses.each do |status|
 					status.effects.each do |effect|
-						changed2 = effect.send(type, entity) if effect.respond_to? type
+						changed2 = effect.send(type, entity, *args) if effect.respond_to? type
 						changed = changed2 > changed ? changed2 : changed
 					end
 				end
 				entity.type_statuses.each do |status|
 					status.effects.each do |effect|
-						changed2 = effect.send(type, entity) if effect.respond_to? type
+						changed2 = effect.send(type, entity, *args) if effect.respond_to? type
 						changed = changed2 > changed ? changed2 : changed
 					end
 				end
@@ -143,7 +143,7 @@ module Entity
 			end
 			if entity.is_a? Entity::Status
 				entity.effects.each do |effect|
-					changed2 = effect.send(type, entity) if effect.respond_to? type
+					changed2 = effect.send(type, entity, *args) if effect.respond_to? type
 					changed = changed2 > changed ? changed2 : changed
 				end
 				return changed

@@ -41,6 +41,7 @@ module Entity
 		def broadcast_self(scope = BroadcastScope::NONE)
 			packet = {packets: [{type: 'character', character: self.to_hash(scope)}]}.to_json #TODO: Base detail on the broadcast scope
 			broadcast scope, packet
+			broadcast_self(BroadcastScope::SELF) if scope > BroadcastScope::SELF
 		end
 
 		def xp=(new_xp)

@@ -8,7 +8,8 @@ module Effect
 			@overlap = overlap_mode.to_sym
 		end
 
-		def tick_event(target)
+		def tick_event(*target)
+			target = super *target
 			target = target.stateful if target.is_a? Entity::Status
 			target = target.carrier if target.is_a?(Entity::Item) && @target != :item
 			target = target.location if @target == :tile && target.is_a?(Entity::Character)
