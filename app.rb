@@ -200,7 +200,7 @@ get '/' do
 	end
 
 	while events.count < 4 do
-		events.unshift({header: 'Welcome to Nexus Clash!', time: '', background: intro_class[rand(1..(intro_class.count)) - 1], body: '<p style="width:33vw">Nexus Clash is a browser-based MMORPG that continues the saga of Nexus War. Each character in the game is a soul entrapped in this eternal struggle that rages across worlds. Characters can choose to become fearsome Demons, mighty Wizards, powerful warriors, or even Angels - and every action is measured in the scales of reality to determine what new worlds will be formed in each new Breath of Creation.</p>'})
+		events.unshift({header: 'Welcome to Nexus Clash!', time: '', background: intro_class[rand(1..(intro_class.count)) - 1], body: '<p style="width:90vw;max-width:500px">Nexus Clash is a browser-based MMORPG that continues the saga of Nexus War. Each character in the game is a soul entrapped in this eternal struggle that rages across worlds. Characters can choose to become fearsome Demons, mighty Wizards, powerful warriors, or even Angels - and every action is measured in the scales of reality to determine what new worlds will be formed in each new Breath of Creation.</p>'})
 	end
 
 	events << events[0]
