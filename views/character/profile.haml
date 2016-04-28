@@ -3,7 +3,7 @@
 		%div(style="overflow:hidden;position:absolute;left:calc(50% - 20vh);right:10px;;top:75px;bottom:10px;pointer-events:none;")
 			%img(src="/img/class/colour/#{char.nexus_class}.png" style="position:absolute;width:100%;opacity:0.5")
 	- else
-		%div(style="overflow:hidden;position:absolute;left:20px;right:20px;;top:75px;bottom:20px;pointer-events:none;background-image:url('/img/class/portrait/#{char.nexus_class}.png');background-size:cover;opacity:0.5")
+		%div(class="bg-#{char.nexus_class.gsub(' ', '-')}" style="overflow:hidden;position:absolute;left:20px;right:20px;;top:75px;bottom:10px;pointer-events:none;opacity:0.5")
 			%img(src="" style="position:absolute;width:100%;opacity:0.5")
 	%h1
 		=char.name

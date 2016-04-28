@@ -196,11 +196,11 @@ get '/' do
 		ele = msg.message.split(' has become a ')
 		ele[1].chomp! '!'
 
-		events << {header: "#{ele[0]} became a #{ele[1]}", time: Time::at(msg.timestamp.to_i).strftime('%Y-%m-%d %H:%M:%S'), image: "/img/class/portrait/#{ele[1]}.png", body:''}
+		events << {header: "#{ele[0]} became a #{ele[1]}", time: Time::at(msg.timestamp.to_i).strftime('%Y-%m-%d %H:%M:%S'), background: ele[1], body:''}
 	end
 
 	while events.count < 4 do
-		events.unshift({header: 'Welcome to Nexus Clash!', time: '', image: "/img/class/portrait/#{intro_class[rand(1..(intro_class.count)) - 1]}.png", body: '<p style="width:33vw">Nexus Clash is a browser-based MMORPG that continues the saga of Nexus War. Each character in the game is a soul entrapped in this eternal struggle that rages across worlds. Characters can choose to become fearsome Demons, mighty Wizards, powerful warriors, or even Angels - and every action is measured in the scales of reality to determine what new worlds will be formed in each new Breath of Creation.</p>'})
+		events.unshift({header: 'Welcome to Nexus Clash!', time: '', background: intro_class[rand(1..(intro_class.count)) - 1], body: '<p style="width:33vw">Nexus Clash is a browser-based MMORPG that continues the saga of Nexus War. Each character in the game is a soul entrapped in this eternal struggle that rages across worlds. Characters can choose to become fearsome Demons, mighty Wizards, powerful warriors, or even Angels - and every action is measured in the scales of reality to determine what new worlds will be formed in each new Breath of Creation.</p>'})
 	end
 
 	events << events[0]

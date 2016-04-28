@@ -1171,3 +1171,137 @@ img[src=""]
 		margin-bottom:40px;
 	}
 }
+
+.bg-Advocate, .bg-Archon, .bg-Conduit, .bg-Corruptor, .bg-Dark-Oppressor, .bg-Defiler,
+.bg-Divine-Herald, .bg-Doom-Howler, .bg-Eternal-Soldier, .bg-Holy-Champion, .bg-Infernal-Behemoth,
+.bg-Lich, .bg-Lightspeaker, .bg-Myrmidon, .bg-Nexus-Champion, .bg-Paladin, .bg-Pariah, .bg-Revenant,
+.bg-Seraph, .bg-Shepherd, .bg-Sorcerer, .bg-Void-Walker, .bg-Wizard, .bg-Wyrm-Master
+{
+	background-size:cover;
+}
+
+.bg-Advocate{background-image: url('/img/class/portrait/Advocate.jpg')}
+.bg-Archon{background-image: url('/img/class/portrait/Archon.jpg')}
+.bg-Conduit{background-image: url('/img/class/portrait/Conduit.jpg'); background-position:100% 0%}
+.bg-Corruptor{background-image: url('/img/class/portrait/Corruptor.jpg')}
+.bg-Dark-Oppressor{background-image: url('/img/class/portrait/Dark Oppressor.jpg')}
+.bg-Defiler{background-image: url('/img/class/portrait/Defiler.jpg')}
+.bg-Divine-Herald{background-image: url('/img/class/portrait/Divine Herald.jpg')}
+.bg-Doom-Howler{background-image: url('/img/class/portrait/Doom Howler.jpg')}
+.bg-Eternal-Soldier{background-image: url('/img/class/portrait/Eternal Soldier.jpg')}
+.bg-Holy-Champion{background-image: url('/img/class/portrait/Holy Champion.jpg')}
+.bg-Infernal-Behemoth{background-image: url('/img/class/portrait/Infernal Behemoth.jpg')}
+.bg-Lich{background-image: url('/img/class/portrait/Lich.jpg')}
+.bg-Lightspeaker{background-image: url('/img/class/portrait/Lightspeaker.jpg')}
+.bg-Myrmidon{background-image: url('/img/class/portrait/Myrmidon.jpg')}
+.bg-Nexus-Champion{background-image: url('/img/class/portrait/Nexus Champion.jpg')}
+.bg-Paladin{background-image: url('/img/class/portrait/Paladin.jpg')}
+.bg-Pariah{background-image: url('/img/class/portrait/Pariah.jpg')}
+.bg-Revenant{background-image: url('/img/class/portrait/Revenant.jpg')}
+.bg-Seraph{background-image: url('/img/class/portrait/Seraph.jpg')}
+.bg-Shepherd{background-image: url('/img/class/portrait/Shepherd.jpg')}
+.bg-Sorcerer{background-image: url('/img/class/portrait/Sorcerer.jpg')}
+.bg-Void-Walker{background-image: url('/img/class/portrait/Void Walker.jpg')}
+.bg-Wizard{background-image: url('/img/class/portrait/Wizard.jpg')}
+.bg-Wyrm-Master{background-image: url('/img/class/portrait/Wyrm Master.jpg')}
+
+@media screen and (min-aspect-ratio: 4/3)
+{
+	.bg-Advocate{ }
+	.bg-Archon{background-position:100% 40%}
+	.bg-Conduit{}
+	.bg-Corruptor{background-position:0% 20%}
+	.bg-Dark-Oppressor{}
+	.bg-Defiler{}
+	.bg-Divine-Herald{background-position:0% 50%}
+	.bg-Doom-Howler{}
+	.bg-Eternal-Soldier{}
+	.bg-Holy-Champion{background-position:0% 0%}
+	.bg-Infernal-Behemoth{}
+	.bg-Lich{}
+	.bg-Lightspeaker{background-position:10% 40%}
+	.bg-Myrmidon{background-position:20% 0%}
+	.bg-Nexus-Champion{}
+	.bg-Paladin{background-position:40% 20%}
+	.bg-Pariah{background-position:20% 0%}
+	.bg-Revenant{background-position:0% 0%}
+	.bg-Seraph{background-position:100% 25%}
+	.bg-Shepherd{}
+	.bg-Sorcerer{}
+	.bg-Void-Walker{background-position:90% 70%}
+	.bg-Wizard{background-position:50% 25%}
+	.bg-Wyrm-Master{}
+}
+
+@media screen and (max-aspect-ratio: 4/3)
+{
+	.bg-Advocate{ }
+	.bg-Archon{background-position:80% 40%}
+	.bg-Conduit{}
+	.bg-Corruptor{background-position:15% 100%}
+	.bg-Dark-Oppressor{}
+	.bg-Defiler{background-position:40% 0%}
+	.bg-Divine-Herald{}
+	.bg-Doom-Howler{}
+	.bg-Eternal-Soldier{background-position:20% 0%}
+	.bg-Holy-Champion{background-position:20% 0%;background-size:200%;}
+	.bg-Infernal-Behemoth{background-position:50% 0%}
+	.bg-Lich{}
+	.bg-Lightspeaker{background-position:60% 50%}
+	.bg-Myrmidon{background-position:20% 0%}
+	.bg-Nexus-Champion{background-position:80% 0%}
+	.bg-Paladin{background-position:40% 10%}
+	.bg-Pariah{background-position:0% 0%}
+	.bg-Revenant{background-position:0% 0%}
+	.bg-Seraph{background-position:50% 0%}
+	.bg-Shepherd{}
+	.bg-Sorcerer{}
+	.bg-Void-Walker{background-position:100% 100%}
+	.bg-Wizard{background-position:70% 0%}
+	.bg-Wyrm-Master{}
+}
+
+@media screen and (min-aspect-ratio: 4/3) and (max-aspect-ratio: 16/10)
+{
+	.bg-Holy-Champion{background-size:200%;background-position:10% 0%}
+}
+@keyframes slidy
+{
+	0% { left: 0%; }
+	20% { left: 0%; }
+	25% { left: -100%; }
+	45% { left: -100%; }
+	50% { left: -200%; }
+	70% { left: -200%; }
+	75% { left: -300%; }
+	95% { left: -300%; }
+	100% { left: -400%; }
+}
+div#slider { overflow: hidden; width:100vw; height:100vh; position:fixed;left:0px;top:0px; z-index:-1;  }
+div#slider figure > div { width: 20%; float: left; height:100%; }
+div#slider figure > div > img { width: 100%; object-fit:cover; object-position:0% 0%; height:100%; }
+div#slider figure > div > div { z-index:1; position:relative;top:100px;left:30px; margin-bottom:-500px; height:500px; float:left; }
+div#slider figure
+{
+	position: relative;
+	width: 500%;
+	margin: 0;
+	left: 0;
+	text-align: left;
+	animation: 30s slidy infinite;
+	height:100%;
+}
+div#slider figure h1
+{
+	text-shadow: 0px 0px 4px rgba(255, 255, 255, 1), 0px 0px 6px rgba(255, 255, 255, 1), 0px 0px 8px rgba(255, 255, 255, 1);
+}
+div#slider figure p
+{
+	background:rgba(255,255,255,0.7);
+	border-radius:5px;
+	padding:5px;
+}
+#slider-container
+{
+	position:absolute; left:0px; width:100%;
+}
