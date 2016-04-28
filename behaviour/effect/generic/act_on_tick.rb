@@ -2,7 +2,7 @@ module Effect
 	class ActOnTick < Effect::Base
 
 		def initialize(parent, interval)
-			@interval = interval
+			@interval = interval.to_sym
 			@parent = parent
 
 			define_singleton_method ('tick_' + interval.to_s).to_sym do |target|

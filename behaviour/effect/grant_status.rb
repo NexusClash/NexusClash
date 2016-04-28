@@ -8,15 +8,19 @@ module Effect
 			@overlap = overlap_mode.to_sym
 		end
 
-		def tick_event(*target)
-			target = super *target
+		def tick_event(*args)
+			target = super *args
 			target = target.stateful if target.is_a? Entity::Status
 			target = target.carrier if target.is_a?(Entity::Item) && @target != :item
 			target = target.location if @target == :tile && target.is_a?(Entity::Character)
 
 			if target.is_a?(Entity::Tile) && @target == :character
 				target.characters.each do |char|
-					self.send(('tick_' + @interval.to_s).to_sym, char)
+					if args.count > 1
+						self.send(('tick_' + @interval.to_s).to_sym, [args[0], char])
+					else
+						self.send(('tick_' + @interval.to_s).to_sym, char)
+					end
 				end
 			else
 				# Apply status effect to entity
@@ -67,6 +71,7 @@ module Effect
 				if apply
 					nstatus = Entity::Status.source_from @status.id
 					nstatus.stateful = target
+					Entity::Status.tick nstatus, StatusTick::STATUS_CREATED, *args
 				end
 				return BroadcastScope::SELF
 			end

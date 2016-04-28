@@ -1,54 +1,56 @@
 module Effect
-	class SendMessage
+	class SendMessage < Effect::ActOnTick
 
 		def initialize(parent, message, interval = StatusTick::ITEM_ACTIVATED, scope = BroadcastScope::SELF)
-			@parent = parent
+			super parent, interval
 			@scope = scope.to_i
-			@interval = interval.to_sym
 			@message = message
-			define_singleton_method ('tick_' + interval.to_s).to_sym do |target|
-				target = target.carrier if target.is_a? Entity::Item
+		end
 
-				receivers = []
-				msg = @message
+		def tick_event(*target)
+			target = super *target
+			target = target.stateful if target.is_a? Entity::Status
+			target = target.carrier if target.is_a? Entity::Item
 
-				case @scope
-					when BroadcastScope::SELF
-						receivers << target.id
-					when BroadcastScope::TARGET
-						#TODO: Implement
-					when BroadcastScope::TILE
-	          target.location.characters.each do |char|
-		          receivers << char.id
-	          end
-					when BroadcastScope::VISIBLE
-						game = Firmament::Plane.fetch Instance.plane
-						tiles = Set.new
-						(-2..2).each do |y|
-							(-2..2).each do |x|
-								tiles.add game.map(target.location.x + x, target.location.y + y, target.location.z)
-							end
+			receivers = []
+			msg = @message
+
+			case @scope
+				when BroadcastScope::SELF
+					receivers << target.id
+				when BroadcastScope::TARGET
+					#TODO: Implement
+				when BroadcastScope::TILE
+					target.location.characters.each do |char|
+						receivers << char.id
+					end
+				when BroadcastScope::VISIBLE
+					game = Firmament::Plane.fetch Instance.plane
+					tiles = Set.new
+					(-2..2).each do |y|
+						(-2..2).each do |x|
+							tiles.add game.map(target.location.x + x, target.location.y + y, target.location.z)
 						end
-
-						tiles.each do |tile|
-							tile.characters.each do |char|
-								receivers << char.id
-							end
-						end
-					else
-						return BroadcastScope::NONE
-				end
-				if receivers.length > 0
-
-					@parent.temp_effect_vars.keys.each do |key|
-						msg.gsub! "[#{key.to_s}]", @parent.temp_effect_vars[key].to_s
 					end
 
-					m = Entity::Message.new({characters: receivers, type: MessageType::GENERIC, message: msg})
-					m.save
-				end
-				return BroadcastScope::NONE
+					tiles.each do |tile|
+						tile.characters.each do |char|
+							receivers << char.id
+						end
+					end
+				else
+					return BroadcastScope::NONE
 			end
+			if receivers.length > 0
+
+				@parent.temp_effect_vars.keys.each do |key|
+					msg.gsub! "[#{key.to_s}]", @parent.temp_effect_vars[key].to_s
+				end
+
+				m = Entity::Message.new({characters: receivers, type: MessageType::GENERIC, message: msg})
+				m.save
+			end
+			return BroadcastScope::NONE
 		end
 
 		def describe
