@@ -1,18 +1,30 @@
 class Dash < Sinatra::Application
 	get '/character/:id' do
 
-		if params[:id].to_i == 0
+		id = params[:id].to_i
+
+		game = Firmament::Plane.fetch Instance.plane
+
+		layout = :'layouts/guest'
+		layout = :'layouts/user' if auth?
+
+		if id == 0
 			char = Entity::Character.where({name: params[:id]}).first
+			id = char.id unless char === nil
 		else
-			char = Entity::Character.where({id: params[:id].to_i}).first
+			if game.character? id
+				char = game.character id
+			else
+				char = Entity::Character.where({id: id}).first
+			end
+
 		end
 
 		return haml :'character/none', :layout => layout if char === nil
 
 		if char.plane == Instance.plane
 
-			game = Firmament::Plane.fetch Instance.plane
-			char = game.character params[:id]
+			char = game.character id
 
 
 			# Calculate skill tree
@@ -65,9 +77,6 @@ class Dash < Sinatra::Application
 
 			owner = false
 			owner = true if auth? && @user.id == char.account.id
-
-			layout = :'layouts/guest'
-			layout = :'layouts/user' if auth?
 
 			haml :'character/profile', :layout => layout, :locals => {:auth => auth?, :char => char, :skills => root, :owner => owner}
 		else
