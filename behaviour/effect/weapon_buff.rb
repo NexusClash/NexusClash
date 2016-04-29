@@ -15,35 +15,27 @@ module Effect
 		end
 
 		def alter_attack_intent(intent)
-			alter = false
-
-			if @name != nil && @name == intent.weapon.name && (@family == :all || @family == intent.weapon.family) then
-				alter = true
-			else
-				if @name == nil &&  (@family == :all || @family == intent.weapon.family)
-					alter = true
-				end
-			end
-
-			if alter
-
+			if (@family == :all || @family == intent.weapon.family) && (@name == nil || @name == intent.weapon.name)
 				intent.damage += @damage
 				intent.hit_chance += @hit_chance
-
 				intent.debug self
-
 			end
 			return intent
 		end
 
 		def describe
 			msg = ''
-			msg = "Increases damage dealt by #{@family} weapons#{ @name === nil ? '' : " named #{@name}" } by #{@damage}" if @damage > 0
-			msg = "Decreases damage dealt by #{@family} weapons#{ @name === nil ? '' : " named #{@name}" } by #{@damage}" if @damage < 0
-			msg << '.' if @damage != 0 && @hit_chance == 0
-			msg << ' and ' if @damage != 0 && @hit_chance != 0
-			msg = "#{ msg == '' ? 'I' : 'i' }ncreases hit chance#{ msg == '' ? " of #{@family} weapons#{ @name === nil ? '' : " named #{@name}" }" : '' } by #{@hit_chance}%." if @hit_chance > 0
-			msg = "#{ msg == '' ? 'D' : 'd' }ecreases hit chance#{ msg == '' ? " of #{@family} weapons#{ @name === nil ? '' : " named #{@name}" }" : '' } by #{@hit_chance}%." if @hit_chance < 0
+			hmsg = ''
+			if @hit_chance != 0
+				hmsg = "#{@hit_chance > 0 ? 'increases' : 'decreases'} hit chance of #{@family} weapons#{ @name === nil ? '' : " named #{@name}" }  by #{@hit_chance.abs}%."
+			end
+			if @damage != 0
+				hmsg.capitalize!
+				msg = "#{@damage > 0 ? 'Increases' : 'Decreases'} damage dealt by #{@family} weapons#{ @name === nil ? '' : " named #{@name}" } by #{@damage.abs}"
+				msg << '. ' if @hit_chance == 0
+				msg << ' and ' if @damage != 0
+			end
+			msg << hmsg
 			return msg
 		end
 
