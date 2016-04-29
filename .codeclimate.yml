@@ -1,0 +1,48 @@
+---
+engines:
+  bundler-audit:
+    enabled: true
+  csslint:
+    enabled: true
+  duplication:
+    enabled: true
+    config:
+      languages:
+      - ruby
+      - javascript
+      - python
+      - php
+  eslint:
+    enabled: true
+  fixme:
+    enabled: true
+  rubocop:
+    enabled: true
+ratings:
+  paths:
+  - Gemfile.lock
+  - "**.css"
+  - "**.inc"
+  - "**.js"
+  - "**.jsx"
+  - "**.module"
+  - "**.php"
+  - "**.py"
+  - "**.rb"
+exclude_paths:
+- config/
+- features/
+- public/icons/
+- public/images/
+- public/img/
+- public/swf/
+- public/tiles/
+- public/ails/
+- public/css/images/
+- public/css/jqui/
+- public/css/sass/
+- "*jquery*.js"
+- "*dataTables*.css"
+- "*dataTables*.js"
+- "*jquery*.css"
+- "absolution*.css"
