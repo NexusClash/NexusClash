@@ -2,6 +2,7 @@ module Firmament
 
 	class Plane
 
+		attr_reader :id
 		attr_reader :plane
 		attr_reader :dead_tile
 		@@planes = ThreadSafe::Cache.new
@@ -43,6 +44,7 @@ module Firmament
 			@pending_deletion = Queue.new
 			@pending_save = Queue.new
 
+			@id = plane.to_i
 			@plane = Entity::Plane.where({plane: plane.to_i}).first
 			@@planes[plane.to_i] = self
 

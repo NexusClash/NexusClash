@@ -216,7 +216,8 @@ web_app = Dash.new
 
 ws_app = lambda do |env|
 
-	Faye::WebSocket.send :include, Wayfarer::Identity
+
+	Faye::WebSocket.send :include, Wayfarer::Engine
 
 
 	ws = Faye::WebSocket.new(env, ["nexusdash"], {:ping => 25, :extensions => [PermessageDeflate]})
@@ -230,57 +231,59 @@ ws_app = lambda do |env|
 			session = env['rack.session']
 
 			msg['packets'].each do |ent|
-				case ent['type'].to_s
-					when 'request_character'
-						ws.send({packets: [{type: 'character', character: ws.character.to_hash}]}.to_json)
-					when 'connect'
-						# Authenticate as plane server
-						if ent.has_key? 'plane'
-							plane = Entity::Plane.where(plane: ent['plane']).first
-							if plane.token == ent['token']
-								ws.plane = plane.id
-								Firmament::Plane.add_server ws
-							end
+				if ent['type'] == 'connect'
+					# Authenticate as plane server
+					if ent.has_key? 'plane'
+						plane = Entity::Plane.where(plane: ent['plane']).first
+						if plane.token == ent['token']
+							ws.plane = plane.id
+							Firmament::Plane.add_server ws
 						end
-						# Authenticate as admin
-						if ent.has_key? 'admin'
-							user = Entity::Account.where(username: session[:username]).first
-							if user.has_role?(:admin)
-								ws.send({packets: [{type: 'developer_mode', toggle: 'on' }]}.to_json)
-								ws.admin = true
-								Firmament::Plane.add_admin ws
+					end
+					# Authenticate as admin
+					if ent.has_key? 'admin'
+						user = Entity::Account.where(username: session[:username]).first
+						if user.has_role?(:admin)
+							ws.send({packets: [{type: 'developer_mode', toggle: 'on' }]}.to_json)
+							ws.admin = true
+							Firmament::Plane.add_admin ws
+						else
+							ws.send({packets: [{type: 'error', message: 'Authentication failiure' }]}.to_json)
+						end
+					end
+					# Authenticate as character
+					if ent.has_key? 'char_id'
+						game = Firmament::Plane.fetch Instance.plane
+						if game.character? ent[:char_id]
+							char = game.character ent[:char_id]
+						else
+							char = Entity::Character.find(ent['char_id'].to_i)
+						end
+						unless char.plane === Instance.plane
+							ws.send({packets: [{type: 'error', message: 'Connected to wrong plane server for character!' }]}.to_json)
+							return
+						end
+						if char != nil
+							if char.account.username == session[:username]
+								ws.character = game.character ent['char_id'].to_i
+								ws.character.socket.send({packets: [{type: 'debug', message: 'Another login has deregistered this character from this connection!'}]}) unless ws.character.socket === nil
+								ws.character.socket = ws
+								ws.admin = char.account.has_role?(:admin)
+								ws.send({packets: [{type: 'self', character: ws.character.to_hash }, {type: 'developer_mode', toggle: ( ws.admin ? 'on' : 'off' )}]}.to_json)
 							else
 								ws.send({packets: [{type: 'error', message: 'Authentication failiure' }]}.to_json)
 							end
+						else
+							ws.send({packets: [{type: 'error', message: 'Authentication failiure' }]}.to_json)
 						end
-						# Authenticate as character
-						if ent.has_key? 'char_id'
-							game = Firmament::Plane.fetch Instance.plane
-							if game.character? ent[:char_id]
-								char = game.character ent[:char_id]
-							else
-								char = Entity::Character.find(ent['char_id'].to_i)
-							end
-							unless char.plane === Instance.plane
-								ws.send({packets: [{type: 'error', message: 'Connected to wrong plane server for character!' }]}.to_json)
-								return
-							end
-							if char != nil
-								if char.account.username == session[:username]
-									ws.character = game.character ent['char_id'].to_i
-									ws.character.socket.send({packets: [{type: 'debug', message: 'Another login has deregistered this character from this connection!'}]}) unless ws.character.socket === nil
-									ws.character.socket = ws
-									ws.admin = char.account.has_role?(:admin)
-									ws.send({packets: [{type: 'self', character: ws.character.to_hash }, {type: 'developer_mode', toggle: ( ws.admin ? 'on' : 'off' )}]}.to_json)
-								else
-									ws.send({packets: [{type: 'error', message: 'Authentication failiure' }]}.to_json)
-								end
-							else
-								ws.send({packets: [{type: 'error', message: 'Authentication failiure' }]}.to_json)
-							end
-						end
+					end
+				else
+					type = ent['type'].to_sym
+					if Wayfarer::Engine.api_functions.include? type
+						ws.__send__(type, ent) unless ws.character === nil && ws.admin != true
 					else
-						Wayfarer.process_message(ws, ent) unless ws.character === nil && ws.admin != true
+						ws.send({packets: [{type: 'debug', message: "Invalid API Call: #{type}. Valid Wayfarer API calls are: #{Wayfarer::Engine.api_functions.to_a.join(', ')}." }]}.to_json)
+					end
 				end
 			end
 
