@@ -340,7 +340,7 @@ module Wayfarer
 						tile.z = json['z'].to_i
 						tile.type_id = json['type_id'].to_i if json.has_key? 'type_id'
 						tile.name = json['name'] if json.has_key? 'name'
-						tile.description = Rack::Utils.unescape(self.json_unescape(json['description'])) if json.has_key? 'description'
+						tile.description = Rack::Utils.unescape(Wayfarer.json_unescape(json['description'])) if json.has_key? 'description'
 						tile.save
 						game.remove_void(tile.x, tile.y, tile.z)
 					else
@@ -350,7 +350,7 @@ module Wayfarer
 						tile.z = json['z'].to_i
 						tile.type_id = json['type_id'].to_i if json.has_key? 'type_id'
 						tile.name = json['name'] if json.has_key? 'name'
-						tile.description = Rack::Utils.unescape(self.json_unescape(json['description'])) if json.has_key? 'description'
+						tile.description = Rack::Utils.unescape(Wayfarer.json_unescape(json['description'])) if json.has_key? 'description'
 						tile.save
 					end
 

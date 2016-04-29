@@ -38,12 +38,12 @@ module Effect
 
 		def describe
 			msg = ''
-			msg = "Increases damage dealt by #{@family.to_s} weapons#{ @name === nil ? '' : " named #{@name}" } by #{@damage.to_s}" if @damage > 0
-			msg = "Decreases damage dealt by #{@family.to_s} weapons#{ @name === nil ? '' : " named #{@name}" } by #{@damage.to_s}" if @damage < 0
+			msg = "Increases damage dealt by #{@family} weapons#{ @name === nil ? '' : " named #{@name}" } by #{@damage}" if @damage > 0
+			msg = "Decreases damage dealt by #{@family} weapons#{ @name === nil ? '' : " named #{@name}" } by #{@damage}" if @damage < 0
 			msg << '.' if @damage != 0 && @hit_chance == 0
 			msg << ' and ' if @damage != 0 && @hit_chance != 0
-			msg = "#{ msg == '' ? 'I' : 'i' }ncreases hit chance#{ msg == '' ? " of #{@family.to_s} weapons#{ @name === nil ? '' : " named #{@name}" }" : '' } by #{@hit_chance.to_s}%." if @hit_chance > 0
-			msg = "#{ msg == '' ? 'D' : 'd' }ecreases hit chance#{ msg == '' ? " of #{@family.to_s} weapons#{ @name === nil ? '' : " named #{@name}" }" : '' } by #{@hit_chance.to_s}%." if @hit_chance < 0
+			msg = "#{ msg == '' ? 'I' : 'i' }ncreases hit chance#{ msg == '' ? " of #{@family} weapons#{ @name === nil ? '' : " named #{@name}" }" : '' } by #{@hit_chance}%." if @hit_chance > 0
+			msg = "#{ msg == '' ? 'D' : 'd' }ecreases hit chance#{ msg == '' ? " of #{@family} weapons#{ @name === nil ? '' : " named #{@name}" }" : '' } by #{@hit_chance}%." if @hit_chance < 0
 			return msg
 		end
 
