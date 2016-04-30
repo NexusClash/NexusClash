@@ -17,7 +17,6 @@ require 'expedition'
 
 class Voyager < Expedition
 
-	attr_reader :state
 	attr_accessor :adventurer
 	attr_accessor :luggage
 

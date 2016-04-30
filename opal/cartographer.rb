@@ -15,7 +15,6 @@ require 'expedition'
 
 class Cartographer < Expedition
 
-	attr_reader :state
 	attr_accessor :map
 
 	attr_accessor :map_x
@@ -34,39 +33,6 @@ class Cartographer < Expedition
 
 	def self.mode
 		:editor
-	end
-
-	def state=(state)
-		return if @state == :error && state == :disconnected
-		@state = state
-		case state
-			when :error, :disconnected
-				$window.after @recon_delay do
-					unless @req_in_air
-						@req_in_air = true
-						@recon_delay = @recon_delay + 1 if @recon_delay < @recon_delay_max
-						Browser::HTTP.get("/validate/#{$document['char_id'].inner_html.to_s.strip}").then {|resp|
-							@req_in_air = false
-							if resp.text == 'ok'
-								self.connect
-							else
-								self.state = :error
-							end
-
-						}.rescue{
-							@req_in_air = false
-							self.state = :error
-						}
-					end
-
-				end
-				$document['#ws-connection']['data-state'] = state.to_s
-			when :connected
-				$document['#ws-connection']['data-state'] = state.to_s
-				@recon_delay = @recon_delay_min
-			when :unsupported
-				$document['#ws-connection']['data-state'] = 'error'
-		end
 	end
 
 	def initialize(addr)
