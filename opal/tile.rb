@@ -61,10 +61,10 @@ class Tile
 		@node['data-type'] = @type
 		@node['style'] = 'clear:left' if @clear_left
 		@node.inner_html = ''
-		if Voyager.mode == :game
+		if Expedition.mode == :game
 			@node['data-action-type'] = 'movement'
 			@node['data-action-vars'] = "x:#{@x},y:#{@y},z:#{@z}"
-			if Voyager.developer_mode
+			if Expedition.developer_mode
 				@node['data-dev-action-type'] = 'dev_tile'
 				@node['data-dev-action-vars'] = "x:#{@x},y:#{@y},z:#{@z}"
 				@node['oncontextmenu'] = 'return false;'

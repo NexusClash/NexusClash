@@ -11,10 +11,9 @@ require 'native'
 
 require 'adventurer'
 require 'instance'
+require 'expedition'
 
-puts 'wow, running ruby!'
-
-class Voyager
+class Cartographer < Expedition
 
 	attr_reader :state
 	attr_accessor :map
@@ -71,18 +70,13 @@ class Voyager
 	end
 
 	def initialize(addr)
-		@address = addr
-		@req_in_air = false
-		@recon_delay = 3
-		@recon_delay_min = 3
-		@recon_delay_max = 6
 		@size = 25
 		@map_z = 0
 		@map_x = 20
 		@map_y = 20
 		self.zoom = 0.5
 		@map = Magellan.new $document['#map_edit_view'], @size
-		self.connect
+		super addr
 	end
 
 	def zoom=(zoom)
@@ -90,45 +84,6 @@ class Voyager
 		px = zoom * 75
 		css = "#map_edit_container{max-height:80vh} #map_edit_view{width:#{px * @size * 2 + px * 2 + @size * 2 + 80}px; height:#{px * @size * 2 + px * 2 + @size * 2}px}  #map_edit_view .tile {width: #{px}px; height: #{px}px; max-width:#{px}px !important} "
 		$document['#map_editor_zoom'].inner_html = css
-	end
-
-	def connect
-		unless Browser::Socket.supported?
-			@state = :unsupported
-			return
-		end
-
-		self.state = :connecting
-		@socket = Browser::Socket.new @address do |socket|
-
-			socket.on :open do
-				self.state = :connected
-				$document['#game_loading .message'].inner_html = 'Connected!'
-			end
-
-			socket.on :message do |e|
-				puts e.data
-				handle_message e
-			end
-
-			socket.on :error do
-				self.state = :error
-			end
-
-			socket.on :close do
-				self.state = :disconnected
-			end
-		end
-	end
-
-	def write_message(msg)
-		puts "send - #{msg.to_json}"
-		@socket.write({packets: [msg] }.to_json)
-	end
-
-	def write_messages(msgs)
-		puts "send - #{msgs.to_json}"
-		@socket.write({packets: msgs }.to_json)
 	end
 
 	def handle_message(m)
@@ -247,41 +202,41 @@ $document['css-tab-r1'].trigger :click
 
 $document['#game_loading .message'].inner_html = 'Connecting...'
 
-voyager = Voyager.new Instance.endpoint
+cartographer = Cartographer.new Instance.endpoint
 
 puts 'socket opened!'
 
 $document.on :click, '#zoom_in' do |event|
 
-	if voyager.zoom < 1
-		voyager.zoom = voyager.zoom + 0.1
+	if cartographer.zoom < 1
+		cartographer.zoom = cartographer.zoom + 0.1
 	else
-		voyager.zoom = voyager.zoom + 1
+		cartographer.zoom = cartographer.zoom + 1
 	end
 end
 
 $document.on :click, '#zoom_out' do |event|
-	if voyager.zoom > 2
-		voyager.zoom = voyager.zoom - 1
+	if cartographer.zoom > 2
+		cartographer.zoom = cartographer.zoom - 1
 	else
-		if voyager.zoom > 0.1
-      voyager.zoom = voyager.zoom - 0.1
+		if cartographer.zoom > 0.1
+			cartographer.zoom = cartographer.zoom - 0.1
 		end
 	end
 
 end
 
 $document.on :click, '#map_edit_view .tile' do |event|
-	return unless voyager.state == :connected
+	return unless cartographer.state == :connected
 
 	if event.button == 2
 		#right click - select tile as the clone source if the multiple tile stamping tab is open
 		unless $document['#css-tab-r2:checked'] === nil
 
-			x = event.target['data-x'].to_i - voyager.map_x
-			y = event.target['data-y'].to_i - voyager.map_y
+			x = event.target['data-x'].to_i - cartographer.map_x
+			y = event.target['data-y'].to_i - cartographer.map_y
 
-			tile = voyager.map.surrounds[x][y]
+			tile = cartographer.map.surrounds[x][y]
 
 			$document['#edit_tile_multiple input[name=stamp-name'].value = tile.name
 			$document['#edit_tile_multiple .description textarea'].value = tile.description
@@ -294,9 +249,9 @@ $document.on :click, '#map_edit_view .tile' do |event|
 	else
 		unless $document['#css-tab-r1:checked'] === nil
 			# Single tile edit mode
-			voyager.click_x = event.target['data-x'].to_i
-			voyager.click_y = event.target['data-y'].to_i
-			voyager.write_message({type: 'dev_tile', x: event.target['data-x'], y: event.target['data-y'], z: event.target['data-z']})
+			cartographer.click_x = event.target['data-x'].to_i
+			cartographer.click_y = event.target['data-y'].to_i
+			cartographer.write_message({type: 'dev_tile', x: event.target['data-x'], y: event.target['data-y'], z: event.target['data-z']})
 		else
 			# Tile stamping mode
 			changes = {type: 'dev_tile', edit: true, x: event.target['data-x'].to_i, y: event.target['data-y'].to_i, z: event.target['data-z'].to_i}
@@ -308,21 +263,21 @@ $document.on :click, '#map_edit_view .tile' do |event|
 				native_node = Native.convert node
 				changes['description'] = `node.value`
 			end
-			voyager.write_message(changes)
+			cartographer.write_message(changes)
 		end
 	end
 end
 
 $document.on :click, 'button[data-action-type], .action[data-action-type]' do |event|
-	return unless voyager.state == :connected
-	return unless event.button == 0 || event.button == 1 || (event.button == 2 && Voyager.developer_mode && event.target['data-dev-action-type'] != nil)
+	return unless cartographer.state == :connected
+	return unless event.button == 0 || event.button == 1 || (event.button == 2 && Cartographer.developer_mode && event.target['data-dev-action-type'] != nil)
 
 	target = event.target['data-action-type']
 	defined = event.target['data-action-vars']
 	user_defined = event.target['data-action-user-vars']
 	post_event_click = event.target['data-action-trigger-click']
 
-	if Voyager.developer_mode && event.target['data-dev-action-type'] != nil && event.button == 2
+	if Cartographer.developer_mode && event.target['data-dev-action-type'] != nil && event.button == 2
 		target = event.target['data-dev-action-type']
 		defined = event.target['data-dev-action-vars']
 		user_defined = event.target['data-dev-action-user-vars']
@@ -352,6 +307,6 @@ $document.on :click, 'button[data-action-type], .action[data-action-type]' do |e
 		end
 
 	end
-	voyager.write_message(packet)
+	cartographer.write_message(packet)
 	$document[post_event_click].trigger :click if post_event_click != nil
 end
