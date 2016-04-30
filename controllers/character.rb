@@ -29,50 +29,7 @@ class Dash < Sinatra::Application
 
 			# Calculate skill tree
 
-			root = Array.new
-
-			nodes_added = 0
-
-			char.statuses.each do |status|
-				if status.family == :class
-					nodes_added += 1
-					root << {id: status.link, name: status.name, type: :class, learned: true, children: []}
-				end
-			end
-
-			add_to_tree = lambda do |tree, item, prereq; pinpoint, found, children, found2|
-				pinpoint = tree.index{|esrc| esrc[:id] == prereq}
-				found = false
-				if pinpoint === nil
-					tree.map! { |ele|
-						children, found2 = add_to_tree.call(ele[:children], item, prereq)
-						ele[:children] = children if found2
-						found = found || found2
-						ele
-					}
-				else
-					tree[pinpoint][:children] << item
-					found = true
-				end
-				return tree, found
-			end
-
-			skips = []
-
-			char.statuses.each do |instance_skill|
-				if instance_skill.family == :skill
-					instance_skill.effects.each do |effect|
-						if effect.is_a?(Effect::SkillPrerequisite)
-							tree, node_add = add_to_tree.call(root, {id: instance_skill.link, name: instance_skill.name, description: instance_skill.describe, type: instance_skill.family, learned: true, cost: 0, children: []}, effect.link.id)
-							root = tree if node_add
-							skips << instance_skill.link
-						end
-					end
-				end
-			end
-
-
-			root = [root] unless root.is_a? Array
+			root = char.skill_tree false
 
 
 			owner = false

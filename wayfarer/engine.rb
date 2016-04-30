@@ -46,7 +46,7 @@ module Wayfarer
 			end
 
 			if found === nil
-				# TODO: error
+				Entity::Message.send_transient([character.id], 'Unable to find that portal here!', MessageType::FAILED)
 			else
 
 				if found.plane == game.plane.id
@@ -62,8 +62,6 @@ module Wayfarer
 
 					# Unload character
 
-					#TODO: Mutex?
-					#TODO: Handling offline / unknown planes
 					character.save
 					Entity::Character.where(id: character.id).update(x: found.x, y: found.y, z: found.z, plane: found.plane)
 					game.unload_character! character.id
@@ -75,7 +73,6 @@ module Wayfarer
 
 					plane = Entity::Plane.where({plane: found.plane}).first
 
-					#TODO: Add warp support for just changing sockets
 					send({packets: [{type: 'warp', url: "https://#{plane.domain}/warp/#{user.username}/#{character.id}/#{token}/game" }]}.to_json)
 
 					rmpacket = {packets:[type:'remove_character', char_id: character.id]}.to_json
@@ -164,89 +161,8 @@ module Wayfarer
 		end
 
 		def request_skill_tree(*_)
-			root = Array.new
 
-			nodes_added = 0
-
-			character.statuses.each do |status|
-				if status.family == :class
-					nodes_added += 1
-					root << {id: status.link, name: status.name, type: :class, learned: true, children: []}
-				end
-			end
-
-			add_to_tree = lambda do |tree, item, prereq; pinpoint, found, children, found2|
-				pinpoint = tree.index{|esrc| esrc[:id] == prereq}
-				found = false
-				if pinpoint === nil
-					tree.map! { |ele|
-						children, found2 = add_to_tree.call(ele[:children], item, prereq)
-						ele[:children] = children if found2
-						found = found || found2
-						ele
-					}
-				else
-					tree[pinpoint][:children] << item
-					found = true
-				end
-				return tree, found
-			end
-
-			skips = []
-
-			character.statuses.each do |instance_skill|
-				if instance_skill.family == :skill
-					instance_skill.effects.each do |effect|
-						if effect.is_a?(Effect::SkillPrerequisite)
-							tree, node_add = add_to_tree.call(root, {id: instance_skill.link, name: instance_skill.name, description: instance_skill.describe, type: instance_skill.family, learned: true, cost: 0, children: []}, effect.link.id)
-							root = tree if node_add
-							skips << instance_skill.link
-						end
-					end
-				end
-			end
-
-			unassigned = Array.new
-
-			Entity::StatusType.skills.each do |skill|
-				if skill.family == :skill
-					instance_skill = Entity::Status.source_from(skill.id)
-					instance_skill.effects.each do |effect|
-						if effect.is_a?(Effect::SkillPrerequisite) && !skips.include?(skill.id)
-
-							cp_cost = 0
-
-							instance_skill.effects.each do |seffect|
-								cp_cost += seffect.cp_cost if seffect.is_a?(Effect::SkillPurchasable)
-							end
-
-							tree, node_add = add_to_tree.call(root, {id: skill.id, name: instance_skill.name, description: instance_skill.describe, type: instance_skill.family, learned: false, cost: cp_cost, children: []}, effect.link.id)
-							root = tree if node_add
-
-							unless node_add
-								unassigned << [{id: skill.id, name: instance_skill.name, description: instance_skill.describe, type: instance_skill.family, learned: false, cost: cp_cost, children: []}, effect.link.id]
-							end
-
-						end
-					end
-				end
-			end
-
-
-			old_quantity = 0
-			while old_quantity != unassigned.count do
-				old_quantity = unassigned.count
-				unassigned.each do |element|
-
-					tree, node_add = add_to_tree.call(root, element[0], element[1])
-					root = tree if node_add
-
-					unassigned.delete(element) if node_add
-				end
-			end
-
-			root = [root] unless root.is_a? Array
-			send({packets: [{type: 'skill_tree', tree: root }]}.to_json)
+			send({packets: [{type: 'skill_tree', tree: character.skill_tree(true) }]}.to_json)
 		end
 
 

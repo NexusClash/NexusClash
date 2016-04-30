@@ -31,10 +31,6 @@ class Cartographer < Expedition
 		true
 	end
 
-	def self.mode
-		:editor
-	end
-
 	def initialize(addr)
 		@size = 25
 		@map_z = 0
@@ -42,7 +38,7 @@ class Cartographer < Expedition
 		@map_y = 20
 		self.zoom = 0.5
 		@map = Magellan.new $document['#map_edit_view'], @size
-		super addr
+		super addr, :editor
 	end
 
 	def zoom=(zoom)
@@ -58,11 +54,8 @@ class Cartographer < Expedition
 				when 'authentication_request'
 					$document['#game_loading .message'].inner_html = 'Authenticating...'
 					write_message({type: 'connect', admin: true})
-				when 'debug'
-					puts 'debug: ' + ent['message']
-					$document['#game_loading .message'].inner_html = ent['message'].replace('\\n', '<br/>')
-				when 'error'
-					puts 'error: ' + ent['message']
+				when 'debug', 'error'
+					puts "#{ent[:type]}: #{ent['message']}"
 					$document['#game_loading .message'].inner_html = ent['message'].replace('\\n', '<br/>')
 				when 'developer_mode'
 					$document['#game_loading'].attributes[:class] = 'ui-helper-hidden'
@@ -93,23 +86,6 @@ class Cartographer < Expedition
 						target.description = data['description'] if data.has_key? 'description'
 						target.render
 					end
-				when 'message'
-
-					node = DOM{
-						li
-					}
-					node['data-message-family'] = ent['class']
-					node.inner_html = ent['message'] + ' <sup>(' + Time::at(ent['timestamp'].to_i).strftime('%Y-%m-%d %H:%M:%S') + ')</sup>'
-					target_node = Native.convert $document['#activity_log ul']
-					native_node = Native.convert node
-
-					if `target_node.firstChild == null`
-						`target_node.appendChild(native_node)`
-					else
-						`target_node.insertBefore(native_node, target_node.firstChild)`
-					end
-
-					$document['#activity_log'].scroll.to({x: 0, y: 0})
 				when 'dev_tile'
 					if click_x == ent['tile']['x'].to_i && click_y == ent['tile']['y'].to_i
 						$document['#target_information .tname'].value = ent['tile']['name']
@@ -232,47 +208,4 @@ $document.on :click, '#map_edit_view .tile' do |event|
 			cartographer.write_message(changes)
 		end
 	end
-end
-
-$document.on :click, 'button[data-action-type], .action[data-action-type]' do |event|
-	return unless cartographer.state == :connected
-	return unless event.button == 0 || event.button == 1 || (event.button == 2 && Cartographer.developer_mode && event.target['data-dev-action-type'] != nil)
-
-	target = event.target['data-action-type']
-	defined = event.target['data-action-vars']
-	user_defined = event.target['data-action-user-vars']
-	post_event_click = event.target['data-action-trigger-click']
-
-	if Cartographer.developer_mode && event.target['data-dev-action-type'] != nil && event.button == 2
-		target = event.target['data-dev-action-type']
-		defined = event.target['data-dev-action-vars']
-		user_defined = event.target['data-dev-action-user-vars']
-		post_event_click = event.target['data-dev-action-trigger-click']
-	end
-
-	packet = {type: target}
-	defined = '' if defined === nil
-	defined.split(',').each do |defined_var|
-		var = defined_var.split(':', 2)
-		packet[var[0]] = var[1]
-	end
-	user_defined = '' if user_defined === nil
-	user_defined.split(',').each do |user_var|
-		var = user_var.split(':', 2)
-		elem = $document[var[1]]
-		case elem.name.downcase
-			when 'option'
-				packet[var[0]] = elem.attributes[:value]
-			when 'input'
-				packet[var[0]] = elem.value
-				elem.value = '' if elem['type'] == 'text'
-			when 'textarea'
-				packet[var[0]] = elem.value
-			else
-				packet[var[0]] = elem.inner_html
-		end
-
-	end
-	cartographer.write_message(packet)
-	$document[post_event_click].trigger :click if post_event_click != nil
 end

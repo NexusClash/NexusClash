@@ -22,7 +22,7 @@ class Voyager < Expedition
 
 
 	def initialize(addr)
-		super addr
+		super addr, :game
 	end
 
 	def handle_message(m)
@@ -32,24 +32,20 @@ class Voyager < Expedition
 					$document['#game_loading .message'].inner_html = 'Authenticating...'
 					char_id = $document['char_id'].inner_html.to_s.strip
 					write_message({type: 'connect', char_id: char_id})
-				when 'debug'
-					puts 'debug: ' + ent['message']
-					$document['#game_loading .message'].inner_html = ent['message'].replace('\\n', '<br/>')
-				when 'error'
-					puts 'error: ' + ent['message']
+				when 'debug', 'error'
+					puts "#{ent[:type]}: #{ent['message']}"
 					$document['#game_loading .message'].inner_html = ent['message'].replace('\\n', '<br/>')
 				when 'self'
 					if @adventurer === nil then
 						$document['#game_loading .message'].inner_html = 'Loading character...'
 						@adventurer = Adventurer.new ent['character'], true
 						@luggage = Luggage.new
-						write_messages([{type: 'refresh_map'}, {type: 'sync_messages', from: (Time.now - (2*24*60*60))}, {type: 'refresh_inventory'}])
 					else
 						@adventurer.update ent['character']
 						@adventurer.render
 						$document['#activity_log ul'].inner_html = ''
-						write_messages([{type: 'refresh_map'}, {type: 'sync_messages', from: (Time.now - (2*24*60*60))}, {type: 'refresh_inventory'}])
 					end
+					write_messages([{type: 'refresh_map'}, {type: 'sync_messages', from: (Time.now - (2*24*60*60))}, {type: 'refresh_inventory'}])
 				when 'character'
 					data = ent['character']
 					if data['id'] == @adventurer.id
@@ -88,7 +84,7 @@ class Voyager < Expedition
 						end
 						target.description = data['description'] if data.has_key? 'description'
 						target.render
-						$document['tile_description'].inner_html = "<h4>#{target.name} (#{target.x}, #{target.y}, #{target.type})</h4><p>#{target.description}</p><p>There #{target.occupants == 1 ? 'is' : 'are'} #{target.occupants.to_s} other #{target.occupants == 1 ? 'person' : 'people'} here.</p>" if target.x == @adventurer.x && target.y == @adventurer.y && target.z == @adventurer.z
+						$document['tile_description'].inner_html = "<h4>#{target.name} (#{target.x}, #{target.y}, #{target.type})</h4><p>#{target.description}</p><p>There #{target.occupants == 1 ? 'is' : 'are'} #{target.occupants} other #{target.occupants == 1 ? 'person' : 'people'} here.</p>" if target.x == @adventurer.x && target.y == @adventurer.y && target.z == @adventurer.z
 					end
 				when 'actions'
 					html = "<li><button data-action-type='attack' data-action-vars='target:#{@adventurer.target.id},target_type:#{@adventurer.target.type}' data-action-user-vars='weapon:#action_attack option:checked'>Attack with</button> <select id='action_attack'>"
@@ -152,13 +148,13 @@ class Voyager < Expedition
 						}
 
 						if item['type'] == 'class'
-							node.inner_html = "<h4><img style='display:inline;width:30px;margin-right:5px;margin-bottom:-8px;' src='/img/class/black/#{item['name']}.png'>#{item['name'].to_s} Skills</h4>"
+							node.inner_html = "<h4><img style='display:inline;width:30px;margin-right:5px;margin-bottom:-8px;' src='/img/class/black/#{item['name']}.png'>#{item['name']} Skills</h4>"
 						else
 
 							if item['learned']
-								node.inner_html = "<button style='background:#444;color:#EEE'>#{item['name'].to_s}</button>"
+								node.inner_html = "<button style='background:#444;color:#EEE'>#{item['name']}</button>"
 							else
-								node.inner_html = "<button data-action-type='learn_skill' data-action-vars='id:#{item['id']}'>#{item['name'].to_s}(#{item['cost']}CP)</button>"
+								node.inner_html = "<button data-action-type='learn_skill' data-action-vars='id:#{item['id']}'>#{item['name']}(#{item['cost']}CP)</button>"
 							end
 
 
@@ -307,7 +303,7 @@ class Voyager < Expedition
 							html = html + '<span class="outputs"><span>Creates </span><ul>'
 
 							recipe['outputs'].each do |name, q|
-								html = html + "<li>#{q.to_s} x #{name}</li>"
+								html = html + "<li>#{q} x #{name}</li>"
 							end
 
 							html = html + '</ul></span>'
@@ -319,7 +315,7 @@ class Voyager < Expedition
 						if recipe['costs'].size > 0
 
 							recipe['costs'].each do |name, q|
-								costs = costs + "#{q.to_s} #{name.to_s.upcase},"
+								costs = costs + "#{q} #{name.to_s.upcase},"
 							end
 
 							costs = " (#{costs.chomp(',')})"
@@ -331,7 +327,7 @@ class Voyager < Expedition
 							html = html + '<span class="catalysts"><span>Requires </span><ul>'
 
 							recipe['catalysts'].each do |name, q|
-								html = html + "<li #{missing_catalysts.has_key?(name) ? "data-craft-missing='#{missing_catalysts[name].to_s}'" : 'data-craft-missing="0"'}'>#{q.to_s} x #{name}#{missing_catalysts.has_key?(name) ? '(' + missing_catalysts[name].to_s + ' missing)' : ''}</li>"
+								html = html + "<li #{missing_catalysts.has_key?(name) ? "data-craft-missing='#{missing_catalysts[name]}'" : 'data-craft-missing="0"'}'>#{q} x #{name}#{missing_catalysts.has_key?(name) ? '(' + missing_catalysts[name].to_s + ' missing)' : ''}</li>"
 							end
 
 							html = html + '</ul></span>'
@@ -343,7 +339,7 @@ class Voyager < Expedition
 							html = html + '<span class="reagents"><span>Consumes </span><ul>'
 
 							recipe['reagents'].each do |name, q|
-								html = html + "<li style='background-color:#{missing_reagents.has_key?(name) ? '#FFEEEE' : '#EEFFEE'}'>#{q.to_s} x #{name}#{missing_reagents.has_key?(name) ? '(' + missing_reagents[name].to_s + ' missing)' : ''}</li>"
+								html = html + "<li style='background-color:#{missing_reagents.has_key?(name) ? '#FFEEEE' : '#EEFFEE'}'>#{q} x #{name}#{missing_reagents.has_key?(name) ? '(' + missing_reagents[name].to_s + ' missing)' : ''}</li>"
 							end
 
 							html = html + '</ul></span>'
@@ -398,48 +394,6 @@ end
 #	$document['#speech_action input'].value = ''
 #end
 
-$document.on :click, 'button[data-action-type], .action[data-action-type]' do |event|
-	return unless voyager.state == :connected
-		return unless event.button == 0 || event.button == 1 || (event.button == 2 && Voyager.developer_mode && event.target['data-dev-action-type'] != nil)
-
-		target = event.target['data-action-type']
-		defined = event.target['data-action-vars']
-		user_defined = event.target['data-action-user-vars']
-		post_event_click = event.target['data-action-trigger-click']
-
-		if Voyager.developer_mode && event.target['data-dev-action-type'] != nil && event.button == 2
-			target = event.target['data-dev-action-type']
-			defined = event.target['data-dev-action-vars']
-			user_defined = event.target['data-dev-action-user-vars']
-			post_event_click = event.target['data-dev-action-trigger-click']
-		end
-
-		packet = {type: target}
-		defined = '' if defined === nil
-		defined.split(',').each do |defined_var|
-			var = defined_var.split(':', 2)
-			packet[var[0]] = var[1]
-		end
-		user_defined = '' if user_defined === nil
-		user_defined.split(',').each do |user_var|
-			var = user_var.split(':', 2)
-			elem = $document[var[1]]
-			case elem.name.downcase
-				when 'option'
-					packet[var[0]] = elem.attributes[:value]
-				when 'input'
-					packet[var[0]] = elem.value
-					elem.value = '' if elem['type'] == 'text'
-				when 'textarea'
-					packet[var[0]] = elem.inner_html
-				else
-					packet[var[0]] = elem.inner_html
-			end
-
-		end
-		voyager.write_message(packet)
-		$document[post_event_click].trigger :click if post_event_click != nil
-end
 
 $document.on :keyup, 'input[data-enter-trigger-action]' do |event|
 	$document[event.target['data-enter-trigger-action']].trigger :click if event.code == 13
