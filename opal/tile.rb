@@ -25,6 +25,8 @@ class Tile
 	attr_accessor :clear_left
 
 	@@css = Hash.new
+	@@mode = :game
+	@@developer_mode = false
 
 	def initialize(binding)
 		@binding = binding
@@ -52,6 +54,14 @@ class Tile
 		@@css.has_key? style
 	end
 
+	def self.developer_mode=(val)
+		@@developer_mode = val
+	end
+
+	def self.event_mode=(val)
+		@@mode = val
+	end
+
 	def render
 		@node['title'] = @name
 		@node['tabIndex'] = 0
@@ -61,29 +71,34 @@ class Tile
 		@node['data-type'] = @type
 		@node['style'] = 'clear:left' if @clear_left
 		@node.inner_html = ''
-		if Expedition.mode == :game
-			@node['data-action-type'] = 'movement'
-			@node['data-action-vars'] = "x:#{@x},y:#{@y},z:#{@z}"
-			if Expedition.developer_mode
+		case @@mode
+			when :game
+				@node['data-action-type'] = 'movement'
+				@node['data-action-vars'] = "x:#{@x},y:#{@y},z:#{@z}"
+				if @@developer_mode
+					@node['data-dev-action-type'] = 'dev_tile'
+					@node['data-dev-action-vars'] = "x:#{@x},y:#{@y},z:#{@z}"
+					@node['oncontextmenu'] = 'return false;'
+				else
+					@node['oncontextmenu'] = 'return true';
+					@node['data-action-type'] = nil
+					@node['data-action-vars'] = nil
+				end
+
+				@crowd = DOM{
+					ul.occupants
+				}
+				DOM{ li.character.self }.append_to(@crowd) if @origin_tile
+				if @occupants > 0
+					(1..@occupants).each do |i|
+						DOM{ li.character }.append_to(@crowd)
+					end
+				end
+				@crowd.append_to(@node) if @occupants > 0 || @origin_tile
+			when :editor
 				@node['data-dev-action-type'] = 'dev_tile'
 				@node['data-dev-action-vars'] = "x:#{@x},y:#{@y},z:#{@z}"
 				@node['oncontextmenu'] = 'return false;'
-			else
-				@node['oncontextmenu'] = nil
-			end
-
-			@crowd = DOM{
-				ul.occupants
-			}
-			DOM{ li.character.self }.append_to(@crowd) if @origin_tile
-			if @occupants > 0
-				(1..@occupants).each do |i|
-					DOM{ li.character }.append_to(@crowd)
-				end
-			end
-			@crowd.append_to(@node) if @occupants > 0 || @origin_tile
-		else
-			@node['oncontextmenu'] = 'return false;'
 		end
 	end
 end

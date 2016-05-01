@@ -22,7 +22,7 @@ class Voyager < Expedition
 
 
 	def initialize(addr)
-		super addr, :game
+		super addr, :game, false
 	end
 
 	def handle_message(m)
@@ -267,10 +267,10 @@ class Voyager < Expedition
 					$document['css-tab-r3'].trigger :click
 				when 'developer_mode'
 					if ent['toggle'] == 'on'
-						@@developer_mode = true
+						developer_mode = true
 						$document['#developer_mode_message'].attributes[:class] = ''
 					else
-						@@developer_mode = false
+						developer_mode = false
 						$document['#developer_mode_message'].attributes[:class] = 'ui-helper-hidden'
 					end
 				when 'tile_css'
@@ -362,6 +362,78 @@ class Voyager < Expedition
 			end
 		end
 	end
+
+	def attach_html_bindings
+		super
+
+		$document.on :click, 'span[data-char-link]' do |event|
+			return unless state == :connected
+			return unless event.button == 0 || event.button == 1
+			if adventurer.neighbours.has_key? event.target['data-char-link'].to_i
+				$document['css-tab-r3'].trigger :click
+				$document['target_information']['data-target-type'] = 'character'
+				target = adventurer.neighbours[event.target['data-char-link'].to_i]
+				adventurer.target = target
+				adventurer.render
+				write_message({type: 'target', char_id: target.id})
+			end
+		end
+
+		$document.on :keyup, '#map .tile' do |event|
+			#send - {"type":"movement", "x":"1", "y":"1", "z":"0"}
+			packet = nil
+			case event.code
+				#when 36
+				#	packet = {x:-1, y:-1, z:0}
+				when 38, 87
+					packet = {x:0, y:-1, z:0}
+				#when 33
+				#	packet = {x:1, y:-1, z:0}
+				when 37, 65
+					packet = {x:-1, y:0, z:0}
+				when 39, 68
+					packet = {x:1, y:0, z:0}
+				#when 35
+				#	packet = {x:-1, y:1, z:0}
+				when 40, 83
+					packet = {x:0, y:1, z:0}
+				#when 34
+				#	packet = {x:1, y:1, z:0}
+			end
+			unless packet === nil
+				packet[:type] = 'movement'
+				packet[:x] += adventurer.x
+				packet[:y] += adventurer.y
+				packet[:z] += adventurer.z
+				write_message(packet)
+			end
+
+		end
+
+		$document.on :click, '#hud_player_vitals .ui-hud-cp' do |event|
+			if state == :connected
+				$document['#play_pane'].attributes[:class] = 'ui-helper-hidden'
+				$document['#skills_pane'].attributes[:class] = ''
+				$document['#crafting_pane'].attributes[:class] = 'ui-helper-hidden'
+				write_message({type: 'request_skill_tree'})
+			end
+		end
+
+		$document.on :click, '.return_to_game' do |event|
+			$document['#play_pane'].attributes[:class] = ''
+			$document['#skills_pane'].attributes[:class] = 'ui-helper-hidden'
+			$document['#crafting_pane'].attributes[:class] = 'ui-helper-hidden'
+		end
+
+		$document.on :click, '#view_crafting_recipes' do |event|
+			if state == :connected
+				$document['#play_pane'].attributes[:class] = 'ui-helper-hidden'
+				$document['#skills_pane'].attributes[:class] = 'ui-helper-hidden'
+				$document['#crafting_pane'].attributes[:class] = ''
+				write_message({type: 'request_crafting_recipes'})
+			end
+		end
+	end
 end
 
 $document['css-tab-r1'].trigger :click
@@ -369,86 +441,3 @@ $document['css-tab-r1'].trigger :click
 $document['#game_loading .message'].inner_html = 'Connecting...'
 
 voyager = Voyager.new Instance.endpoint
-
-puts 'socket opened!'
-
-#$document['map'].on :click, '.tile' do |event|
-#	voyager.write_message({type: 'movement', x: event.target['data-x'].to_i, y: event.target['data-y'].to_i, z: event.target['data-z'].to_i})
-#end
-
-$document.on :click, 'span[data-char-link]' do |event|
-	return unless voyager.state == :connected
-	return unless event.button == 0 || event.button == 1
-	if voyager.adventurer.neighbours.has_key? event.target['data-char-link'].to_i
-		$document['css-tab-r3'].trigger :click
-		$document['target_information']['data-target-type'] = 'character'
-		target = voyager.adventurer.neighbours[event.target['data-char-link'].to_i]
-		voyager.adventurer.target = target
-		voyager.adventurer.render
-		voyager.write_message({type: 'target', char_id: target.id})
-	end
-end
-
-#$document.on :click, '#speech_action button' do |event|
-#	voyager.write_message({type: 'speech', message: $document['#speech_action input'].value})
-#	$document['#speech_action input'].value = ''
-#end
-
-
-$document.on :keyup, 'input[data-enter-trigger-action]' do |event|
-	$document[event.target['data-enter-trigger-action']].trigger :click if event.code == 13
-end
-
-$document.on :keyup, '#map .tile' do |event|
-	#send - {"type":"movement", "x":"1", "y":"1", "z":"0"}
-	packet = nil
-	case event.code
-		#when 36
-		#	packet = {x:-1, y:-1, z:0}
-		when 38, 87
-			packet = {x:0, y:-1, z:0}
-		#when 33
-		#	packet = {x:1, y:-1, z:0}
-		when 37, 65
-			packet = {x:-1, y:0, z:0}
-		when 39, 68
-			packet = {x:1, y:0, z:0}
-		#when 35
-		#	packet = {x:-1, y:1, z:0}
-		when 40, 83
-			packet = {x:0, y:1, z:0}
-		#when 34
-		#	packet = {x:1, y:1, z:0}
-	end
-	unless packet === nil
-		packet[:type] = 'movement'
-		packet[:x] += voyager.adventurer.x
-		packet[:y] += voyager.adventurer.y
-		packet[:z] += voyager.adventurer.z
-		voyager.write_message(packet)
-	end
-
-end
-
-$document.on :click, '#hud_player_vitals .ui-hud-cp' do |event|
-	return unless voyager.state == :connected
-	$document['#play_pane'].attributes[:class] = 'ui-helper-hidden'
-	$document['#skills_pane'].attributes[:class] = ''
-	$document['#crafting_pane'].attributes[:class] = 'ui-helper-hidden'
-	voyager.write_message({type: 'request_skill_tree'})
-end
-
-$document.on :click, '.return_to_game' do |event|
-	$document['#play_pane'].attributes[:class] = ''
-	$document['#skills_pane'].attributes[:class] = 'ui-helper-hidden'
-	$document['#crafting_pane'].attributes[:class] = 'ui-helper-hidden'
-	return unless voyager.state == :connected
-end
-
-$document.on :click, '#view_crafting_recipes' do |event|
-	return unless voyager.state == :connected
-	$document['#play_pane'].attributes[:class] = 'ui-helper-hidden'
-	$document['#skills_pane'].attributes[:class] = 'ui-helper-hidden'
-	$document['#crafting_pane'].attributes[:class] = ''
-	voyager.write_message({type: 'request_crafting_recipes'})
-end
