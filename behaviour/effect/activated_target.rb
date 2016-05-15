@@ -5,7 +5,7 @@ module Effect
 
 		def initialize(parent, costs = nil, name = nil, targets = [:self, Entity::Character])
 			@parent = parent
-			@targets = Set.new targets
+			@targets = targets
 			@costs = Hash.new{|hash, key| 0}
 			unless costs === nil
 				costs.each do |cost, delta|
