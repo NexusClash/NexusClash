@@ -1,10 +1,47 @@
-%form(method="post")
-	- if defined? errors then
-		.ui-state-error.ui-corner-all.padding-10
-			%ul
-				- errors.each do |error|
-					%li= error
-	%p
-		%label(for="charname") Character Name:
-		%input(name="charname")
-	%input(type="submit" value="Create")
+:css
+	input[type="radio"]:checked+label {font-weight:bold;}
+%div(style="min-height:calc(100vh - 200px)")
+	%h2
+		Character Creation
+	%div(style="overflow:hidden;position:absolute;left:calc(50% - 20vh);right:10px;;top:75px;bottom:10px;pointer-events:none;")
+		%img(src="/img/class/colour/Mortal.png" style="position:absolute;width:100%;opacity:0.5")
+	%form(method="post")
+		- if defined? errors then
+			.ui-state-error.ui-corner-all.padding-10
+				%ul
+					- errors.each do |error|
+						%li= error
+		%p
+			%label(for="charname") What is your character's name?
+			%br
+			%input(name="charname")
+		%p
+			What is your character's gender?
+			%ul.list-plain
+				%li
+					%input{:type => :radio, :value => Gender::PLURAL, :name => :gender, :id => :gender_plural}
+					%label{:for => :gender_plural}
+						Plural -
+						%i they, them, their, theirs, themselves
+				%li
+					%input{:type => :radio, :value => Gender::MALE, :name => :gender, :id => :gender_male}
+					%label{:for => :gender_male}
+						Male -
+						%i he, him, his, his, himself
+				%li
+					%input{:type => :radio, :value => Gender::FEMALE, :name => :gender, :id => :gender_female}
+					%label{:for => :gender_female}
+						Female -
+						%i she, her, hers, herself
+				%li
+					%input{:type => :radio, :value => Gender::NEUTER, :name => :gender, :id => :gender_neuter}
+					%label{:for => :gender_neuter}
+						Neuter -
+						%i it, it, its, itself
+				%li
+					%input{:type => :radio, :value => Gender::EPICENE, :name => :gender, :id => :gender_epicene}
+					%label{:for => :gender_epicene}
+						Epicene -
+						%i they, them, their, theirs, themselves
+		%p
+			%input(type="submit" value="Enter the Nexus...")

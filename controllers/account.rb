@@ -106,10 +106,12 @@ class Dash < Sinatra::Application
 		errors << 'Character name required' unless params[:charname].length > 0
 		errors << 'Character name already taken' if Entity::Character.where(name: params[:charname]).exists?
 		errors << 'You have reached the maximum number of active characters on your account' unless @user.characters.count < 3 || role?(:admin)
+		errors << 'Please choose a gender!' unless params[:gender] != nil
 		if errors.count > 0 then
-			haml :'account/characters/create', :layout => @layout, :locals => {:errors => errors}
+			haml :'account/characters_create', :layout => @layout, :locals => {:errors => errors}
 		else
 			newchar = Entity::Character.new(name: params[:charname])
+			newchar.gender = params[:gender].to_i
 			newchar.statuses << Entity::Status.source_from(1)
 			@user.characters << newchar
 			# Push existence to game map
