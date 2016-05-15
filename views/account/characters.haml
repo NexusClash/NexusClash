@@ -24,7 +24,10 @@
 							=char.cp
 				%figcaption
 					%h3
-						="#{char.x}, #{char.y}, #{Entity::Plane.where({plane: char.plane.to_i}).first.name}"
+						- if char.hp > 0
+							="#{char.x}, #{char.y}, #{Entity::Plane.where({plane: char.plane.to_i}).first.name}"
+						- else
+							="The Void, #{Entity::Plane.where({plane: char.plane.to_i}).first.name}"
 					%span
 						="Level #{char.level} #{char.nexus_class}"
 					%ul.list-plain
@@ -41,3 +44,14 @@
 							Profile
 .clear-left.padding-10
 %a.ui-button.ui-corner-all(href="/account/characters/create") New Character
+%div(style='width:100%;position:relative;top:10px;text-align:right')
+	Class portraits by
+	%a(href='http://akithefrivolicious.deviantart.com/' target='_blank')
+		Acaisha Buffo
+	\. Class icons by
+	%a(href='http://glukowze.deviantart.com/' target='_blank')
+		Dissident
+	\. Other icons by Delapouite, Lorc &amp; other contributors at
+	%a( href='http://game-icons.net' target='_blank')
+		game-icons.net
+	\.
