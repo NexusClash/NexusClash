@@ -8,6 +8,9 @@ module Effect
 		end
 
 		def tick_event(*target)
+			source = target[0]
+			source = source.stateful if source.is_a? Entity::Status
+			source = source.carrier if source.is_a? Entity::Item
 			target = super *target
 			target = target.stateful if target.is_a? Entity::Status
 			target = target.carrier if target.is_a? Entity::Item
@@ -43,6 +46,8 @@ module Effect
 			end
 			if receivers.length > 0
 
+				msg.gsub! '[target]', target.name_link
+				msg.gsub! '[source]', source.name_link
 				@parent.temp_effect_vars.keys.each do |key|
 					msg.gsub! "[#{key.to_s}]", @parent.temp_effect_vars[key].to_s
 				end
