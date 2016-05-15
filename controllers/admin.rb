@@ -68,16 +68,7 @@ class Dash < Sinatra::Application
 	get '/admin/preload_alpha' do
 		protected! :admin
 
-		p = Entity::Plane.new
-		p.name = 'Alphaville'
-		p.domain = 'alpha.nexuscla.sh'
-		p.save
-
 		Entity::Character.update_all({x: VoidTile::DEAD_COORDINATE, y: VoidTile::DEAD_COORDINATE, z: VoidTile::DEAD_COORDINATE, hp: 0, plane: 3})
-
-		Entity::Tile.delete
-
-
 
 		alpha = [[11, 14, 1, 1, 'The Ammo Shack', 'Gun Store', '', '', 1, 1, 0, 0, 1, 0, 0, 0, 30, 'Harriston Heights', 1, 0, 746, 'Redcliffe Power', 464, 'Gun Store', 0, 0, 0, '', '', '', '', '', '', 0, '', '', '', '', '', ''],
 		             [12, 10, 1, 1, 'Sarah\'s Sundries', 'Corner Store', '', '', 1, 1, 0, 0, 0, 0, 0, 1, 30, 'Harriston Heights', 1, 1, 890, 'Redcliffe Power', 505, 'Corner Store', 0, 0, 0, '', '', '', '', '', '', 0, '', '', '', '', '', ''],
