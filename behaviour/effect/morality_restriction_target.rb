@@ -1,8 +1,8 @@
 module Effect
 	class MoralityRestrictionTarget < Effect::MoralityRestriction
 
-		def initialize(*args)
-			super *args
+		def initialize(parent, min, max)
+			super parent, min, max
 		end
 
 		def learn_intent_callback(action, intent)
