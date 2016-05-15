@@ -68,6 +68,12 @@ class Dash < Sinatra::Application
 	get '/admin/preload_alpha' do
 		protected! :admin
 
+		p = Entity::Plane.new
+		p.name = 'Alphaville'
+		p.domain = 'alpha.nexuscla.sh'
+		p.plane = 3
+		p.save
+
 		Entity::Character.update_all({x: VoidTile::DEAD_COORDINATE, y: VoidTile::DEAD_COORDINATE, z: VoidTile::DEAD_COORDINATE, hp: 0, plane: 3})
 
 		alpha = [[11, 14, 1, 1, 'The Ammo Shack', 'Gun Store', '', '', 1, 1, 0, 0, 1, 0, 0, 0, 30, 'Harriston Heights', 1, 0, 746, 'Redcliffe Power', 464, 'Gun Store', 0, 0, 0, '', '', '', '', '', '', 0, '', '', '', '', '', ''],
@@ -102,12 +108,12 @@ class Dash < Sinatra::Application
 
 			#exterior
 			tile = Entity::Tile.new
-			type = Entity::TileType.where(name: row[4]).first
+			type = Entity::TileType.where(name: row[5]).first
 			tile.type = type
-			tile.name = row[3]
+			tile.name = row[4]
 			tile.x = row[0]
 			tile.y = row[1]
-			tile.description = row[5]
+			#tile.description = row[5]
 			tile.z = 0
 			tile.plane = 3
 			tile.save
@@ -119,7 +125,7 @@ class Dash < Sinatra::Application
 				tile.name = row[3]
 				tile.x = row[0]
 				tile.y = row[1]
-				tile.description = row[6]
+				#tile.description = row[6]
 				tile.z = 1
 				tile.plane = 3
 				tile.save
