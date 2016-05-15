@@ -179,7 +179,7 @@ module Entity
 		end
 
 		def name_link
-			"<span data-char-link='#{self.id}'>#{self.name}</span>"
+			"<a href='/character/#{self.id}' data-char-link='#{self.id}'>#{self.name}</a>"
 		end
 
 		def to_hash(scope = BroadcastScope::NONE)

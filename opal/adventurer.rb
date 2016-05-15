@@ -92,7 +92,7 @@ class Adventurer
 			$document['#hud_player_vitals .hp'].inner_html = @hp
 			$document['#hud_player_vitals .level'].inner_html = @level
 			$document['#hud_player_vitals .class'].inner_html = @nexus_class
-			$document['#hud_player_vitals .name'].inner_html = @name
+			$document['#hud_player_vitals .name'].inner_html = "<a href='/character/#{@id}' style='color:black;text-decoration:none'>#{@name}</a>"
 
 			status_text = ''
 			self.statuses.each do |status|
@@ -128,7 +128,7 @@ class Adventurer
 				$document['#target_information .stats'].inner_html = ''
 				$document['#target_information .actions'].inner_html = ''
 			else
-				$document['#target_information .name'].inner_html = @target.name
+				$document['#target_information .name'].inner_html = "<a href='/character/#{@target.id}' style='color:black;text-decoration:none'>#{@target.name}</a>"
 				$document['#target_information .class_image'].attributes['src'] = "/img/class/colour/#{@target.nexus_class}.png"
 				$document['#target_information .stats'].inner_html = "<li>Level #{target.level} #{@target.nexus_class}</li><li>HP: #{@target.hp_fuzzy}</li>"
 				$document['#target_information .actions'].inner_html = '' unless @neighbours.has_key? @target.id

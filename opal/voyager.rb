@@ -371,7 +371,7 @@ class Voyager < Expedition
 	def attach_html_bindings
 		super
 
-		$document.on :click, 'span[data-char-link]' do |event|
+		$document.on :click, '[data-char-link]' do |event|
 			return unless state == :connected
 			return unless event.button == 0 || event.button == 1
 			if adventurer.neighbours.has_key? event.target['data-char-link'].to_i
@@ -382,6 +382,7 @@ class Voyager < Expedition
 				adventurer.render
 				write_message({type: 'select_target', char_id: target.id})
 			end
+			event.prevent
 		end
 
 		$document.on :keyup, '#map .tile' do |event|
