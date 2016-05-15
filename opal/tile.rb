@@ -81,8 +81,8 @@ class Tile
 					@node['oncontextmenu'] = 'return false;'
 				else
 					@node['oncontextmenu'] = 'return true';
-					@node['data-action-type'] = nil
-					@node['data-action-vars'] = nil
+					@node['data-dev-action-type'] = nil
+					@node['data-dev-action-vars'] = nil
 				end
 
 				@crowd = DOM{

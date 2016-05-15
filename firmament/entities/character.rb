@@ -88,6 +88,33 @@ module Entity
 			end
 		end
 
+		# Morality hooking for Alonai's Aegis
+
+		def mo_hook=(val)
+			@mo_hook = val
+		end
+
+		def mo_hook
+			@mo_hook
+		end
+
+		def mo=(val)
+			if @mo_hook === nil
+				self[:mo] = val
+			else
+				self[:mo] = @mo_hook.mo=(val)
+			end
+		end
+
+		def mo
+			if @mo_hook === nil
+				self[:mo]
+			else
+				@mo_hook.mo
+			end
+
+		end
+
 		def kill!
 			self[:hp] = 0 if self.hp > 0
 			game = Firmament::Plane.fetch Instance.plane

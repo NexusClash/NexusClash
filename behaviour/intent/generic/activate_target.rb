@@ -11,7 +11,7 @@ module Intent
 
 		def take_action
 			super
-			@entity.broadcast_self Entity::Status.tick(@target, StatusTick::ACTIVATED)
+			@entity.broadcast_self Entity::Status.tick(@target, StatusTick::ACTIVATED_SOURCE)
 			@target_entity.broadcast_self Entity::Status.tick(@target, StatusTick::ACTIVATED_TARGET, @target_entity)
 		end
 	end

@@ -5,7 +5,7 @@ module Effect
 
 		def initialize(parent, costs = nil, name = nil, targets = Array.new([:self]))
 			@parent = parent
-			@targets = Set.new targets
+			@targets = targets
 			@costs = Hash.new{|hash, key| 0}
 			unless costs === nil
 				costs.each do |cost, delta|
@@ -17,7 +17,11 @@ module Effect
 		end
 
 		def can_target?(tar)
-			@targets.include? tar
+			if tar == :self
+				@targets.include? tar
+			else
+				@targets.include? tar.class
+			end
 		end
 
 		def activate_self_intent(intent)
@@ -27,22 +31,15 @@ module Effect
 			end
 		end
 
-		def activate_target_intent(intent)
-			intent.name = name
-			@costs.each do |cost, delta|
-				intent.add_cost cost, delta
-			end
-		end
-
 		def describe
-			"#{@parent.name.to_s} has an activated ability called #{@name}, costing #{@costs[:ap].to_s} AP + #{@costs[:mp].to_s} MP."
+			"#{@parent.name.to_s} has an activated ability called #{@name} that can target #{@targets.join ' & '}, costing #{@costs[:ap].to_s} AP + #{@costs[:mp].to_s} MP."
 		end
 
 		def save_state
 			if @name === @parent.name
-				['Activated', @costs]
+				[self.class.name, @costs]
 			else
-				['Activated', @costs, @name]
+				[self.class.name, @costs, @name]
 			end
 
 		end

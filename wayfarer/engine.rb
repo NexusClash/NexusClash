@@ -104,14 +104,20 @@ module Wayfarer
 			end
 		end
 
-		def target(json)
+		def select_target(json)
 			self.target = game.character(json['char_id'])
 			weaps_hash = Hash.new
 			weaps = character.weaponry
 			weaps.keys.each do |weapi|
 				weaps_hash[weapi] = weaps[weapi].to_hash
 			end
-			packets = [{type: 'actions', actions:{attacks: weaps_hash}}]
+			abilities = character.activated_uses_target @target
+			abilities_hash = Hash.new
+			abilities.keys.each do |ability_i|
+				ability = abilities[ability_i]
+				abilities_hash[ability_i] = {name: ability.name}
+			end
+			packets = [{type: 'actions', actions:{attacks: weaps_hash, abilities: abilities_hash}}]
 			send({packets: packets}.to_json)
 		end
 
@@ -345,6 +351,15 @@ module Wayfarer
 
 		def activate_self(json)
 			uses = character.activated_uses
+			if uses.has_key? json['status_id'].to_i
+				uses[json['status_id'].to_i].realise
+			else
+				Entity::Message.send_transient([character.id],'Unable to find specified ability!', MessageType::FAILED)
+			end
+		end
+
+		def activate_target(json)
+			uses = character.activated_uses_target @target
 			if uses.has_key? json['status_id'].to_i
 				uses[json['status_id'].to_i].realise
 			else

@@ -94,6 +94,11 @@ class Voyager < Expedition
 						html = html + "<option value='#{action_id}'>#{action['name']} - #{action['damage']} #{action['damage_type']} @ #{action['hit_chance']}%</option>"
 					end
 					html = html + '</select></li>'
+					data = ent['actions']['abilities']
+	        data.keys.each do |action_id|
+						action = data[action_id]
+						html = html + "<li><button data-action-type='activate_target' data-action-vars='status_id:#{action_id},target:#{@adventurer.target.id},target_type:#{@adventurer.target.type}'>#{action['name']}</button></li>"
+					end
 					$document['#target_information .actions'].inner_html = html
 				when 'message'
 
@@ -375,7 +380,7 @@ class Voyager < Expedition
 				target = adventurer.neighbours[event.target['data-char-link'].to_i]
 				adventurer.target = target
 				adventurer.render
-				write_message({type: 'target', char_id: target.id})
+				write_message({type: 'select_target', char_id: target.id})
 			end
 		end
 

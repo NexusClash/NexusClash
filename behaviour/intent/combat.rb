@@ -1,6 +1,10 @@
 module Intent
 	class Combat < Action
 
+
+		attr_reader :attack
+		attr_reader :defend
+
 		def initialize(attack, defend)
 			super attack.entity, {encumbrance: false, status_tick: false} # checks get done in Attack intent
 			@attack = attack
@@ -23,12 +27,16 @@ module Intent
 		end
 
 		def take_action
+			attacker_hooks = collate_combat_hooks @attack.entity
+			defender_hooks = collate_combat_hooks @attack.target
 			debug "Effective hit % after close/ranged avoidance: #{@attack.hit_chance}"
 			@attack.hit_chance = 0 if @defend.avoided?
 			debug 'Missed due to generic avoidance!' if @defend.avoided?
 			if @attack.hit?
 				debug 'Attack hit!'
 				@defend.take_hit(@attack)
+				attacker_hooks.each {|hook| hook.intent_combat_hook self, :took_damage, :attacker}
+				defender_hooks.each {|hook| hook.intent_combat_hook self, :took_damage, :defender}
 				case @attack.target.alignment
 					when :good
 						@attack.entity.mo -= @defend.damage_taken * 2
@@ -64,6 +72,16 @@ module Intent
 			message_atk.save
 			message_def.save
 			message_death.save unless message_death === nil
+		end
+
+		private
+
+		def collate_combat_hooks(entity)
+			hooks = []
+			entity.each_applicable_effect do |effect|
+				hooks << effect if effect.respond_to? :intent_combat_hook
+			end
+			return hooks
 		end
 
 	end
