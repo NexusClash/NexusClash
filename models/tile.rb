@@ -50,7 +50,7 @@ module Entity
 		end
 
 		def description
-			if self[:description] == ''
+			if self[:description] === nil || self[:description] == ''
 				@type.description
 			else
 				self[:description]
