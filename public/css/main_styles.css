@@ -1206,7 +1206,7 @@ img[src=""]
 .bg-Revenant{background-image: url('/img/class/portrait/Revenant.jpg')}
 .bg-Seraph{background-image: url('/img/class/portrait/Seraph.jpg')}
 .bg-Shepherd{background-image: url('/img/class/portrait/Shepherd.jpg')}
-.bg-Sorcerer{background-image: url('/img/class/portrait/Sorcerer.jpg')}
+.bg-Sorcerer{background-image: url('/img/class/portrait/Sorcerer.jpg'); background-position:100% 0%}
 .bg-Void-Walker{background-image: url('/img/class/portrait/Void Walker.jpg')}
 .bg-Wizard{background-image: url('/img/class/portrait/Wizard.jpg')}
 .bg-Wyrm-Master{background-image: url('/img/class/portrait/Wyrm Master.jpg')}
