@@ -5,8 +5,8 @@ module Effect
 			@interval = interval.to_sym
 			@parent = parent
 
-			define_singleton_method ('tick_' + interval.to_s).to_sym do |target|
-				tick_event target
+			define_singleton_method ('tick_' + interval.to_s).to_sym do |*args|
+				tick_event *args
 			end
 		end
 
