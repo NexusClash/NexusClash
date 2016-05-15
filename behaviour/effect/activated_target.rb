@@ -3,7 +3,7 @@ module Effect
 
 		attr_reader :name
 
-		def initialize(parent, costs = nil, name = nil, targets = [:self, Entity::Character])
+		def initialize(parent, costs = nil, name = nil, targets = [Entity::Character])
 			@parent = parent
 			@targets = targets
 			@costs = Hash.new{|hash, key| 0}
