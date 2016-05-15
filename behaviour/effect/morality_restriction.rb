@@ -14,12 +14,29 @@ module Effect
 			intent.entity.mo >= @mo_min * 10 && intent.entity.mo <= @mo_max * 10 if action == :possible?
 		end
 
+		def activate_self_intent(intent)
+			intent.add_cost self.class.name.to_sym, self.method(:morality_check)
+		end
+
+		def activate_target_intent(intent)
+			intent.add_cost self.class.name.to_sym, self.method(:morality_check)
+		end
+
+		def morality_check(action, intent)
+			if action == :possible?
+				entity = intent.entity
+				text  =  "Morality check - #{entity.mo} needs to be between #{@mo_min} and #{@mo_max}"
+				intent.debug text
+				return entity.mo >= @mo_min * 10 && entity.mo <= @mo_max * 10
+			end
+		end
+
 		def describe
 			"Morality must be #{@mo_min} - #{@mo_max}"
 		end
 
 		def save_state
-			['MoralityRestriction', @mo_min, @mo_max]
+			[self.class.name, @mo_min, @mo_max]
 		end
 
 	end

@@ -9,6 +9,9 @@ module Effect
 		end
 
 		def tick_event(*args)
+			source = args[0]
+			source = source.stateful if source.is_a? Entity::Status
+			source = source.carrier if source.is_a? Entity::Item
 			target = super *args
 			target = target.stateful if target.is_a? Entity::Status
 			target = target.carrier if target.is_a?(Entity::Item) && @target != :item
@@ -70,6 +73,7 @@ module Effect
 
 				if apply
 					nstatus = Entity::Status.source_from @status.id
+					nstatus.source = source
 					nstatus.stateful = target
 					Entity::Status.tick nstatus, StatusTick::STATUS_CREATED, *args
 				end

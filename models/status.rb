@@ -6,6 +6,9 @@ module Entity
 		embedded_in :stateful, polymorphic: true
 
 		attr_accessor :parent
+		attr_reader :source
+
+		field :source_id, type: Integer
 
 		field :link, type: Integer
 
@@ -42,6 +45,17 @@ module Entity
 
 		def family
 			self.type.family
+		end
+
+		def source=(char)
+			@source = char
+			self[:source_id] = char.id
+		end
+
+		def source_id=(val)
+			self[:source_id] = val
+			game = Firmanent::Plane.fetch Instance.plane
+			@source = game.character val
 		end
 
 		def type
@@ -110,6 +124,8 @@ module Entity
 				new_effects << Effect::Base.unserialize(self, impact)
 			end
 			@effects = new_effects
+			game = Firmanent::Plane.fetch Instance.plane
+			@source = game.character(self.source_id) unless self.source_id === nil
 		end
 
 		def self.tick(entity, interval, *args)
