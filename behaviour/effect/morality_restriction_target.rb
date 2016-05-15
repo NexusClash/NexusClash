@@ -7,6 +7,7 @@ module Effect
 
 		def learn_intent_callback(action, intent)
 			# Nullify the check since it doesn't apply to target restrictions
+			true if action == :possible?
 		end
 
 		def morality_check(action, intent)
