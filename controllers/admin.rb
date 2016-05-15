@@ -111,7 +111,7 @@ class Dash < Sinatra::Application
 			tile.plane = 3
 			tile.save
 			#interior
-			if row[2] == 1
+			if row[3] == 1
 				tile = Entity::Tile.new
 				type = Entity::TileType.where(name: row[5] + ' (Inside)').first
 				tile.type = type
