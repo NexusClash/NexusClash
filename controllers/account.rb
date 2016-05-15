@@ -102,22 +102,23 @@ class Dash < Sinatra::Application
 
 	post '/account/characters/create' do
 		protected!
-			errors = []
-			errors << 'Character name required' unless params[:charname].length > 0
-			errors << 'Character name already taken' if Entity::Character.where(name: params[:charname]).exists?
-			if errors.count > 0 then
-				haml :'account/characters/create', :layout => @layout, :locals => {:errors => errors}
-			else
-				newchar = Entity::Character.new(name: params[:charname])
-				newchar.statuses << Entity::Status.source_from(1)
-				@user.characters << newchar
-				# Push existence to game map
-				game = Firmament::Plane.fetch Instance.plane
-				newchar = game.character newchar.id
-				newchar.move! game.map(VoidTile::DEAD_COORDINATE, VoidTile::DEAD_COORDINATE, VoidTile::DEAD_COORDINATE)
-				newchar.move! game.map(1,1,0)
-				redirect to('/account/characters')
-			end
+		errors = []
+		errors << 'Character name required' unless params[:charname].length > 0
+		errors << 'Character name already taken' if Entity::Character.where(name: params[:charname]).exists?
+		errors << 'You have reached the maximum number of active characters on your account' unless @user.characters.count < 3 || role?(:admin)
+		if errors.count > 0 then
+			haml :'account/characters/create', :layout => @layout, :locals => {:errors => errors}
+		else
+			newchar = Entity::Character.new(name: params[:charname])
+			newchar.statuses << Entity::Status.source_from(1)
+			@user.characters << newchar
+			# Push existence to game map
+			game = Firmament::Plane.fetch Instance.plane
+			newchar = game.character newchar.id
+			newchar.move! game.map(VoidTile::DEAD_COORDINATE, VoidTile::DEAD_COORDINATE, VoidTile::DEAD_COORDINATE)
+			newchar.respawn
+			redirect to('/account/characters')
+		end
 	end
 
 	get '/account/logout' do

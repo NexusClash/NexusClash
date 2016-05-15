@@ -127,7 +127,11 @@ module Entity
 				self.ap -= cost
 				self.hp = self.hp_max
 				game = Firmament::Plane.fetch Instance.plane
-				move! game.map(1,1,0)
+				if Instance.plane == 3
+					move! game.map(rand(12...15),rand(10...16),rand(0...2))
+				else
+					move! game.map(1,1,0)
+				end
 				msg = Entity::Message.new({characters: [self.id], type: MessageType::SPAWN_SELF, message: 'Your spirit feels drawn to a new body and you quickly enter it. You have respawned.'})
 				msg.save
 			end
