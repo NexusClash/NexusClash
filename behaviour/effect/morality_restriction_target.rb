@@ -1,5 +1,5 @@
 module Effect
-	class MoralityRestrictionTarget < Effect::MoralityRestriction
+	class MoralityRestrictionTarget < MoralityRestriction
 
 		def initialize(parent, min, max)
 			super parent, min, max
