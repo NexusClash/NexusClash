@@ -6,7 +6,7 @@ module Intent
 		attr_accessor :name
 
 		def initialize(entity, target, effect = nil)
-			super entity, {encumbrance: true, status_tick: true}
+			super entity
 			@target = target
 			@outcomes = ThreadSafe::Array.new
 			@name = ''

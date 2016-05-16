@@ -17,7 +17,7 @@ module Intent
 		attr_accessor :additional_text
 
 		def initialize(entity, target = nil)
-			super entity, {encumbrance: true, status_tick: true}
+			super entity
 			@target = target
 			@attack_roll = rand(1..100)
 			debug "Attack Roll: #{@attack_roll}"

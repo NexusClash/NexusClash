@@ -49,6 +49,10 @@ class VoidTile
 		@@fakearray
 	end
 
+	def visible_character_count
+		0
+	end
+
 	def occupants
 		@@fakearray
 	end

@@ -5,7 +5,7 @@ module Intent
 		attr_reader :learning
 
 		def initialize(entity, learn)
-			super entity, {encumbrance: false, status_tick: false}
+			super entity, {encumbrance: false, status_tick: false, unhide: false}
 			@learning = learn
 			@learning = Entity::Status.source_from(@learning.id) if @learning.is_a? Entity::StatusType
 			calculate_prerequisites

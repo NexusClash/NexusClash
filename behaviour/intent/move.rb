@@ -7,7 +7,7 @@ module Intent
 		attr_accessor :message
 
 		def initialize(entity, destination)
-			super entity, {encumbrance: true, status_tick: true}
+			super entity
 			@start = entity.location
 			@end = destination
 			@message = ''

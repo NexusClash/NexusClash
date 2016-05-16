@@ -23,11 +23,15 @@ module Entity
 		field :z, type: Integer, default: 0
 		field :plane, type: Integer, default: 1
 
+		field :visibility, type: Integer, default: Visibility::VISIBLE
+
 		field :gender, type: Integer, default: Gender::PLURAL
 
 		field :last_tick, type:Time, default: ->{Time.now}
 
 		attr_reader :location
+
+		@revealed_to = ThreadSafe::Array.new
 
 		def shard
 			@shard ||= Firmament::Plane.fetch self.plane
@@ -75,6 +79,34 @@ module Entity
 			end
 		end
 
+		def reveal_to!(char)
+			@revealed_to << char.id
+			packet = {packets: [{type: 'character', character: self.to_hash(BroadcastScope::TILE)}]}.to_json
+			char.socket.send(packet) unless char.socket === nil
+		end
+
+		def visible_to?(char)
+			char == self || self.visibility == Visibility::VISIBLE || @revealed_to.include?(char.id)
+		end
+
+		def visibility=(val)
+			if val != self.visibility
+				could_see = []
+				self.location.characters.each do |char|
+					could_see << char if self.visible_to?(char)
+				end
+				self[:visibility] = val
+				@revealed_to.clear
+				# Hide from characters who can't see anymore
+				rmpacket = {packets:[type:'remove_character', char_id: self.id]}.to_json
+				could_see.each do |char|
+					char.socket.send(rmpacket) unless char.socket === nil || self.visible_to?(char)
+				end
+				# Display to characters now capable of seeing
+				self.broadcast_self(BroadcastScope::TILE)
+			end
+		end
+
 		before_save do |document|
 			self.last_tick = Time.now
 
@@ -84,6 +116,8 @@ module Entity
 		end
 
 		after_find do |document|
+
+			@revealed_to = ThreadSafe::Array.new
 
 			document.statuses.each do |status|
 				status.unserialize
@@ -188,6 +222,7 @@ module Entity
 
 			if scope == BroadcastScope::SELF
 				visible_statuses = Array.new
+				visible_statuses << {name: 'Hidden', description: 'You are hiding'} if self.visibility & Visibility::HIDING > 0
 				self.statuses.each do |status|
 					visible_statuses << {name: status.name, description: status.describe} if status.family == :magical || status.family == :mundane
 				end

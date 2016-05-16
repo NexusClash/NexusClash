@@ -18,7 +18,7 @@ module Entity
 					end
 				when BroadcastScope::TILE
 					self.location.characters.each do |char|
-						char.socket.send(packet) unless char.socket === nil
+						char.socket.send(packet) unless char.socket === nil || !self.visible_to?(char)
 					end
 				when BroadcastScope::VISIBLE
 					game = Firmament::Plane.fetch Instance.plane
@@ -31,7 +31,7 @@ module Entity
 
 					tiles.each do |tile|
 						tile.characters.each do |char|
-							char.socket.send(packet) unless char.socket === nil
+							char.socket.send(packet) unless char.socket === nil || !self.visible_to?(char)
 						end
 					end
 
@@ -147,7 +147,7 @@ module Entity
 				(-2..2).each do |y|
 					(-2..2).each do |x|
 						tile = game.map(self.x + x, self.y + y, self.z)
-						packets << { type: 'tile', tile:{ x: tile.x, y: tile.y, z: tile.z, name: tile.name, description: tile.description, colour: tile.colour, type: tile.type.name, occupants: tile.characters.count}}
+						packets << { type: 'tile', tile:{ x: tile.x, y: tile.y, z: tile.z, name: tile.name, description: tile.description, colour: tile.colour, type: tile.type.name, occupants: tile.visible_character_count}}
 					end
 				end
 			else
@@ -155,7 +155,7 @@ module Entity
 					(-2..2).each do |x|
 						if x == 0 && y == 0
 							tile = game.map(self.x + x, self.y + y, self.z)
-							packets << { type: 'tile', tile:{ x: tile.x, y: tile.y, z: tile.z, name: tile.name, description: tile.description, colour: tile.colour, type: tile.type.name, occupants: tile.characters.count}}
+							packets << { type: 'tile', tile:{ x: tile.x, y: tile.y, z: tile.z, name: tile.name, description: tile.description, colour: tile.colour, type: tile.type.name, occupants: tile.visible_character_count}}
 						else
 							packets << {type: 'tile', tile: VoidTile.generate_hash(self.x + x, self.y + y, self.z)}
 						end
@@ -166,7 +166,7 @@ module Entity
 			packets.concat(@location.portals_packets)
 
 			@location.characters.each do |char|
-				packets << {type: 'character', character: char.to_hash(BroadcastScope::TILE) } unless char === self
+				packets << {type: 'character', character: char.to_hash(BroadcastScope::TILE) } unless char === self || !char.visible_to?(self)
 			end
 
 			packets
@@ -200,14 +200,14 @@ module Entity
 
 			rmpacket = {packets:[type:'remove_character', char_id: self.id]}.to_json
 			old.characters.each do |char|
-				char.socket.send(rmpacket) unless char == self || char.socket === nil
+				char.socket.send(rmpacket) unless char == self || char.socket === nil || !self.visible_to?(char)
 			end
 
 
 			packets = Array.new
 
-			packets << { type: 'tile', tile:{ x: old.x, y: old.y, z: old.z, occupants: old.characters.count}}
-			packets << { type: 'tile', tile:{ x: new.x, y: new.y, z: new.z, occupants: new.characters.count}}
+			packets << { type: 'tile', tile:{ x: old.x, y: old.y, z: old.z, occupants: old.visible_character_count}}
+			packets << { type: 'tile', tile:{ x: new.x, y: new.y, z: new.z, occupants: new.visible_character_count}}
 
 			packet = {packets: packets}.to_json
 			tiles = Set.new
@@ -222,7 +222,7 @@ module Entity
 
 			tiles.each do |tile|
 				tile.characters.each do |char|
-					char.socket.send(packet) unless char == self || char.socket === nil
+					char.socket.send(packet) unless char == self || char.socket === nil || !self.visible_to?(char)
 				end
 			end
 

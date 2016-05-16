@@ -133,6 +133,14 @@ module Entity
 			end
 		end
 
+		def visible_character_count
+			i = 0
+			characters.each do |char|
+				i += 1 if char.visibility == Visibility::VISIBLE
+			end
+			return i
+		end
+
 		private
 
 		def update_type_statuses

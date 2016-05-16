@@ -1,0 +1,8 @@
+module Visibility
+	VISIBLE = 0
+	HIDING = 1
+	SKULKING = 4
+	INVISIBLE = 16
+	SUPERINVISIBLE = 64
+	VANISHED = 1024
+end

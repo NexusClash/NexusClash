@@ -231,6 +231,52 @@ module Wayfarer
 				send(packet.to_json)
 			end
 
+			if rand(1..100) < 25
+
+				character.location.characters.each do |char|
+					if !char.visible_to?(character) && char.visibility == Visibility::HIDING
+						char.reveal_to! character
+						message_ent = Entity::Message.new({characters: [character.id], message: "You find #{char.name_link} while searching. #{char.pronoun(:he)} is hiding.", type: MessageType::SEARCH_SUCCESS})
+						message_ent.save
+						break
+					end
+				end
+
+			end
+
+
+			character.broadcast_self BroadcastScope::SELF
+		end
+
+		def hide(_)
+			if character.ap < 1	|| character.location.is_a?(VoidTile)
+				Entity::Message.send_transient([character.id], 'You cannot hide at this time!', MessageType::FAILED)
+				return
+			end
+
+			if character.visibility > Visibility::VISIBLE
+				Entity::Message.send_transient([character.id], 'You don\'t need to hide, because you already aren\'t visible to casual bystanders!', MessageType::FAILED)
+				return
+			end
+
+			character.ap -= 1
+
+			if rand(1..100) < character.location.type.hide_rate
+				message_ent = Entity::Message.new({characters: [character.id], message: 'You are now hidden.', type: MessageType::HIDDEN})
+				message_ent.save
+
+				# Hide character
+				character.visibility = character.visibility | Visibility::HIDING
+
+			else
+				message_ent = Entity::Message.new({characters: [character.id], message: 'You look around but have trouble finding anywhere to hide.', type: MessageType::FAILED})
+				message_ent.save
+				if character.location.type.hide_rate == 0
+					message_ent = Entity::Message.new({characters: [character.id], message: 'There appears to be absolutely no hope of hiding here at all - You should try somewhere else...', type: MessageType::FAILED})
+					message_ent.save
+				end
+			end
+
 			character.broadcast_self BroadcastScope::SELF
 		end
 

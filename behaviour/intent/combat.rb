@@ -6,7 +6,7 @@ module Intent
 		attr_reader :defend
 
 		def initialize(attack, defend)
-			super attack.entity, {encumbrance: false, status_tick: false} # checks get done in Attack intent
+			super attack.entity, {encumbrance: false, status_tick: false, unhide: false} # checks get done in Attack intent
 			@attack = attack
 			@defend = defend
 			@attack.hit_chance -= defend.attack_penalty?(DefenceType::CLOSE_COMBAT_AVOIDANCE) if @attack.close_combat?

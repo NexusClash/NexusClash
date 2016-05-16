@@ -3,6 +3,7 @@ module MessageType
 	CLASS_LEARNT = :'class-learnt'
 	SEARCH_SUCCESS = :'search-success'
 	SEARCH_NOTHING = :'search-nothing'
+	HIDDEN = :'hide-success'
 	FAILED = :'message-failed'
 	SPEECH = :'speech'
 	SPEECH_EMOTE = :'speech-emote'
