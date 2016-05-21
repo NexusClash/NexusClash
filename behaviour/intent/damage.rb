@@ -1,5 +1,7 @@
 module Intent
 	class Damage
+		attr_accessor :hooks
+
 		def initialize(entity)
 			@entity = entity
 			@soak_base = Hash.new{|_,_| 0}
@@ -8,26 +10,29 @@ module Intent
 			@resist_bonus = Hash.new{|_,_| 0}
 			@avoidance = Hash.new{|_,_| 0}
 			@lazy_loaded = false
+			@hooks = Array.new
+			@post_soak_multiplier = 1
 		end
+
+		attr_accessor :post_soak_multiplier
 
 		# Deal damage with soak
-		def deal_damage(damage, type)
-			lazy_load
-			damage_dealt = deal_damage?(damage, type)
-			@entity.hp = @entity.hp - damage_dealt
-			return damage_dealt
+		def deal_damage(damage, type, source = nil, armour_pierce = 0)
+			damage_taken = deal_damage? damage, type, source, armour_pierce
+			Entity::Status.tick @entity, StatusTick::DAMAGE_TAKEN, damage, type, source
+			@entity.hp = @entity.hp - damage_taken
+			return damage_taken
 		end
 
-		# Deal damage, no soak
-		def deal_damage!(damage)
-			@entity.hp = @entity.hp - damage
-			return damage
-		end
-
-		# Check damage after soaks
-		def deal_damage?(damage, type)
+		def deal_damage?(damage, type, source = nil, armour_pierce = 0)
 			lazy_load
-			damage_taken = damage - soak?(type)
+			soak = soak?(type)
+			if soak > armour_pierce
+				soak -= armour_pierce
+			else
+				soak = 0 if soak > 0
+			end
+			damage_taken = damage - soak
 			damage_taken = 1 if damage > 0 && damage_taken < 1 # Damage floor
 			damage_taken = damage_taken.to_f * (100 - resist?(type)) / 100
 			if damage_taken.modulo(1).round(2) == 0.50 # If its about half, round up rather than down
@@ -35,7 +40,18 @@ module Intent
 			else
 				damage_taken = damage_taken.round
 			end
-			return damage_taken.to_i
+			@soaked = damage - damage_taken
+			(damage_taken.to_f * post_soak_multiplier).floor
+		end
+
+		def soaked
+			@soaked
+		end
+
+		# Deal damage, no soak
+		def deal_damage!(damage)
+			@entity.hp = @entity.hp - damage
+			return damage
 		end
 
 		def add_soak(damage_type, amount, soak_type = DefenceType::BONUS_SOAK)

@@ -40,7 +40,12 @@ module Behaviour
 
 			attack = weapons[weapon_id]
 
-			combat = Intent::Combat.new(attack, Intent::Defend.new(target))
+			dmg = Intent::Damage.new(target)
+
+			# Because Blood Claws needs to be special
+			dmg.post_soak_multiplier = attack.weapon.post_soak_damage_multiplier if attack.weapon.respond_to? :post_soak_damage_multiplier
+
+			combat = Intent::Combat.new(attack, Intent::Defend.new(target, dmg))
 			combat.realise
 			attack.entity.broadcast_self BroadcastScope::SELF
 		end

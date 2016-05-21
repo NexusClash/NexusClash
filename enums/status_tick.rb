@@ -4,6 +4,7 @@ module StatusTick
 	AP = :ap
 	MINUTE = :minute
 	STATUS = :status
+	DAMAGE_TAKEN = :damage_taken # expects the damage, type, source (optional) to be passed as additional arguments
 
 	# Scope: Item
 	ITEM_ACTIVATED = :item_activation
@@ -15,7 +16,7 @@ module StatusTick
 	STATUS_CREATED = :status_created
 
 
-	LIST = [ACTIVATED, STATUS_CREATED, ACTIVATED_SOURCE, ACTIVATED_TARGET, AP, ITEM_ACTIVATED, MINUTE, STATUS]
+	LIST = [ACTIVATED, STATUS_CREATED, ACTIVATED_SOURCE, ACTIVATED_TARGET, AP, DAMAGE_TAKEN, ITEM_ACTIVATED, MINUTE, STATUS]
 
 	def type_list
 		LIST

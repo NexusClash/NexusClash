@@ -4,6 +4,7 @@ module Intent
 
 		attr_reader :attack
 		attr_reader :defend
+		attr_accessor :mo_delta
 
 		def initialize(attack, defend)
 			super attack.entity, {encumbrance: false, status_tick: false, unhide: false} # checks get done in Attack intent
@@ -34,17 +35,30 @@ module Intent
 			debug 'Missed due to generic avoidance!' if @defend.avoided?
 			if @attack.hit?
 				debug 'Attack hit!'
+				attacker_hooks.each {|hook| hook.intent_combat_hook self, :attack_hit, :attacker}
+				defender_hooks.each {|hook| hook.intent_combat_hook self, :attack_hit, :defender}
 				@defend.take_hit(@attack)
-				attacker_hooks.each {|hook| hook.intent_combat_hook self, :took_damage, :attacker}
-				defender_hooks.each {|hook| hook.intent_combat_hook self, :took_damage, :defender}
 				case @attack.target.alignment
 					when :good
-						@attack.entity.mo -= @defend.damage_taken * 2
+						@mo_delta = @defend.damage_taken * -2
+						# -3 MO for goods hitting goods
+						@mo_delta -= 30 if @attack.entity.alignment == :good
+						# -1 MO for goods killing goods (total -4)
+						@mo_delta -= 10 if @attack.entity.dead?
 					when :neutral
-						@attack.entity.mo -= @defend.damage_taken
+						@mo_delta = -@defend.damage_taken
+						# -2 MO for goods killing neutrals
+						@mo_delta -= 20 if @attack.entity.dead? && @attack.entity.alignment == :good
 					when :evil
-						@attack.entity.mo += @defend.damage_taken # TODO: unless @attack.target.faction.alignment == :evil || @attack.target.is_demon
+						unless @attack.entity.alignment == :evil
+							@mo_delta = @defend.damage_taken unless @attack.entity.alignment == :evil # TODO: unless @attack.target.faction.alignment == :evil || @attack.target.is_demon
+							# +1 MO for non-evil killing evil
+							@mo_delta += 10 if @attack.target.dead?
+						end
 				end
+				attacker_hooks.each {|hook| hook.intent_combat_hook self, :took_damage, :attacker}
+				defender_hooks.each {|hook| hook.intent_combat_hook self, :took_damage, :defender}
+				@attack.entity.mo += @mo_delta
 			end
 		end
 
