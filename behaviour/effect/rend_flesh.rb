@@ -14,6 +14,8 @@ module Effect
 				rend_dmg += 1 if percent < 66
 				rend_dmg += 1 if percent < 33
 
+				intent.attack.damage += rend_dmg
+
 				intent.debug "Rend Flesh - #{percent} = #{rend_dmg} extra damage."
 			end
 		end
