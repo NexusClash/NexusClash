@@ -47,6 +47,10 @@ module Entity
 			self.type.family
 		end
 
+		def source
+			@source ||= game.character source_id
+		end
+
 		def source=(char)
 			@source = char
 			self[:source_id] = char.id
@@ -125,7 +129,7 @@ module Entity
 			end
 			@effects = new_effects
 			game = Firmament::Plane.fetch Instance.plane
-			@source = game.character(self.source_id) unless self.source_id === nil
+			#@source = game.character(self.source_id) unless self.source_id === nil
 		end
 
 		def self.tick(entity, interval, *args)
