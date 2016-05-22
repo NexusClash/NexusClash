@@ -117,7 +117,12 @@ module Wayfarer
 				ability = abilities[ability_i]
 				abilities_hash[ability_i] = {name: ability.name}
 			end
-			packets = [{type: 'actions', actions:{attacks: weaps_hash, abilities: abilities_hash}}]
+			charge_attacks = character.charge_attacks
+			charge_attacks_hash = Hash.new
+			charge_attacks.each do |charge_attack|
+				charge_attacks_hash[charge_attack.object_id] = {name: charge_attack.name, description: charge_attack.describe}
+			end
+			packets = [{type: 'actions', actions:{attacks: weaps_hash, abilities: abilities_hash, charge_attacks: charge_attacks_hash}}]
 			send({packets: packets}.to_json)
 		end
 
@@ -158,7 +163,7 @@ module Wayfarer
 		def attack(json)
 			case json['target_type']
 				when 'character'
-					character.attack game.character(json['target'].to_i), json['weapon'].to_i
+					character.attack game.character(json['target'].to_i), json['weapon'].to_i, (json.has_key?('charge_attack') && json['charge_attack'] != '' ? json['charge_attack'].to_i : nil)
 			end
 		end
 

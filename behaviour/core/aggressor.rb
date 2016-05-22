@@ -23,7 +23,24 @@ module Behaviour
 			return weaps
 		end
 
-		def attack(target, weapon_id)
+		def charge_attacks(select = nil)
+			if select === nil
+				charge_attacks = []
+				self.each_applicable_effect do |effect|
+					charge_attacks << effect if effect.respond_to?(:apply_charge_attack)
+				end
+				return charge_attacks
+			else
+				self.each_applicable_effect do |effect|
+					if effect.respond_to?(:apply_charge_attack) && effect.object_id == select
+						return effect
+					end
+				end
+				return nil
+			end
+		end
+
+		def attack(target, weapon_id, charge_attack = nil)
 			weapons = self.weaponry(target)
 			unless weapons.has_key? weapon_id
 				Entity::Message.new({characters: [self.id], message: 'Unable to find that weapon!', type: MessageType::FAILED})
@@ -39,6 +56,9 @@ module Behaviour
 			end
 
 			attack = weapons[weapon_id]
+
+			charge_attack = charge_attacks(charge_attack) unless charge_attack === nil
+			attack.charge_attack = charge_attack unless charge_attack === nil
 
 			dmg = Intent::Damage.new(target)
 

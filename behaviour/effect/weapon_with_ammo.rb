@@ -3,12 +3,13 @@ module Effect
 
 		attr_reader :empty_message
 		attr_reader :ammo_cost
+		attr_reader :armour_pierce
 
-		def initialize(parent, family, hit_chance, damage_type, damage, ammo_cost, empty_message, name = nil)
+		def initialize(parent, family, hit_chance, damage_type, damage, ammo_cost, empty_message, name = nil, armour_pierce = 0)
 			super parent, family, hit_chance, damage_type, damage, name
 			@empty_message = empty_message
 			@ammo_cost = ammo_cost.to_i
-
+			@armour_pierce = armour_pierce
 			@costs[:ammo] = self.method(:ammo_callback)
 		end
 
@@ -36,9 +37,9 @@ module Effect
 
 		def save_state
 			if @name == parent.name then
-				['WeaponWithAmmo', @family, @hit_chance, @damage_type, @damage, @ammo_cost, @empty_message]
+				['WeaponWithAmmo', @family, @hit_chance, @damage_type, @damage, @ammo_cost, @empty_message, nil, @armour_pierce]
 			else
-				['WeaponWithAmmo', @family, @hit_chance, @damage_type, @damage, @ammo_cost, @empty_message, @name]
+				['WeaponWithAmmo', @family, @hit_chance, @damage_type, @damage, @ammo_cost, @empty_message, @name, @armour_pierce]
 			end
 		end
 

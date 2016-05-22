@@ -87,13 +87,28 @@ class Voyager < Expedition
 						$document['tile_description'].inner_html = "<h4>#{target.name} (#{target.x}, #{target.y}, #{target.type})</h4><p>#{target.description}</p><p>There #{target.occupants == 1 ? 'is' : 'are'} #{target.occupants} other #{target.occupants == 1 ? 'person' : 'people'} here.</p>" if target.x == @adventurer.x && target.y == @adventurer.y && target.z == @adventurer.z
 					end
 				when 'actions'
-					html = "<li><button data-action-type='attack' data-action-vars='target:#{@adventurer.target.id},target_type:#{@adventurer.target.type}' data-action-user-vars='weapon:#action_attack option:checked'>Attack with</button> <select id='action_attack'>"
+					html = "<li><button data-action-type='attack' data-action-vars='target:#{@adventurer.target.id},target_type:#{@adventurer.target.type}' data-action-user-vars='weapon:#action_attack option:checked,charge_attack:.charge_attack:checked'>Attack with</button> <select id='action_attack'>"
 					data = ent['actions']['attacks']
 					data.keys.each do |action_id|
 						action = data[action_id]
 						html = html + "<option value='#{action_id}'>#{action['name']} - #{action['damage']} #{action['damage_type']} @ #{action['hit_chance']}%</option>"
 					end
 					html = html + '</select></li>'
+
+					if ent['actions'].count > 0
+						html = html + '<li>'
+					else
+						html = html + '<li style="display:none">'
+					end
+					html = html + '<input type="radio" id="charge_attack_none" name="charge_attack" class="charge_attack" value="" checked><label for="charge_attack_none" class="ui-button">None</label>'
+					data = ent['actions']['charge_attacks']
+					data.keys.each do |action_id|
+						action = data[action_id]
+						html = html + "<input type='radio' id='charge_attack_#{action_id}' name='charge_attack' class='charge_attack' value='#{action_id}'><label class='ui-button' for='charge_attack_#{action_id}' title='#{action['description']}'>#{action['name']}</label>"
+					end
+					html = html + '</li>'
+
+
 					data = ent['actions']['abilities']
 	        data.keys.each do |action_id|
 						action = data[action_id]

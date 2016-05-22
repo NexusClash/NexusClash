@@ -2,6 +2,7 @@ module Intent
 	class Attack < Action
 
 		attr_reader :weapon
+		attr_reader :charge_attack
 		attr_accessor :message
 
 		attr_accessor :family
@@ -44,6 +45,21 @@ module Intent
 				@damage = weap.damage
 
 				debug weap
+			end
+		end
+
+		def charge_attack=(charge)
+			unless @charge_attack == charge
+				@charge_attack = charge
+				@charge_attack.costs.each do |key, value|
+					if value.respond_to? :call
+						@costs[key] = value
+					else
+						@costs[key] += value
+					end
+				end
+				@charge_attack.apply_charge_attack self
+				debug charge
 			end
 		end
 

@@ -15,7 +15,7 @@ module Effect
 			end
 		end
 
-		def tick_event(defender, attacker)
+		def tick_event(attacker, defender)
 			duration = @parent.get_tag(:charges)
 			duration = @charges if duration === nil
 			duration = duration.to_i

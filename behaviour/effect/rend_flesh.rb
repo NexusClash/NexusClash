@@ -16,7 +16,7 @@ module Effect
 
 				intent.attack.damage += rend_dmg
 
-				intent.debug "Rend Flesh - #{percent} = #{rend_dmg} extra damage."
+				intent.debug "Rend Flesh - #{percent}% HP => #{rend_dmg} extra damage."
 			end
 		end
 

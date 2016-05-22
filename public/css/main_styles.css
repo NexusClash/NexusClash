@@ -170,6 +170,14 @@ p
 .combobox .ui-button-icon-only .ui-button-text { padding: 0.35em; } 
 .combobox .ui-autocomplete-input { margin: 0; padding: 0.48em 0 0.47em 0.45em; }
 .combobox label, #logon_step3_div label { display:inline-block; min-width:200px;}
+input[type=radio].charge_attack:checked+label.ui-button
+{
+	background:#444;color:#EEE;
+}
+input[type=radio].charge_attack
+{
+	display:none;
+}
 .div-30
 {
 	float:left;
