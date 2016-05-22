@@ -4,6 +4,7 @@ module Intent
 		attr_reader :weapon
 		attr_reader :charge_attack
 		attr_accessor :message
+		attr_accessor :costs
 
 		attr_accessor :family
 		attr_accessor :hit_chance

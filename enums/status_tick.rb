@@ -4,7 +4,8 @@ module StatusTick
 	AP = :ap
 	MINUTE = :minute
 	STATUS = :status
-	DAMAGE_TAKEN = :damage_taken # expects the damage, type, source (optional) to be passed as additional arguments
+	DAMAGE_TAKEN = :damage_taken # expects (you), damage, type, source (optional) to be passed as additional arguments
+	DEATH = :death # expects source (optional) to be passed as additional arguments
 
 	# Scope: Item
 	ITEM_ACTIVATED = :item_activation

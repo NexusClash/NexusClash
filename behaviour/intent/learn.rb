@@ -13,6 +13,9 @@ module Intent
 
 		def take_action
 			@learning.stateful = @entity
+			@learning.effects.each do |effect|
+				effect.unserialise if effect.respond_to? :unserialise
+			end
 		end
 
 		def broadcast_results

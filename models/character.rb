@@ -124,6 +124,12 @@ module Entity
 				status.parent = self
 			end
 
+			document.statuses.each do |status|
+				status.effects.each do |effect|
+					effect.unserialise if effect.respond_to? :unserialise
+				end
+			end
+
 			minutes_elapsed = ((Time.now - document.last_tick) / 60).floor
 
 			ticks_before = (15 - document.last_tick.min % 15).floor

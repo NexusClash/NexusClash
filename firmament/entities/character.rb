@@ -115,7 +115,9 @@ module Entity
 
 		end
 
-		def kill!
+		def kill!(tick = true)
+			self[:hp] = 0 if self.hp > 0
+			Entity::Status.tick(self, StatusTick::DEATH) if tick
 			self[:hp] = 0 if self.hp > 0
 			game = Firmament::Plane.fetch Instance.plane
 			move! game.map(VoidTile::DEAD_COORDINATE, VoidTile::DEAD_COORDINATE, VoidTile::DEAD_COORDINATE)
