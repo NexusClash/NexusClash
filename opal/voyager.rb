@@ -91,19 +91,21 @@ class Voyager < Expedition
 					data = ent['actions']['attacks']
 					data.keys.each do |action_id|
 						action = data[action_id]
+						next if action['name'] == ''
 						html = html + "<option value='#{action_id}'>#{action['name']} - #{action['damage']} #{action['damage_type']} @ #{action['hit_chance']}%</option>"
 					end
 					html = html + '</select></li>'
 
 					if ent['actions'].count > 0
-						html = html + '<li>'
+						html = html + '<li style="margin:5px;padding-bottom:5px;border-bottom:1px dashed grey">'
 					else
 						html = html + '<li style="display:none">'
 					end
-					html = html + '<input type="radio" id="charge_attack_none" name="charge_attack" class="charge_attack" value="" checked><label for="charge_attack_none" class="ui-button">None</label>'
+					html = html + '&rdsh; with: <input type="radio" id="charge_attack_none" name="charge_attack" class="charge_attack" value="" checked><label for="charge_attack_none" class="ui-button">None</label>'
 					data = ent['actions']['charge_attacks']
 					data.keys.each do |action_id|
 						action = data[action_id]
+						next if action['name'] == ''
 						html = html + "<input type='radio' id='charge_attack_#{action_id}' name='charge_attack' class='charge_attack' value='#{action_id}'><label class='ui-button' for='charge_attack_#{action_id}' title='#{action['description']}'>#{action['name']}</label>"
 					end
 					html = html + '</li>'
@@ -112,6 +114,7 @@ class Voyager < Expedition
 					data = ent['actions']['abilities']
 	        data.keys.each do |action_id|
 						action = data[action_id]
+						next if action['name'] == ''
 						html = html + "<li><button data-action-type='activate_target' data-action-vars='status_id:#{action_id},target:#{@adventurer.target.id},target_type:#{@adventurer.target.type}'>#{action['name']}</button></li>"
 					end
 					$document['#target_information .actions'].inner_html = html

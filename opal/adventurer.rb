@@ -109,6 +109,7 @@ class Adventurer
 			ability_ul.inner_html = ''
 
 			@abilities.each do |ability|
+				next if ability['name'] == ''
 				node2 = DOM{
 					li
 				}

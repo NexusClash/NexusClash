@@ -28,6 +28,7 @@ module Effect
 			intent.damage += @damage
 			intent.hit_chance += @hit_chance
 			intent.damage_type = @damage_type unless @damage_type == :none || @damage_type == nil
+			intent.append_message "This attack was a #{@name}!"
 		end
 
 		def describe
