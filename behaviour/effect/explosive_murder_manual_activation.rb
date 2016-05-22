@@ -62,7 +62,7 @@ module Effect
 				count = 0
 			end
 
-			intent.name = "#{name} (#{@costs[:ap]}AP, #{costs[:mp] - count}MP)"
+			intent.name = "#{name} (#{@costs[:ap]}AP, #{@costs[:mp] - count}MP)"
 			@costs.each do |cost, delta|
 				delta -= count if cost == :mp # Reduce MP cost if multiple copies of ability
 				intent.add_cost cost, delta
