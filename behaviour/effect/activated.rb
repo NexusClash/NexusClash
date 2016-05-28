@@ -2,6 +2,7 @@ module Effect
 	class Activated
 
 		attr_reader :name
+		attr_accessor :parent
 
 		def initialize(parent, costs = nil, name = nil, targets = Array.new([:self]))
 			@parent = parent
