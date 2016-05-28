@@ -13,7 +13,7 @@ require 'magellan'
 
 
 class Adventurer
-	attr_accessor :id, :name, :hp, :hp_fuzzy, :mp, :xp, :level, :mo, :cp, :nexus_class
+	attr_accessor :id, :name, :hp, :hp_fuzzy, :hp_max, :mp, :mp_max, :xp, :level, :mo, :cp, :nexus_class, :sense_hp, :sense_mo, :sense_mp, :alignment
 	attr_accessor :x, :y, :z
 	attr_accessor :neighbours, :map, :me, :ap, :target, :statuses, :abilities
 
@@ -29,24 +29,9 @@ class Adventurer
 		@abilities = Array.new
 		@statuses = Array.new
 		@me = me
-		self.name = data['name'] if data.has_key? 'name'
-		self.hp = data['hp'] if data.has_key? 'hp'
-		self.hp_fuzzy = data['hp_fuzzy'] if data.has_key? 'hp_fuzzy'
-		self.mp = data['mp'] if data.has_key? 'mp'
-		self.xp = data['xp'] if data.has_key? 'xp'
-		self.level = data['level'] if data.has_key? 'level'
-		self.mo = data['mo'] if data.has_key? 'mo'
-		self.cp = data['cp'] if data.has_key? 'cp'
-		self.x = data['x'] if data.has_key? 'x'
-		self.y = data['y'] if data.has_key? 'y'
-		self.z = data['z'] if data.has_key? 'z'
-		self.ap = data['ap'] if data.has_key? 'ap'
-		self.nexus_class = data['nexus_class'] if data.has_key? 'nexus_class'
-		self.statuses = data['visible_statuses'] if data.has_key? 'visible_statuses'
-		self.abilities = data['abilities'] if data.has_key? 'abilities'
 		@id = data['id']
 		@target = nil
-		render
+		update data
 	end
 
 	def x=(x)
@@ -62,11 +47,20 @@ class Adventurer
 		@z = z
 	end
 
+	def mp_fuzzy
+		return 'full' if mp >= mp_max
+		return 'high' if mp > mp_max * 0.5
+		return 'mid' if mp > mp_max * 0.25
+		return 'low'
+	end
+
 	def update(data)
 		self.name = data['name'] if data.has_key? 'name'
 		self.hp = data['hp'] if data.has_key? 'hp'
 		self.hp_fuzzy = data['hp_fuzzy'] if data.has_key? 'hp_fuzzy'
+		self.hp_max = data['hp_max'] if data.has_key? 'hp_max'
 		self.mp = data['mp'] if data.has_key? 'mp'
+		self.mp_max = data['mp_max'] if data.has_key? 'mp_max'
 		self.xp = data['xp'] if data.has_key? 'xp'
 		self.level = data['level'] if data.has_key? 'level'
 		self.mo = data['mo'] if data.has_key? 'mo'
@@ -75,6 +69,10 @@ class Adventurer
 		self.y = data['y'] if data.has_key? 'y'
 		self.z = data['z'] if data.has_key? 'z'
 		self.ap = data['ap'] if data.has_key? 'ap'
+		self.sense_hp = data['sense_hp'] if data.has_key? 'sense_hp'
+		self.sense_mo = data['sense_mo'] if data.has_key? 'sense_mo'
+		self.sense_mp = data['sense_mp'] if data.has_key? 'sense_mp'
+		self.alignment = data['alignment'] if data.has_key? 'alignment'
 		self.nexus_class = data['nexus_class'] if data.has_key? 'nexus_class'
 		self.statuses = data['visible_statuses'] if data.has_key? 'visible_statuses'
 		self.abilities = data['abilities'] if data.has_key? 'abilities'
@@ -102,7 +100,11 @@ class Adventurer
 			occupants = ''
 			@neighbours.keys.each do |key|
 				neighbour = @neighbours[key]
-				occupants += "<li><span data-char-link='#{neighbour.id}'>#{neighbour.name}</span> (#{neighbour.level})<span class='hp-widget' data-state='#{neighbour.hp_fuzzy}'></span></li>"
+				mp_widget = ''
+				mo_widget = ''
+				mp_widget = "<span class='mp-widget' data-state='#{neighbour.mp_fuzzy}' title='#{neighbour.mp}/#{neighbour.mp_max}'></span>" if sense_mp
+				mo_widget = "<span class='mo-widget' data-state='#{neighbour.alignment}' title='#{neighbour.alignment}'></span>" if sense_mo
+				occupants += "<li><span data-char-link='#{neighbour.id}'>#{neighbour.name}</span> (#{neighbour.level})<span class='hp-widget' data-state='#{neighbour.hp_fuzzy}' #{sense_hp ? "title='#{neighbour.hp}/#{neighbour.hp_max}'" : ''}></span>#{mp_widget}#{mo_widget}</li>"
 			end
 			$document['tile_occupants_players'].inner_html = occupants
 			ability_ul = $document['#abilities']
@@ -131,7 +133,10 @@ class Adventurer
 			else
 				$document['#target_information .name'].inner_html = "<a href='/character/#{@target.id}' style='color:black;text-decoration:none'>#{@target.name}</a>"
 				$document['#target_information .class_image'].attributes['src'] = "/img/class/colour/#{@target.nexus_class}.png"
-				$document['#target_information .stats'].inner_html = "<li>Level #{target.level} #{@target.nexus_class}</li><li>HP: #{@target.hp_fuzzy}</li>"
+				stats = "<li>Level #{target.level} #{@target.nexus_class}</li><li>HP: #{sense_hp ? "#{@target.hp} / #{@target.hp_max}" : @target.hp_fuzzy}</li>"
+				stats = stats + "<li>MP: #{@target.mp} / #{@target.mp_max}</li>" if sense_mp
+				stats = stats + "<li>Alignment: #{@target.alignment}</li>" if sense_mo
+				$document['#target_information .stats'].inner_html = stats
 				$document['#target_information .actions'].inner_html = '' unless @neighbours.has_key? @target.id
 			end
 			if @hp <= 0

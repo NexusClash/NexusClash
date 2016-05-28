@@ -770,7 +770,7 @@ img[src=""]
 	cursor:pointer;
 	text-decoration:underline;
 }
-.hp-widget
+.hp-widget, .mp-widget
 {
 	margin-left:2px;
 	width:6px;
@@ -780,6 +780,29 @@ img[src=""]
 	border:1px solid black;
 	position:relative;
 	top:3px;
+}
+.mo-widget
+{
+	margin-left:2px;
+	width:8px;
+	height:8px;
+	display:inline-block;
+	border-radius:10px;
+	border:1px solid black;
+	position:relative;
+	top:2px;
+}
+.mo-widget[data-state=good]
+{
+	background-color:white;
+}
+.mo-widget[data-state=neutral]
+{
+	background-color:grey;
+}
+.mo-widget[data-state=evil]
+{
+	background-color:black;
 }
 .hp-widget[data-state=low]
 {
@@ -796,6 +819,36 @@ img[src=""]
 .hp-widget[data-state=full]
 {
 	background: linear-gradient(to bottom, rgb(0,0,0) 0%,rgb(255,50,50) 0%);
+}
+.hp-widget::before, .mp-widget::before {
+	font-size: 70%;
+	content: attr(title);
+	position: relative;
+	text-align: center;
+}
+.hp-widget::before {
+	top: -18px;
+	left: -8px;
+}
+.mp-widget::before {
+	left: -8px;
+	top:10px;
+}
+.mp-widget[data-state=low]
+{
+	background: linear-gradient(to bottom, rgb(0,0,0) 80%,rgb(50,50,255) 80%);
+}
+.mp-widget[data-state=mid]
+{
+	background: linear-gradient(to bottom, rgb(0,0,0) 50%,rgb(50,50,255) 50%);
+}
+.mp-widget[data-state=high]
+{
+	background: linear-gradient(to bottom, rgb(0,0,0) 20%,rgb(50,50,255) 20%);
+}
+.mp-widget[data-state=full]
+{
+	background: linear-gradient(to bottom, rgb(0,0,0) 0%,rgb(50,50,255) 0%);
 }
 #target_information .stats li
 {

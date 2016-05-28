@@ -104,25 +104,36 @@ module Wayfarer
 			end
 		end
 
-		def select_target(json)
-			self.target = game.character(json['char_id'])
-			weaps_hash = Hash.new
-			weaps = character.weaponry
-			weaps.keys.each do |weapi|
-				weaps_hash[weapi] = weaps[weapi].to_hash
+		def select_target(json, include = {attacks: true, abilities: true, charge_attacks: true})
+			self.target = game.character(json['char_id']) if json.has_key? 'char_id'
+			output = {}
+			if include[:attacks]
+				weaps_hash = Hash.new
+				weaps = character.weaponry
+				weaps.keys.each do |weapi|
+					weaps_hash[weapi] = weaps[weapi].to_hash
+				end
+				output[:attacks] = weaps_hash
 			end
-			abilities = character.activated_uses_target @target
-			abilities_hash = Hash.new
-			abilities.keys.each do |ability_i|
-				ability = abilities[ability_i]
-				abilities_hash[ability_i] = {name: ability.name}
+			if include[:abilities]
+				abilities = character.activated_uses_target @target
+				abilities_hash = Hash.new
+				abilities.keys.each do |ability_i|
+					ability = abilities[ability_i]
+					abilities_hash[ability_i] = {name: ability.name}
+				end
+				output[:abilities] = abilities_hash
 			end
-			charge_attacks = character.charge_attacks
-			charge_attacks_hash = Hash.new
-			charge_attacks.each do |charge_attack|
-				charge_attacks_hash[charge_attack.object_id] = {name: charge_attack.name, description: charge_attack.describe}
+			if include[:charge_attacks]
+				charge_attacks = character.charge_attacks
+				charge_attacks_hash = Hash.new
+				charge_attacks.each do |charge_attack|
+					charge_attacks_hash[charge_attack.object_id] = {name: charge_attack.name, description: charge_attack.describe}
+				end
+				output[:charge_attacks] = charge_attacks_hash
 			end
-			packets = [{type: 'actions', actions:{attacks: weaps_hash, abilities: abilities_hash, charge_attacks: charge_attacks_hash}}]
+
+			packets = [{type: 'actions', actions: output}]
 			send({packets: packets}.to_json)
 		end
 
@@ -413,12 +424,14 @@ module Wayfarer
 			uses = character.activated_uses_target @target
 			if uses.has_key? json['status_id'].to_i
 				uses[json['status_id'].to_i].realise
+				select_target({}, {attacks: false, abilities: true, charge_attacks: false})
 			else
 
 				character.items.each do |item|
 					uses = item.activated_uses_target @target
 					if uses.has_key? json['status_id'].to_i
 						uses[json['status_id'].to_i].realise
+						select_target({}, {attacks: false, abilities: true, charge_attacks: false})
 						return
 					end
 				end

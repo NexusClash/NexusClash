@@ -50,6 +50,9 @@ module Behaviour
 			if self.is_a? Entity::Character
 				character = self
 				targets = [self, self.location]
+				character.items.each do |item|
+					targets << item
+				end
 				intent_type = Intent::ActivateTarget
 				target_status = true
 			end

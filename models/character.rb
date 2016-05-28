@@ -30,6 +30,9 @@ module Entity
 		field :last_tick, type:Time, default: ->{Time.now}
 
 		attr_reader :location
+		attr_accessor :sense_health
+		attr_accessor :sense_magic
+		attr_accessor :sense_morality
 
 		@revealed_to = ThreadSafe::Array.new
 
@@ -224,7 +227,7 @@ module Entity
 
 		def to_hash(scope = BroadcastScope::NONE)
 
-			hash = {id: id, name: name, hp: hp, hp_fuzzy: hp_fuzzy, ap: ap, mp: mp, xp: xp, level: level, mo: mo, cp: cp, x: x, y: y, z: z, plane: plane, nexus_class: nexus_class}
+			hash = {id: id, name: name, hp: hp, hp_fuzzy: hp_fuzzy, hp_max: hp_max, ap: ap, mp: mp, mp_max: mp_max, xp: xp, level: level, mo: mo, cp: cp, x: x, y: y, z: z, plane: plane, nexus_class: nexus_class, sense_hp: sense_health, sense_mp: sense_magic, sense_mo: sense_morality, alignment: alignment}
 
 			if scope == BroadcastScope::SELF
 				visible_statuses = Array.new
