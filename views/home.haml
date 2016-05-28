@@ -20,7 +20,7 @@
 			- slides.each do |slide|
 				%div(class="#{slide.has_key?(:background) ? 'bg-' + slide[:background].gsub(' ', '-') : ''}")
 					%div
-						%h1
+						%h1.outlined
 							= slide[:header]
 						= slide[:body]
 					- if slide.has_key? :image

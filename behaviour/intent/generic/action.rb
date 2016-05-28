@@ -93,7 +93,7 @@ module Intent
 
 		def unhide_callback(action, intent)
 			if action == :apply_costs
-				intent.entity.visibility = Visibility::VISIBLE if intent.entity.respond_to? :visibility=
+				intent.entity.visibility = Visibility::VISIBLE #if intent.entity.respond_to? :visibility=
 			end
 			true if action == :possible?
 		end
