@@ -117,6 +117,7 @@ class Dash < Sinatra::Application
 			# Push existence to game map
 			game = Firmament::Plane.fetch Instance.plane
 			newchar = game.character newchar.id
+			newchar.plane = Instance.plane
 			newchar.move! game.map(VoidTile::DEAD_COORDINATE, VoidTile::DEAD_COORDINATE, VoidTile::DEAD_COORDINATE)
 			newchar.respawn
 			redirect to('/account/characters')
