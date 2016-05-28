@@ -1311,10 +1311,6 @@ div#slider figure
 	animation: 30s slidy infinite;
 	height:100%;
 }
-div#slider figure h1
-{
-	text-shadow: 0px 0px 4px rgba(255, 255, 255, 1), 0px 0px 6px rgba(255, 255, 255, 1), 0px 0px 8px rgba(255, 255, 255, 1);
-}
 div#slider figure p
 {
 	background:rgba(255,255,255,0.7);
