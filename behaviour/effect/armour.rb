@@ -2,7 +2,7 @@ module Effect
 	class Armour < Defence
 
 		def equipped?
-			@parent.get_tag :equipped
+			@parent.carrier.get_tag :equipped
 		end
 
 		def alter_damage_intent(intent)

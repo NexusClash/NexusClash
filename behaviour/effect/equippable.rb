@@ -6,10 +6,15 @@ module Effect
 		def initialize(parent, slot = nil)
 			super parent
 			@slot = slot
+			unserialise
+		end
+
+		def unserialise
+			@item = @parent.stateful if @parent.respond_to? :stateful
 		end
 
 		def equipped?
-			@parent.get_tag(:equipped)
+			@item.get_tag(:equipped)
 		end
 
 		def name
@@ -43,15 +48,23 @@ module Effect
 			case action
 				when :possible?
 					result = true
-					result = false unless equipped? || slot_free?(character, slot)
-				when :apply_costs
-				when :take_action
-					if equipped?
-						@parent.set_tag :equipped, false
-						@parent.set_tag :slot, nil
+					equipped = equipped?
+					free = slot_free?(character, slot)
+					result = false unless equipped || free
+					if result
+						intent.debug "Able to equip into #{slot}" unless slot === nil
 					else
-						@parent.set_tag :equipped, true
-						@parent.set_tag :slot, slot
+						intent.debug "Slot #{slot} isn't available!" if !equipped && !free
+					end
+				when :apply_costs
+					if equipped?
+						intent.debug 'Unequipping'
+						@item.set_tag :equipped, false
+						@item.set_tag :slot, nil
+					else
+						intent.debug 'Equipping'
+						@item.set_tag :equipped, true
+						@item.set_tag :slot, slot
 					end
 				when :broadcast_results
 
