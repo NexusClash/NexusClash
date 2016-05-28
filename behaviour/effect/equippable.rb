@@ -66,8 +66,6 @@ module Effect
 						@item.set_tag :equipped, true
 						@item.set_tag :slot, slot
 					end
-				when :broadcast_results
-
 					if equipped?
 						msg = "You equip your #{target.name}"
 					else
