@@ -105,8 +105,8 @@ module Intent
 			if possible?
 				apply_costs
 				take_action if respond_to? :take_action
-				broadcast_results if respond_to? :broadcast_results
 				debug_broadcast entity
+				broadcast_results if respond_to? :broadcast_results
 				return true
 			end
 			debug_broadcast entity
