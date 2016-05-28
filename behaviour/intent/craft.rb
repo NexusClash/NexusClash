@@ -120,6 +120,19 @@ module Intent
 					end
 				end
 			end
+			# Look for catalysts on location
+			entity.location.statuses.each do |status|
+				status.effects.each do |effect|
+					if effect.respond_to?(:component)
+						# Check for catalyst
+						if remaining_catalysts.has_key?(effect.component) && remaining_catalysts[effect.component] > 0
+							remaining_catalysts[effect.component] = remaining_catalysts[effect.component] - 1
+							debug effect
+							break
+						end
+					end
+				end
+			end
 			remaining.delete_if {|_, value| value == 0}
 			remaining_catalysts.delete_if {|_, value| value == 0}
 			@remaining = remaining
