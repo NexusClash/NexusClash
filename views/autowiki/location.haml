@@ -1,0 +1,42 @@
+%style
+	= location.css
+%h2
+	= location.name
+%div.tile(data-type="#{location.name}" title="#{location.name}")
+	%ul.occupants
+%h4
+	Description
+%p
+	= location.description
+%h4
+	Search Odds
+%table#search_odds.display
+	%thead
+		%tr
+			%th
+				Item Name
+			%th
+				= '% Chance On Successful Search'
+	%tbody
+		- location.search_table.each do |odds|
+			- item = Entity::ItemType.find odds[0]
+			%tr
+				%td
+					= item.name
+				%td
+					= "#{(odds[1] * 100 / search_rate_total).round}%"
+	%tfoot
+%script(src="/js/jquery.js")
+%script(src="/js/jquery.dataTables.js")
+%script(src="/js/dataTables.tableTools.js")
+%link(rel="stylesheet" href="/css/jquery.dataTables.min.css")
+%link(rel="stylesheet" href="/css/dataTables.tableTools.min.css")
+:javascript
+	$('#search_odds').DataTable({  "dom": 'T<"clear">lfrtip',
+			"tableTools": { "aButtons": [ 'xls', 'print' ],
+							"deferRender": true,
+							"sSwfPath": "/swf/copy_csv_xls.swf"
+						},
+			"order": [[1, "desc"]],"bJQueryUI": false,"bAutoWidth":false, "bPaginate": false,
+			"deferRender": true
+		});

@@ -84,7 +84,7 @@ class Voyager < Expedition
 						end
 						target.description = data['description'] if data.has_key? 'description'
 						target.render
-						$document['tile_description'].inner_html = "<h4>#{target.name} (#{target.x}, #{target.y}, #{target.type})</h4><p>#{target.description}</p><p>There #{target.occupants == 1 ? 'is' : 'are'} #{target.occupants} other #{target.occupants == 1 ? 'person' : 'people'} here.</p>" if target.x == @adventurer.x && target.y == @adventurer.y && target.z == @adventurer.z
+						$document['tile_description'].inner_html = "<h4>#{target.name} (#{target.x}, #{target.y}, <a href='/autowiki/tile/#{target.x}/#{target.y}/#{target.z}' target='_blank' style='color:black'>#{target.type}</a>)</h4><p>#{target.description}</p><p>There #{target.occupants == 1 ? 'is' : 'are'} #{target.occupants} other #{target.occupants == 1 ? 'person' : 'people'} here.</p>" if target.x == @adventurer.x && target.y == @adventurer.y && target.z == @adventurer.z
 					end
 				when 'actions'
 					html = "<li><button data-action-type='attack' data-action-vars='target:#{@adventurer.target.id},target_type:#{@adventurer.target.type}' data-action-user-vars='weapon:#action_attack option:checked,charge_attack:.charge_attack:checked'>Attack with</button> <select id='action_attack'>"

@@ -78,6 +78,10 @@ module Entity
 			def self.impacts
 				[]
 			end
+
+			def self.id
+				0
+			end
 		end
 
 	end
