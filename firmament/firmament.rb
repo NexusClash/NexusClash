@@ -125,6 +125,7 @@ module Firmament
 			puts 'Loading Characters...'
 
 			Entity::Character.where({plane: @plane.plane.to_i}).each do |newchar|
+				newchar.statuses << Entity::Status.source_from(1) if newchar.statuses.count == 0
 				newchar.location = @locations[newchar.x][newchar.y][newchar.z]
 				@locations[newchar.x][newchar.y][newchar.z].characters << newchar
 				@characters[newchar.id] = newchar
