@@ -70,7 +70,7 @@ module Entity
 				state = Entity::Status.source_from statid
 				state.parent = document
 				state.effects.each do |effect|
-					effect.unseralise if effect.respond_to? :unserialise
+					effect.unserialise if effect.respond_to? :unserialise
 				end
 				document.type_statuses << state
 			end
