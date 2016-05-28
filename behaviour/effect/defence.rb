@@ -14,11 +14,11 @@ module Effect
 			@name = @parent.name if @name === nil
 			@soaks = Hash.new{|hash, key| 0}
 			soaks.each do |type, delta|
-				@soaks[type.to_sym] = delta.to_i
+				@soaks[type.downcase.to_sym] = delta.to_i
 			end
 			@resistances = Hash.new{|hash, key| 0}
 			resistances.each do |type, delta|
-				@resistances[type.to_sym] = delta.to_i
+				@resistances[type.downcase.to_sym] = delta.to_i
 			end
 			@avoidance = Hash.new{|hash, key| 0}
 			avoidance.each do |type, delta|
