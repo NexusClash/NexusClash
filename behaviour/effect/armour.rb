@@ -6,6 +6,7 @@ module Effect
 		end
 
 		def alter_damage_intent(intent)
+			intent.debug "#{name} #{equipped? ? 'is' : 'isn\'t'} equipped."
 			super if equipped?
 		end
 
