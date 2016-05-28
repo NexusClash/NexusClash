@@ -1285,7 +1285,7 @@ img[src=""]
 	.bg-Conduit{}
 	.bg-Corruptor{background-position:0% 20%}
 	.bg-Dark-Oppressor{}
-	.bg-Defiler{}
+	.bg-Defiler{background-position:40% 20%}
 	.bg-Divine-Herald{background-position:0% 50%}
 	.bg-Doom-Howler{}
 	.bg-Eternal-Soldier{}
@@ -1299,7 +1299,7 @@ img[src=""]
 	.bg-Pariah{background-position:20% 0%}
 	.bg-Revenant{background-position:0% 0%}
 	.bg-Seraph{background-position:100% 25%}
-	.bg-Shepherd{}
+	.bg-Shepherd{background-position:50% 0%}
 	.bg-Sorcerer{}
 	.bg-Void-Walker{background-position:90% 70%}
 	.bg-Wizard{background-position:50% 25%}
@@ -1313,7 +1313,7 @@ img[src=""]
 	.bg-Conduit{}
 	.bg-Corruptor{background-position:15% 100%}
 	.bg-Dark-Oppressor{}
-	.bg-Defiler{background-position:40% 0%}
+	.bg-Defiler{background-position:40% 20%}
 	.bg-Divine-Herald{}
 	.bg-Doom-Howler{}
 	.bg-Eternal-Soldier{background-position:20% 0%}
@@ -1327,7 +1327,7 @@ img[src=""]
 	.bg-Pariah{background-position:0% 0%}
 	.bg-Revenant{background-position:0% 0%}
 	.bg-Seraph{background-position:50% 0%}
-	.bg-Shepherd{}
+	.bg-Shepherd{background-position:50% 0%}
 	.bg-Sorcerer{}
 	.bg-Void-Walker{background-position:100% 100%}
 	.bg-Wizard{background-position:70% 0%}
