@@ -22,7 +22,6 @@ module Intent
 		def possible?
 			unless @attack.possible?
 				debug 'Not possible to attack'
-				debug_broadcast @attack.entity.id
 			end
 			@attack.possible?
 		end
@@ -66,7 +65,6 @@ module Intent
 			#TODO: Split into Intent::Attack and Intent::Defend
 			message_death = nil
 			attack_text = @attack.describe(BroadcastScope::SELF, @defend)
-			debug_broadcast @attack.entity.id
 			if @attack.target.dead?
 
 				notify = Array.new

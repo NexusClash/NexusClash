@@ -51,7 +51,6 @@ module Intent
 			end
 			debug "Total CP cost: #{@cp_cost}"
 			add_cost :cp, @cp_cost
-			debug_broadcast @entity.id
 		end
 
 	end

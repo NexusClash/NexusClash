@@ -16,7 +16,6 @@ module Intent
 
 		def possible?
 			debug "Able? #{super ? 'Yes' : 'No'} Traversible? #{traversible? ? 'Yes' : 'No'} Adjacent? #{adjacent? ? 'Yes' : 'No'} Movement? #{@start != @end ? 'Yes' : 'No'}" if Instance.debug
-			debug_broadcast @entity.id
 			super && traversible? && adjacent? && @start != @end
 		end
 

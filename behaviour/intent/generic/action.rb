@@ -106,8 +106,10 @@ module Intent
 				apply_costs
 				take_action if respond_to? :take_action
 				broadcast_results if respond_to? :broadcast_results
+				debug_broadcast entity
 				return true
 			end
+			debug_broadcast entity
 			return false
 		end
 
@@ -128,6 +130,7 @@ module Intent
 		def debug_broadcast(target)
 			return unless Instance.debug
 			@debug_log = Array.new if @debug_log === nil
+			target = target.id if target.is_a? Entity::Character
 			target = [target] unless target.is_a? Array
 			@debug_log.reverse_each do |msg|
 				Entity::Message.send_transient(target,msg, MessageType::DEBUG)

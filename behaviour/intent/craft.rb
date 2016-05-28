@@ -35,7 +35,6 @@ module Intent
 				debug "Used up #{item.name}"
 				item.despawn
 			end
-			debug_broadcast @entity.id
 		end
 
 		def take_action
