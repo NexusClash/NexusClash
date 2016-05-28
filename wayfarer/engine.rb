@@ -307,7 +307,7 @@ module Wayfarer
 				if json.has_key?('edit')
 					if tile.is_a?(VoidTile) && json['type_id'].to_i != -1
 						tile = Entity::Tile.new
-						tile.plane = game.plane.id
+						tile.plane = Instance.plane
 						tile.x = json['x'].to_i
 						tile.y = json['y'].to_i
 						tile.z = json['z'].to_i
@@ -317,7 +317,7 @@ module Wayfarer
 						tile.save
 						game.remove_void(tile.x, tile.y, tile.z)
 					else
-						tile.plane = game.plane.id
+						tile.plane = Instance.plane
 						tile.x = json['x'].to_i
 						tile.y = json['y'].to_i
 						tile.z = json['z'].to_i
@@ -414,6 +414,15 @@ module Wayfarer
 			if uses.has_key? json['status_id'].to_i
 				uses[json['status_id'].to_i].realise
 			else
+
+				character.items.each do |item|
+					uses = item.activated_uses_target @target
+					if uses.has_key? json['status_id'].to_i
+						uses[json['status_id'].to_i].realise
+						return
+					end
+				end
+
 				Entity::Message.send_transient([character.id],'Unable to find specified ability!', MessageType::FAILED)
 			end
 		end
