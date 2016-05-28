@@ -69,6 +69,9 @@ module Entity
 			document.type.statuses.each do |statid|
 				state = Entity::Status.source_from statid
 				state.parent = document
+				state.effects.each do |effect|
+					effect.unseralise if effect.respond_to? :unserialise
+				end
 				document.type_statuses << state
 			end
 
@@ -81,6 +84,9 @@ module Entity
 			item.type.statuses.each do |statid|
 				state = Entity::Status.source_from statid
 				state.parent = item
+				state.effects.each do |effect|
+					effect.unseralise if effect.respond_to? :unserialise
+				end
 				item.type_statuses << state
 			end
 			return item
