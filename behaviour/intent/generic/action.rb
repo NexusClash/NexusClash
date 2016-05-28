@@ -11,10 +11,12 @@ module Intent
 			@costs = Hash.new{|hash, key| 0}
 			@debug_log = Array.new
 
+			puts options.inspect
 			# Built-in default triggers for actions
 			add_cost(:encumbrance_check_callback, self.method(:encumbrance_check_callback)) if !options.has_key?(:encumbrance) || options[:encumbrance]
 			add_cost(:status_tick_callback, self.method(:status_tick_callback)) if !options.has_key?(:status_tick) || options[:status_tick]
 			add_cost(:unhide_callback, self.method(:unhide_callback)) if !options.has_key?(:unhide) || options[:unhide]
+			puts @costs.inspect
 		end
 
 		##
