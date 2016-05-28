@@ -12,9 +12,9 @@ module Intent
 			@debug_log = Array.new
 
 			# Built-in default triggers for actions
-			add_cost(:encumbrance_check_callback, self.method(:encumbrance_check_callback)) if options.has_key?(:encumbrance) && options[:encumbrance]
-			add_cost(:status_tick_callback, self.method(:status_tick_callback)) if options.has_key?(:status_tick) && options[:status_tick]
-			add_cost(:unhide_callback, self.method(:unhide_callback)) if options.has_key?(:unhide) && options[:unhide]
+			add_cost(:encumbrance_check_callback, self.method(:encumbrance_check_callback)) if !options.has_key?(:encumbrance) || options[:encumbrance]
+			add_cost(:status_tick_callback, self.method(:status_tick_callback)) if !options.has_key?(:status_tick) || options[:status_tick]
+			add_cost(:unhide_callback, self.method(:unhide_callback)) if !options.has_key?(:unhide) || options[:unhide]
 		end
 
 		##
@@ -86,13 +86,16 @@ module Intent
 
 		def status_tick_callback(action, intent)
 			if action == :apply_costs
+				debug 'Status Tick as part of action...'
 				Entity::Status.tick(intent.entity, StatusTick::STATUS)
 			end
 			true if action == :possible?
 		end
 
 		def unhide_callback(action, intent)
+			puts "Unhide callback #{action} for #{intent.inspect} on #{intent.entity} with visibility #{intent.entity.visibility}"
 			if action == :apply_costs
+				debug 'Unhiding character as part of action...'
 				intent.entity.visibility = Visibility::VISIBLE #if intent.entity.respond_to? :visibility=
 			end
 			true if action == :possible?
