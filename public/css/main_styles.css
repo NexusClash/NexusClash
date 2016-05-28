@@ -1,5 +1,11 @@
 @import url(https://fonts.googleapis.com/css?family=Raleway|Lustria);
 
+.outlined
+{
+	text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+	color:white
+}
+
 html, body
 {
 	font-size:0.9em;
