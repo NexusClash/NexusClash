@@ -1,6 +1,7 @@
 module Effect
 	class Defence
 
+		attr_accessor :parent
 		attr_reader :name
 		attr_reader :soaks
 		attr_reader :resistances

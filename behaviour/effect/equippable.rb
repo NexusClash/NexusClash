@@ -6,15 +6,10 @@ module Effect
 		def initialize(parent, slot = nil)
 			super parent
 			@slot = slot
-			unserialise
-		end
-
-		def unserialise
-			@item = @parent.stateful if @parent.respond_to? :stateful
 		end
 
 		def equipped?
-			@item.get_tag(:equipped)
+			@parent.get_tag(:equipped)
 		end
 
 		def name
@@ -59,12 +54,12 @@ module Effect
 				when :apply_costs
 					if equipped?
 						intent.debug 'Unequipping'
-						@item.set_tag :equipped, false
-						@item.set_tag :slot, nil
+						@parent.set_tag :equipped, false
+						@parent.set_tag :slot, nil
 					else
 						intent.debug 'Equipping'
-						@item.set_tag :equipped, true
-						@item.set_tag :slot, slot
+						@parent.set_tag :equipped, true
+						@parent.set_tag :slot, slot
 					end
 					if equipped?
 						msg = "You equip your #{target.name}"
@@ -83,8 +78,10 @@ module Effect
 		def slot_free?(character, slot)
 			return true if slot === nil
 			character.items.each do |item|
-				item_slot = item.get_tag :slot
-				return false if item_slot == slot
+				item.statuses.each do |status|
+					item_slot = status.get_tag :slot
+					return false if item_slot == slot
+				end
 			end
 			true
 		end
