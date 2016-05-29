@@ -16,7 +16,7 @@ module Intent
 			@target_entity.broadcast_self Entity::Status.tick(@target, StatusTick::ACTIVATED_TARGET, @target_entity)
 		end
 
-		def location_check(intent, action)
+		def location_check(action, intent)
 			if action == :possible?
 				intent.debug "Same location as target? #{@entity.location == @target_entity.location ? 'Yes' : 'No'}"
 				@entity.location == @target_entity.location
