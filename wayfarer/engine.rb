@@ -200,7 +200,7 @@ module Wayfarer
 		end
 
 		def respawn(_)
-			character.respawn if character.dead?
+			character.respawn if character.dead? || character.location.type == Entity::VoidTileType
 		end
 
 		def request_skill_tree(*_)

@@ -139,7 +139,7 @@ class Adventurer
 				$document['#target_information .stats'].inner_html = stats
 				$document['#target_information .actions'].inner_html = '' unless @neighbours.has_key? @target.id
 			end
-			if @hp <= 0
+			if @hp <= 0 || (@x == -9001 && @y == -9001 && @z == -9001)
 				$document['#details_pane_alive'].attributes[:class] = 'ui-helper-hidden'
 				$document['#details_pane_dead'].attributes[:class] = ''
 			else
