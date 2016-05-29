@@ -29,8 +29,9 @@ module Wayfarer
 				return false
 			else
 				# Throttle
+
 				locked = @mutex.try_lock
-				@queue.push [method, json, icd]
+				@queue.push [method, json, @icd + icd - now < icd ? @icd + icd - now : icd]
 				Entity::Message.send_transient([character.id], "Queueing #{method} for ~#{icd}ms due to input throttle...", MessageType::DEBUG)
 
 				if locked
