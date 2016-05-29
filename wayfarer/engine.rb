@@ -13,9 +13,7 @@ module Wayfarer
 		attr_accessor :plane
 
 		def character=(val)
-			@mutex = Mutex.new
 			@icd = Time.now.to_f * 1000
-			@queue = Queue.new
 			@character = val
 			@user = val.account
 		end
@@ -29,42 +27,11 @@ module Wayfarer
 				return false
 			else
 				# Throttle
-
-				locked = @mutex.try_lock
-				icd = @icd + icd - now < icd ? @icd + icd - now : icd
-				icd = 1 if icd < 1
-				if @queue.length >= 5
-					Entity::Message.send_transient([character.id], "Cannot queue #{method}, please wait for the #{@queue.length} queued throttled actions to complete!", MessageType::DEBUG)
-				else
-					@queue.push [method, json, icd]
-					Entity::Message.send_transient([character.id], "Queueing #{method} for ~#{icd}ms due to input throttle...", MessageType::DEBUG)
+				w = (@icd - (now - icd)).to_f.abs / 1000
+				Entity::Message.send_transient([character.id], "Queueing #{method} for ~#{w}ms due to input throttle...", MessageType::DEBUG)
+				sleep w
+				return false
 				end
-
-				if locked
-
-					start = Time.now
-
-					while @queue.length > 0 do
-						command = @queue.pop
-						@icd = Time.now.to_f * 1000 + command[2] + 100
-						sleep command[2].to_f / 1000.to_f
-						Entity::Message.send_transient([character.id], "Executing throttled #{command[0]}, #{@queue.length} other commands remain in the queue...", MessageType::DEBUG)
-						@icd = 0
-						self.__send__ command[0], command[1]
-						@icd = Time.now.to_f * 1000 + command[2]
-						if Time.now - start > 5
-							Entity::Message.send_transient([character.id], 'Throttled queued actions taking too long, clearing queue - Please spam inputs less!', MessageType::DEBUG)
-							@queue.clear
-							@icd = 0
-							return true
-						end
-					end
-
-
-					@mutex.unlock
-				end
-
-				return true
 			end
 		end
 
