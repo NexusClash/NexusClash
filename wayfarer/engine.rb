@@ -42,10 +42,10 @@ module Wayfarer
 						command = @queue.pop
 						@icd = Time.now.to_f * 1000 + command[2] + 100
 						sleep command[2].to_f / 1000.to_f
-						@icd = Time.now.to_f * 1000 - command[2] - 100
 						Entity::Message.send_transient([character.id], "Executing throttled #{command[0]}", MessageType::DEBUG)
+						@icd = 0
 						self.__send__ command[0], command[1]
-						@icd = Time.now.to_f * 1000 + command[2] + 100
+						@icd = Time.now.to_f * 1000 + command[2]
 					end
 
 
