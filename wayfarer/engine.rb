@@ -31,7 +31,6 @@ module Wayfarer
 				Entity::Message.send_transient([character.id], "Queueing #{method} for ~#{w}ms due to input throttle...", MessageType::DEBUG)
 				sleep w
 				return false
-				end
 			end
 		end
 
