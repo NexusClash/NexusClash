@@ -219,8 +219,8 @@ module Entity
 
 			(-2..2).each do |y|
 				(-2..2).each do |x|
-					tiles.add game.map(old.x + x, old.y + y, old.z)
-					tiles.add game.map(new.x + x, new.y + y, new.z)
+					tiles.add game.map(old.x + x, old.y + y, old.z) unless old.z != 0 && (x != 0 || y != 0)
+					tiles.add game.map(new.x + x, new.y + y, new.z) unless new.z != 0 && (x != 0 || y != 0)
 				end
 			end
 

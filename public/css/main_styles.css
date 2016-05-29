@@ -1374,3 +1374,8 @@ div#slider figure p
 {
 	position:absolute; left:0px; width:100%;
 }
+#tile_occupants_players li
+{
+	display:inline-block;
+	padding-bottom:15px;
+}
