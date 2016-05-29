@@ -13,8 +13,44 @@ module Wayfarer
 		attr_accessor :plane
 
 		def character=(val)
+			@mutex = Mutex.new
+			@icd = Time.now.to_f * 1000
+			@queue = Queue.new
 			@character = val
 			@user = val.account
+		end
+
+		def throttle(method, json = {}, icd = 300)
+			now = Time.now.to_f  * 1000
+			if now - icd >= @icd
+				# Can perform action
+				@icd += icd
+				@icd = now + icd if @icd <= now
+				return false
+			else
+				# Throttle
+				locked = @mutex.try_lock
+				@queue.push [method, json, icd]
+				Entity::Message.send_transient([character.id], "Queueing #{method} for ~#{icd}ms due to input throttle...", MessageType::DEBUG)
+
+				if locked
+
+					while @queue.length > 0 do
+						command = @queue.pop
+						@icd = Time.now.to_f * 1000 + command[2] + 100
+						sleep command[2].to_f / 1000.to_f
+						@icd = Time.now.to_f * 1000 - command[2] - 100
+						Entity::Message.send_transient([character.id], "Executing throttled #{command[0]}", MessageType::DEBUG)
+						self.__send__ command[0], command[1]
+						@icd = Time.now.to_f * 1000 + command[2] + 100
+					end
+
+
+					@mutex.unlock
+				end
+
+				return true
+			end
 		end
 
 
@@ -35,10 +71,12 @@ module Wayfarer
 		end
 
 		def movement(json)
+			return if throttle :movement, json
 			character.move game.map json['x'].to_i, json['y'].to_i, json['z'].to_i
 		end
 
 		def portal(json)
+			return if throttle :portal, json
 			found = nil
 
 			character.location.portals.each do |portal|
@@ -172,6 +210,7 @@ module Wayfarer
 		end
 
 		def attack(json)
+			return if throttle :attack, json
 			case json['target_type']
 				when 'character'
 					character.attack game.character(json['target'].to_i), json['weapon'].to_i, (json.has_key?('charge_attack') && json['charge_attack'] != '' ? json['charge_attack'].to_i : nil)
@@ -179,6 +218,7 @@ module Wayfarer
 		end
 
 		def respawn(_)
+			return if throttle :respawn
 			character.respawn if character.dead?
 		end
 
@@ -214,6 +254,7 @@ module Wayfarer
 		end
 
 		def learn_skill(json)
+			return if throttle :learn_skill, json
 			skill = Entity::StatusType.find json['id']
 			learn = Intent::Learn.new character, skill
 			if learn.realise
@@ -224,6 +265,7 @@ module Wayfarer
 		end
 
 		def search(_)
+			return if throttle :search
 			if character.ap < 1	|| character.location.is_a?(VoidTile)
 				Entity::Message.send_transient([character.id], 'You cannot search at this time!', MessageType::FAILED)
 				return
@@ -265,6 +307,7 @@ module Wayfarer
 		end
 
 		def hide(_)
+			return if throttle :hide
 			if character.ap < 1	|| character.location.is_a?(VoidTile)
 				Entity::Message.send_transient([character.id], 'You cannot hide at this time!', MessageType::FAILED)
 				return
@@ -398,6 +441,7 @@ module Wayfarer
 		end
 
 		def activate_item_self(json)
+			return if throttle :activate_item_self, json
 			item = nil
 			character.items.each do |e_item|
 				if e_item.object_id == json['id'].to_i
@@ -412,6 +456,7 @@ module Wayfarer
 		end
 
 		def activate_self(json)
+			return if throttle :activate_self, json
 			uses = character.activated_uses
 			if uses.has_key? json['status_id'].to_i
 				uses[json['status_id'].to_i].realise
@@ -421,6 +466,7 @@ module Wayfarer
 		end
 
 		def activate_target(json)
+			return if throttle :activate_target, json
 			uses = character.activated_uses_target @target
 			if uses.has_key? json['status_id'].to_i
 				uses[json['status_id'].to_i].realise
@@ -492,6 +538,7 @@ module Wayfarer
 		end
 
 		def craft(json)
+			return if throttle :craft, json
 			character.craft(json['id'].to_i)
 		end
 	end
