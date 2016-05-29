@@ -52,9 +52,11 @@ module Wayfarer
 						@icd = 0
 						self.__send__ command[0], command[1]
 						@icd = Time.now.to_f * 1000 + command[2]
-						if Time.now - start > 10
+						if Time.now - start > 5
 							Entity::Message.send_transient([character.id], 'Throttled queued actions taking too long, clearing queue - Please spam inputs less!', MessageType::DEBUG)
 							@queue.clear
+							@icd = 0
+							return true
 						end
 					end
 
