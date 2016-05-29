@@ -18,7 +18,8 @@ module Wayfarer
 			@user = val.account
 		end
 
-		def throttle(method, json = {}, icd = 150)
+		def throttle(method, json = {}, icd = 0)
+			return false if icd == 0
 			now = Time.now.to_f  * 1000
 			if now - icd >= @icd
 				# Can perform action
@@ -28,7 +29,8 @@ module Wayfarer
 			else
 				# Throttle
 				w = (@icd - (now - icd)).to_f.abs / 1000
-				Entity::Message.send_transient([character.id], "Queueing #{method} for ~#{w}ms due to input throttle...", MessageType::DEBUG)
+				w = icd if w > icd
+				Entity::Message.send_transient([character.id], "Queueing #{method} for ~#{w * 1000}ms due to input throttle...", MessageType::DEBUG)
 				sleep w
 				return false
 			end
