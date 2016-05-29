@@ -34,6 +34,7 @@ module Entity
 		attr_accessor :sense_magic
 		attr_accessor :sense_morality
 		attr_accessor :weight_max
+		attr_accessor :hp_max_mod
 
 		@revealed_to = ThreadSafe::Array.new
 
@@ -65,6 +66,10 @@ module Entity
 
 		def weight_max
 			@weight_max ||= 50
+		end
+
+		def hp_max_mod
+			@hp_max_mod ||= 0
 		end
 
 		def add_weight(item)
@@ -190,7 +195,7 @@ module Entity
 		end
 
 		def hp_max
-			[50, level + 40].max
+			[50, level + 40].max + hp_max_mod
 		end
 
 		def mp_max
