@@ -15,8 +15,10 @@ module Effect
 			character = @parent
 			character = @parent.stateful if character.is_a? Entity::Status
 			character = @parent.carrier if character.is_a? Entity::Item
-			character.weight_max += amount
-			character.broadcast BroadcastScope::SELF, {packets:[{type: 'inventory', weight_max: character.weight_max, list:'add', items: []}]}.to_json
+			if character.is_a? Entity::Character
+				character.weight_max += amount
+				character.broadcast BroadcastScope::SELF, {packets:[{type: 'inventory', weight_max: character.weight_max, list:'add', items: []}]}.to_json
+			end
 		end
 
 			def describe
