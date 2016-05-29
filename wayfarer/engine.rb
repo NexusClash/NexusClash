@@ -20,7 +20,7 @@ module Wayfarer
 			@user = val.account
 		end
 
-		def throttle(method, json = {}, icd = 300)
+		def throttle(method, json = {}, icd = 150)
 			now = Time.now.to_f  * 1000
 			if now - icd >= @icd
 				# Can perform action
@@ -32,6 +32,7 @@ module Wayfarer
 
 				locked = @mutex.try_lock
 				icd = @icd + icd - now < icd ? @icd + icd - now : icd
+				icd = 1 if icd < 1
 				@queue.push [method, json, icd]
 				Entity::Message.send_transient([character.id], "Queueing #{method} for ~#{icd}ms due to input throttle...", MessageType::DEBUG)
 
@@ -73,7 +74,6 @@ module Wayfarer
 		end
 
 		def movement(json)
-			return if throttle :movement, json
 			character.move game.map json['x'].to_i, json['y'].to_i, json['z'].to_i
 		end
 
@@ -220,7 +220,6 @@ module Wayfarer
 		end
 
 		def respawn(_)
-			return if throttle :respawn
 			character.respawn if character.dead?
 		end
 
