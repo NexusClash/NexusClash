@@ -34,7 +34,7 @@ module Wayfarer
 				icd = @icd + icd - now < icd ? @icd + icd - now : icd
 				icd = 1 if icd < 1
 				if @queue.length >= 5
-					Entity::Message.send_transient([character.id], "Cannot queue #{method}, please wait for queued throttled actions to complete!", MessageType::DEBUG)
+					Entity::Message.send_transient([character.id], "Cannot queue #{method}, please wait for the #{@queue.length} queued throttled actions to complete!", MessageType::DEBUG)
 				else
 					@queue.push [method, json, icd]
 					Entity::Message.send_transient([character.id], "Queueing #{method} for ~#{icd}ms due to input throttle...", MessageType::DEBUG)
@@ -48,7 +48,7 @@ module Wayfarer
 						command = @queue.pop
 						@icd = Time.now.to_f * 1000 + command[2] + 100
 						sleep command[2].to_f / 1000.to_f
-						Entity::Message.send_transient([character.id], "Executing throttled #{command[0]}", MessageType::DEBUG)
+						Entity::Message.send_transient([character.id], "Executing throttled #{command[0]}, #{@queue.length} other commands remain in the queue...", MessageType::DEBUG)
 						@icd = 0
 						self.__send__ command[0], command[1]
 						@icd = Time.now.to_f * 1000 + command[2]
