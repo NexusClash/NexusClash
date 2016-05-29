@@ -75,7 +75,7 @@ module Effect
 					val = initialval
 					delta = @healing + amount_modification
 					max = target.hp_max
-					if val + @healing > max then
+					if val + delta > max then
 						if val > max
 							delta = 0
 						else
@@ -83,7 +83,7 @@ module Effect
 							val = max
 						end
 					else
-						val += @healing
+						val += delta
 					end
 					target.hp = val
 
