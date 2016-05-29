@@ -56,7 +56,8 @@ module Firmament
 				@characters.keys.each do |id|
 					char = @characters[id]
 					result = Entity::Status.tick char, :ap
-					result = Entity::Status.tick char, :status
+					result2 = Entity::Status.tick char, :status
+					result = result2 if result < result2
 					char.broadcast_self result
 				end
 			end
