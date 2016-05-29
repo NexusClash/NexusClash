@@ -212,7 +212,7 @@ module Wayfarer
 		end
 
 		def attack(json)
-			return if throttle :attack, json
+			return if throttle :attack, json, 500
 			case json['target_type']
 				when 'character'
 					character.attack game.character(json['target'].to_i), json['weapon'].to_i, (json.has_key?('charge_attack') && json['charge_attack'] != '' ? json['charge_attack'].to_i : nil)
