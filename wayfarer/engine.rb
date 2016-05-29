@@ -33,10 +33,16 @@ module Wayfarer
 				locked = @mutex.try_lock
 				icd = @icd + icd - now < icd ? @icd + icd - now : icd
 				icd = 1 if icd < 1
-				@queue.push [method, json, icd]
-				Entity::Message.send_transient([character.id], "Queueing #{method} for ~#{icd}ms due to input throttle...", MessageType::DEBUG)
+				if @queue.length >= 5
+					Entity::Message.send_transient([character.id], "Cannot queue #{method}, please wait for queued throttled actions to complete!", MessageType::DEBUG)
+				else
+					@queue.push [method, json, icd]
+					Entity::Message.send_transient([character.id], "Queueing #{method} for ~#{icd}ms due to input throttle...", MessageType::DEBUG)
+				end
 
 				if locked
+
+					start = Time.now
 
 					while @queue.length > 0 do
 						command = @queue.pop
@@ -46,6 +52,10 @@ module Wayfarer
 						@icd = 0
 						self.__send__ command[0], command[1]
 						@icd = Time.now.to_f * 1000 + command[2]
+						if Time.now - start > 10
+							Entity::Message.send_transient([character.id], 'Throttled queued actions taking too long, clearing queue - Please spam inputs less!', MessageType::DEBUG)
+							@queue.clear
+						end
 					end
 
 
