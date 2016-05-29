@@ -132,7 +132,7 @@ module Entity
 				self.hp = self.hp_max
 				game = Firmament::Plane.fetch Instance.plane
 				if Instance.plane == 3
-					move! game.map(rand(12...15),rand(10...16),rand(0...2))
+					move! game.map(rand(12...15),rand(10...16),0)
 				else
 					move! game.map(1,1,0)
 				end
