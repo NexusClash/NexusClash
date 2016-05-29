@@ -82,6 +82,22 @@ module Entity
 			end
 		end
 
+		def mo_max
+			if ['Paladin', 'Divine Herald', 'Holy Champion', 'Seraph', 'Shepherd', 'Lightspeaker', 'Archon', 'Advocate'].include? nexus_class
+				500
+			else
+				400
+			end
+		end
+
+		def mo_min
+			if ['Pariah', 'Infernal Behemoth', 'Doom Howler', 'Void Walker', 'Defiler', 'Dark Oppressor', 'Corruptor', 'Wyrm Master'].include? nexus_class
+				-500
+			else
+				-400
+			end
+		end
+
 		def reveal_to!(char)
 			@revealed_to << char.id
 			packet = {packets: [{type: 'character', character: self.to_hash(BroadcastScope::TILE)}]}.to_json

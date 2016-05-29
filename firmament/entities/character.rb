@@ -100,6 +100,8 @@ module Entity
 
 		def mo=(val)
 			if @mo_hook === nil
+				val = mo_max if val > mo_max
+				val = mo_min if val < mo_min
 				self[:mo] = val
 			else
 				self[:mo] = @mo_hook.mo=(val)
