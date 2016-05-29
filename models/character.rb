@@ -21,7 +21,7 @@ module Entity
 		field :x, type: Integer, default: 1
 		field :y, type: Integer, default: 1
 		field :z, type: Integer, default: 0
-		field :plane, type: Integer, default: 1
+		field :plane, type: Integer, default: ->{Instance.plane}
 
 		field :visibility, type: Integer, default: Visibility::VISIBLE
 
