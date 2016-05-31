@@ -1385,7 +1385,7 @@ div#slider figure p
 }
 #alpha_msg:checked ~ #left_panel #activity_log li[data-message-family=debug]
 {
-	display:inline-block;
+	display:block;
 }
 #debug_mode:checked ~ #left_panel
 {
