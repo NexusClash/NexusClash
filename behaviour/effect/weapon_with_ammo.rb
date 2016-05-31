@@ -13,6 +13,20 @@ module Effect
 			@costs[:ammo] = self.method(:ammo_callback)
 		end
 
+		def name
+			if @parent.respond_to? :parent
+				ammo = @parent.parent.get_tag(:ammo) if @parent.parent.respond_to? :get_tag
+				"#{super} (#{ammo ? ammo : 0})"
+			else
+				super
+			end
+		end
+
+		def unserialise
+			ammo = @parent.parent.get_tag(:ammo) if @parent.parent.respond_to? :get_tag
+			@parent.parent.set_tag(:ammo, 0) if ammo === nil && @parent.parent.respond_to?(:set_tag)
+		end
+
 		def ammo_callback(action, intent)
 			weapon_entity = @parent.parent
 			case action

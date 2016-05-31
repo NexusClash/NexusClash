@@ -6,7 +6,7 @@ module Effect
 		attr_reader :damage_type
 		attr_reader :damage
 		attr_reader :name
-		attr_reader :parent
+		attr_accessor :parent
 		attr_reader :costs
 		attr_reader :armour_pierce
 
