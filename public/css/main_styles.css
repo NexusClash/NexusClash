@@ -1379,3 +1379,89 @@ div#slider figure p
 	display:inline-block;
 	padding-bottom:15px;
 }
+#left_panel #activity_log li[data-message-family=debug]
+{
+	display:none;
+}
+#alpha_msg:checked ~ #left_panel #activity_log li[data-message-family=debug]
+{
+	display:inline-block;
+}
+#debug_mode:checked ~ #left_panel
+{
+	width:calc(100% - 425px - 30vw);
+}
+#debug_mode:checked ~ #right_panel
+{
+	right: calc(30vw + 15px);
+}
+#debugbar
+{
+	display:none;
+	overflow-y:scroll;
+}
+#debug_mode:checked ~ #debugbar
+{
+	position:absolute;
+	width:30vw;
+	right:20px;
+	margin-top:25px;
+	padding:10px;
+	display:block;
+	height:calc(100vh - 300px);
+}
+#debug_mode
+{
+	position:absolute;
+	top:5px;
+	right:100px;
+}
+label[for=debug_mode]
+{
+	position:absolute;
+	top:5px;
+	right:25px;
+	color:white;
+}
+#alpha_msg
+{
+	position:absolute;
+	top:5px;
+	right:210px;
+}
+label[for=alpha_msg]
+{
+	position:absolute;
+	top:5px;
+	right:120px;
+	color:white;
+}
+#debugbar ul li.informational, #debugbar ul li.debug, #debugbar ul li.transmitted
+{
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height:16px;
+	border:1px solid darkslategrey;
+}
+#debugbar ul li.debug
+{
+	background-color:lightyellow;
+}
+#debugbar ul li.informational
+{
+	background-color:lightcyan;
+}
+#debugbar ul li.transmitted
+{
+	background-color:lightgreen;
+}
+#debugbar ul li:focus
+{
+	overflow:visible;
+	height:auto;
+}
+#debugbar ul li.error
+{
+	background-color:lightcoral;
+	border:2px solid red;
+}

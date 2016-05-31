@@ -95,7 +95,6 @@ class Expedition
 			end
 
 			socket.on :message do |e|
-				puts e.data
 				handle_message e
 			end
 
@@ -110,12 +109,10 @@ class Expedition
 	end
 
 	def write_message(msg)
-		puts "send - #{msg.to_json}"
 		@socket.write({packets: [msg] }.to_json)
 	end
 
 	def write_messages(msgs)
-		puts "send - #{msgs.to_json}"
 		@socket.write({packets: msgs }.to_json)
 	end
 

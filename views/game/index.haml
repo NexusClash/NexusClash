@@ -32,6 +32,12 @@
 			%h2(style="color:red") DevMode ON
 		%ul.statuses.clear-left.list-plain.list-horizontal(style="margin:0;min-height:20px")
 		.clear-left
+	%input#alpha_msg(type='checkbox' checked=true)
+	%label(for='alpha_msg')
+		Simple Debug
+	%input#debug_mode(type='checkbox')
+	%label(for='debug_mode')
+		Adv Debug
 	#left_panel
 		%h3.ui-corner-top.ui-widget-header
 			Details
@@ -138,6 +144,8 @@
 								%li
 									%button(data-action-type="dev_tile" data-action-vars="z:1" data-action-user-vars="x:#target_information .target-tile-dev .x,y:#target_information .target-tile-dev .y") Edit Interior
 							.clear-left
+	#debugbar
+		%ul.list-plain
 #game_loading
 	.sk-folding-cube
 		.sk-cube.sk-cube1

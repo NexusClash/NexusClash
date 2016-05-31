@@ -25,15 +25,52 @@ class Voyager < Expedition
 		super addr, :game, false
 	end
 
+	TABLE_FOR_ESCAPE_HTML__ = {
+			"'" => '&#39;',
+			'&' => '&amp;',
+			'"' => '&quot;',
+			'<' => '&lt;',
+			'>' => '&gt;',
+	}
+
+	def debug_msg(msg, type)
+		@debug_bar ||= $document['#debugbar']
+		@debug_node ||= $document['#debugbar ul']
+		@debug_i ||= 0
+		@debug_i += 1
+		if @debug_i > 100 && $document['#debug_mode:checked'] === nil
+			@debug_node.inner_html = ''
+			@debug_i = 0
+		end
+		node = DOM{li}
+		node.attributes[:class] = type
+		node.attributes[:tabindex] = 0
+		node.inner_html = msg.to_json.gsub(/[&\"<>]/, TABLE_FOR_ESCAPE_HTML__).gsub('\n', '<br/>').gsub('\t', '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;').gsub("\\'", "'")
+		node.append_to @debug_node
+		debug_native = Native.convert @debug_bar
+		`debug_native.scrollTop = debug_native.scrollHeight`
+	end
+
+	def write_message(msg)
+		super msg
+		debug_msg msg, :transmitted
+	end
+
+	def write_messages(msgs)
+		super msgs
+		debug_msg msgs, :transmitted
+	end
+
 	def handle_message(m)
 		JSON.parse(m.data)[:packets].each do |ent|
+			debug_msg(ent, :informational) unless ent[:type] == 'error' ||  ent[:type] == 'debug'
 			case ent[:type]
 				when 'authentication_request'
 					$document['#game_loading .message'].inner_html = 'Authenticating...'
 					char_id = $document['char_id'].inner_html.to_s.strip
 					write_message({type: 'connect', char_id: char_id})
 				when 'debug', 'error'
-					puts "#{ent[:type]}: #{ent['message']}"
+					debug_msg ent['message'].replace('\\n', '<br/>'), ent[:type]
 					$document['#game_loading .message'].inner_html = ent['message'].replace('\\n', '<br/>')
 				when 'self'
 					if @adventurer === nil then
