@@ -37,6 +37,7 @@ module Intent
 				attacker_hooks.each {|hook| hook.intent_combat_hook self, :attack_hit, :attacker}
 				defender_hooks.each {|hook| hook.intent_combat_hook self, :attack_hit, :defender}
 				@defend.take_hit(@attack)
+				@mo_delta = 0
 				case @attack.target.alignment
 					when :good
 						@mo_delta = @defend.damage_taken * -2
