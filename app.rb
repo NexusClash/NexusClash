@@ -8,6 +8,7 @@ require 'websocket/extensions'
 require 'permessage_deflate'
 require 'tilt/haml'
 Bundler.require
+require 'digest/sha1'
 
 puts 'Loading base system...'
 
@@ -291,13 +292,15 @@ ws_app = lambda do |env|
 			puts "D: You call that JSON? #{ex}"
 			ws.send({packets: [{type: 'debug', message: 'Invalid JSON' }]}.to_json)
 		rescue Exception => e
-			err_msg = Entity::Message.new({characters: [], message: e.backtrace.inspect, type: MessageType::BACKTRACE})
+			trace = e.backtrace
+			trace_hash = Digest::SHA1.hexdigest trace.inspect
+			err_msg = Entity::Message.new({characters: [], message: "REF: ##{trace_hash} BACKTRACE: #{trace.inspect}", type: MessageType::BACKTRACE})
 			err_msg.save
 			unless ws.character === nil
-				err_msg = Entity::Message.new({characters: [ws.character.id], message: "Nexus Clash has encountered an error!<br/>Exception Details:<br/>#{e.message}", type: MessageType::ERROR})
+				err_msg = Entity::Message.new({characters: [ws.character.id], message: "<b>Nexus Clash has encountered an error!</b><br/><b>Exception:</b> #{e.message}<br/><b>Backtrace Reference ##{trace_hash}</b><br/><b><u>Please report this issue on the forums.</u></b>", type: MessageType::ERROR})
 				err_msg.save
 			end
-			ws.send({packets: [{type: 'error', message: e.message + '\n' + e.backtrace.inspect }]}.to_json)
+			ws.send({packets: [{type: 'error', message: e.message + '<br/>' + trace[0..([trace.length / 2, 3].min)].inspect }]}.to_json)
 		end
 	end
 

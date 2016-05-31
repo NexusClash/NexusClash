@@ -70,7 +70,7 @@ class Voyager < Expedition
 					char_id = $document['char_id'].inner_html.to_s.strip
 					write_message({type: 'connect', char_id: char_id})
 				when 'debug', 'error'
-					debug_msg ent['message'].replace('\\n', '<br/>'), ent[:type]
+					debug_msg ent['message'].gsub('\\n', '<br/>'), ent[:type]
 					$document['#game_loading .message'].inner_html = ent['message'].replace('\\n', '<br/>')
 				when 'self'
 					if @adventurer === nil then

@@ -1167,6 +1167,7 @@ img[src=""]
 {
 	color:black;
 	background-color:lightcoral;
+	border:3px dashed darkred;
 }
 .crafting_recipe ul li
 {
