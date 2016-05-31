@@ -323,12 +323,12 @@ module Wayfarer
 		def drop(json)
 			id = json['id'].to_i
 
-			character.items.each do |item_drop|
-				if item_drop.object_id == id
-					message_drop = Entity::Message.new({characters: [character.id], message: "You drop your #{item_drop.name}.", type: MessageType::ITEM_DROP})
+			character.items.each do |item|
+				if item.object_id == id
+					message_drop = Entity::Message.new({characters: [character.id], message: "You drop your #{item.name}.", type: MessageType::ITEM_DROP})
 					message_drop.save
-					send({packets:[{type: 'inventory', weight: character.weight, weight_max: character.weight_max, list: 'remove', items: [item_drop.object_id]}]}.to_json)
-					character.remove_item item_drop
+					character.remove_item item
+					send({packets:[{type: 'inventory', weight: character.weight, weight_max: character.weight_max, list: 'remove', items: [item.object_id]}]}.to_json)
 					return
 				end
 			end
