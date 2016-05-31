@@ -1,7 +1,7 @@
 module Effect
 	class CriticalHit
 
-		attr_reader :parent, :chance, :base_bonus, :level_mult, :level_div
+		attr_accessor :parent, :chance, :base_bonus, :level_mult, :level_div
 
 		def initialize(parent, chance = 30, base_bonus = 3, level_mult = 1, level_div = 4)
 			@parent = parent
@@ -9,13 +9,26 @@ module Effect
 			@base_bonus = base_bonus
 			@level_mult = level_mult
 			@level_div = level_div
+			@apply_globally = true
+			unserialise
 		end
 
 		def name
 			@parent.name
 		end
 
+		def unserialise
+			if @parent.respond_to? :parent
+				origin = @parent.parent
+				@apply_globally = origin === nil || (!origin.is_a?(Entity::Item) && !origin.is_a?(Entity::ItemType))
+			end
+		end
+
 		def alter_attack_intent(intent)
+
+			unless @apply_globally
+				return intent unless intent.weapon.parent == @parent
+			end
 
 			intent.debug self
 			roll = rand(1..100)
