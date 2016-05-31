@@ -291,7 +291,13 @@ ws_app = lambda do |env|
 			puts "D: You call that JSON? #{ex}"
 			ws.send({packets: [{type: 'debug', message: 'Invalid JSON' }]}.to_json)
 		rescue Exception => e
-			ws.send({packets: [{type: 'debug', message: e.message + '\n' + e.backtrace.inspect }]}.to_json)
+			err_msg = Entity::Message.new({characters: [], message: e.backtrace.inspect, type: MessageType::BACKTRACE})
+			err_msg.save
+			unless ws.character === nil
+				err_msg = Entity::Message.new({characters: [ws.character.id], message: "Nexus Clash has encountered an error!<br/>Exception Details:<br/>#{e.message}", type: MessageType::ERROR})
+				err_msg.save
+			end
+			ws.send({packets: [{type: 'error', message: e.message + '\n' + e.backtrace.inspect }]}.to_json)
 		end
 	end
 

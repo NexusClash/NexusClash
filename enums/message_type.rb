@@ -4,6 +4,8 @@ module MessageType
 	SEARCH_SUCCESS = :'search-success'
 	SEARCH_NOTHING = :'search-nothing'
 	HIDDEN = :'hide-success'
+	ERROR = :'error-exception'
+	BACKTRACE = :'exception-trace'
 	FAILED = :'message-failed'
 	SPEECH = :'speech'
 	SPEECH_EMOTE = :'speech-emote'

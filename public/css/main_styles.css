@@ -1163,7 +1163,11 @@ img[src=""]
 	color:red;
 	font-weight:bold;
 }
-
+#activity_log > ul > li[data-message-family=error-exception]
+{
+	color:black;
+	background-color:lightcoral;
+}
 .crafting_recipe ul li
 {
 	list-style-type:none;
