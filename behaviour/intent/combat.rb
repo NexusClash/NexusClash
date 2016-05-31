@@ -8,6 +8,7 @@ module Intent
 
 		def initialize(attack, defend)
 			super attack.entity, {encumbrance: false, status_tick: false, unhide: false} # checks get done in Attack intent
+			@mo_delta = 0
 			@attack = attack
 			@defend = defend
 			@attack.hit_chance -= defend.attack_penalty?(DefenceType::CLOSE_COMBAT_AVOIDANCE) if @attack.close_combat?
@@ -37,7 +38,6 @@ module Intent
 				attacker_hooks.each {|hook| hook.intent_combat_hook self, :attack_hit, :attacker}
 				defender_hooks.each {|hook| hook.intent_combat_hook self, :attack_hit, :defender}
 				@defend.take_hit(@attack)
-				@mo_delta = 0
 				case @attack.target.alignment
 					when :good
 						@mo_delta = @defend.damage_taken * -2
