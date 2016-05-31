@@ -27,8 +27,13 @@ module Intent
 			dx = @start.x - @end.x
 			dy = @start.y - @end.y
 			dz = @start.z - @end.z
-
-			(dx.between?(-1,1) && dy.between?(-1,1) && dz == 0 && dx.abs + dy.abs > 0) || ((dx == 0 && dy == 0 && dz.abs == 1))
+			if @start.z == 0
+				# Exterior movement considers adjacent tiles and interiors directly above or below to be adjacent
+				(dx.between?(-1,1) && dy.between?(-1,1) && dz == 0 && dx.abs + dy.abs > 0) || ((dx == 0 && dy == 0 && dz.abs == 1))
+			else
+				# Interior movement considers only directly above or below along with adjacent parts of large building interiors (TODO: Implement large buildings)
+				dx == 0 && dy == 0 && dz.abs == 1
+			end
 		end
 
 		def take_action
