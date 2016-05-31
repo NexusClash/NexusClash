@@ -168,6 +168,7 @@ class Voyager < Expedition
 						li
 					}
 					node['data-message-family'] = ent['class']
+					$document['css-tab-r1'].trigger :click if ent['class'] == 'step-inside' || ent['class'] == 'step-outside'
 					node.inner_html = ent['message'] + ' <sup>(' + Time::at(ent['timestamp'].to_i).strftime('%Y-%m-%d %H:%M:%S') + ')</sup>'
 					target_node = Native.convert $document['#activity_log ul']
 					native_node = Native.convert node
