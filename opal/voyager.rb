@@ -38,7 +38,7 @@ class Voyager < Expedition
 		@debug_node ||= $document['#debugbar ul']
 		@debug_i ||= 0
 		@debug_i += 1
-		if @debug_i > 100 && $document['#debug_mode:checked'] === nil
+		if @debug_i > 200 && $document['#debug_mode:checked'] === nil
 			@debug_node.inner_html = ''
 			@debug_i = 0
 		end
