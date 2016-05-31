@@ -90,7 +90,7 @@ module Intent
 			case scope
 				when BroadcastScope::SELF
 					debug_broadcast(@entity.id)
-					kill_msg = "This was enough to kill #{@target.pronoun(:him)}!" if @target.dead?
+					kill_msg = " This was enough to kill #{@target.pronoun(:him)}!" if @target.dead?
 					if hit?
 						return "You attack #{@target.name_link} with your #{@weapon.name} and hit, dealing #{defend.damage_taken.to_s} #{@damage_type.to_s} damage.#{defend_msg}#{@additional_text}#{xp_message}#{kill_msg}"
 					else

@@ -58,7 +58,7 @@ module Intent
 			case scope
 				when BroadcastScope::SELF
 					if attack.hit? && @damage_taken != nil && @damage_taken != attack.damage
-						return " #{@entity.pronoun(:they)} soaked #{@damage_intent.soaked} damage."
+						return " #{@entity.pronoun(:they).capitalize} soaked #{@damage_intent.soaked} damage."
 					else
 						return ''
 					end
