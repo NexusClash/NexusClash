@@ -159,7 +159,7 @@ module Wayfarer
 
 		def speech(json)
 			message = json['message']
-			unless message.strip.empty? || message.strip == '/me'
+			unless message === nil || message.strip.empty? || message.strip == '/me'
 				targets = Array.new
 				character.location.characters.each do |char|
 					targets << char.id
