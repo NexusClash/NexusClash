@@ -114,8 +114,6 @@ class Cartographer < Expedition
 	end
 
 	def attach_html_bindings
-		super
-
 		$document.on :click, '#zoom_in' do |event|
 
 			if zoom < 1
@@ -155,6 +153,8 @@ class Cartographer < Expedition
 						$document['#edit_tile_multiple']['data-target-type'] = 'tile_dev'
 
 					end
+
+					event.stop
 				else
 					unless $document['#css-tab-r1:checked'] === nil
 						# Single tile edit mode
@@ -174,9 +174,61 @@ class Cartographer < Expedition
 						end
 						write_message(changes)
 					end
+					event.stop
 				end
 			end
 		end
+
+
+		$document.on :click, 'button[data-action-type], .action[data-action-type]' do |event|
+			if self.state == :connected && (((event.button == 0 || event.button == 1) && event.target['data-action-type'] != nil) || (event.button == 2 && developer_mode && event.target['data-dev-action-type'] != nil))
+				target = event.target['data-action-type']
+				defined = event.target['data-action-vars']
+				user_defined = event.target['data-action-user-vars']
+				post_event_click = event.target['data-action-trigger-click']
+
+				if developer_mode && event.target['data-dev-action-type'] != nil && event.button == 2
+					target = event.target['data-dev-action-type']
+					defined = event.target['data-dev-action-vars']
+					user_defined = event.target['data-dev-action-user-vars']
+					post_event_click = event.target['data-dev-action-trigger-click']
+				end
+
+				return if target == 'move'
+
+				packet = {type: target}
+				defined = '' if defined === nil
+				defined.split(',').each do |defined_var|
+					var = defined_var.split(':', 2)
+					packet[var[0]] = var[1]
+				end
+				user_defined = '' if user_defined === nil
+				user_defined.split(',').each do |user_var|
+					var = user_var.split(':', 2)
+					elem = $document[var[1]]
+					case elem.name.downcase
+						when 'option'
+							packet[var[0]] = elem.attributes[:value]
+						when 'input'
+							packet[var[0]] = elem.value
+							elem.value = '' if elem['type'] == 'text'
+						when 'textarea'
+							packet[var[0]] = elem.inner_html
+						else
+							packet[var[0]] = elem.inner_html
+					end
+
+				end
+				self.write_message(packet)
+				$document[post_event_click].trigger :click if post_event_click != nil
+			end
+		end
+
+		$document.on :keyup, 'input[data-enter-trigger-action]' do |event|
+			$document[event.target['data-enter-trigger-action']].trigger :click if event.code == 13
+		end
+
+
 	end
 end
 
