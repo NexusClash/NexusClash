@@ -7,7 +7,7 @@ module Intent
 		attr_accessor :mo_delta
 
 		def initialize(attack, defend)
-			super attack.entity, {encumbrance: false, status_tick: false, unhide: false} # checks get done in Attack intent
+			super attack.entity, {encumbrance: false, status_tick: false, unhide: false, alive: false} # checks get done in Attack intent
 			@mo_delta = 0
 			@attack = attack
 			@defend = defend
