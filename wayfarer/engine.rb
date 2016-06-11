@@ -252,39 +252,8 @@ module Wayfarer
 				return
 			end
 
-			character.ap -= 1
-
-			item_drop = nil
-			item_drop = character.location.type.search_roll_item if character.location.type.search_roll
-
-			if item_drop === nil
-				message_ent = Entity::Message.new({characters: [character.id], message: 'You search and find nothing.', type: MessageType::SEARCH_NOTHING})
-				message_ent.save
-			else
-				message_ent = Entity::Message.new({characters: [character.id], message: "You search and find #{item_drop.a_or_an} #{item_drop.name}.", type: MessageType::SEARCH_SUCCESS})
-				message_ent.save
-				item_drop.carrier = character
-
-				packet = {packets:[{type: 'inventory', weight: character.weight, weight_max: character.weight_max, list: 'add', items: [item_drop.to_h]}]}
-
-				send(packet.to_json)
-			end
-
-			if rand(1..100) < 25
-
-				character.location.characters.each do |char|
-					if !char.visible_to?(character) && char.visibility == Visibility::HIDING
-						char.reveal_to! character
-						message_ent = Entity::Message.new({characters: [character.id], message: "You find #{char.name_link} while searching. #{char.pronoun(:he)} is hiding.", type: MessageType::SEARCH_SUCCESS})
-						message_ent.save
-						break
-					end
-				end
-
-			end
-
-
-			character.broadcast_self BroadcastScope::SELF
+			search = Intent::Search.new character
+			search.realise
 		end
 
 		def hide(_)
