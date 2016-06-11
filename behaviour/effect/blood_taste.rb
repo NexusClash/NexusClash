@@ -15,7 +15,7 @@ module Effect
 				heal = intent.attack.entity.hp_max - intent.attack.entity.hp if intent.attack.entity.hp_max - intent.attack.entity.hp < heal
 				if heal > 0
 					intent.attack.entity.hp += heal
-					intent.attack.append_message "You gain #{amount} HP from #{@parent.name}."
+					intent.attack.append_message "You gain #{amount} HP from #{@parent.name}.", :attacker
 				end
 			end
 		end
