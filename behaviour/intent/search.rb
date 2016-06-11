@@ -22,7 +22,7 @@ module Intent
 
 				packet = {packets:[{type: 'inventory', weight: entity.weight, weight_max: entity.weight_max, list: 'add', items: [item_drop.to_h]}]}
 
-				send(packet.to_json)
+				entity.broadcast BroadcastScope::SELF, packet.to_json
 			end
 
 			if rand(1..100) < 25
