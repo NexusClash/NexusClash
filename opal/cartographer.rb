@@ -25,9 +25,9 @@ class Cartographer < Expedition
 	attr_accessor :size
 
 	def initialize(addr)
-		@size = 25
+		@size = 50
 		@map_z = 0
-		@map_x = 20
+		@map_x = -20
 		@map_y = 20
 		self.zoom = 0.5
 		@map = Magellan.new $document['#map_edit_view'], @size
