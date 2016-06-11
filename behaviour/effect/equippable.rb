@@ -69,6 +69,7 @@ module Effect
 					msg_equip = Entity::Message.new({characters: [character.id], message: msg, type: MessageType::GENERIC})
 					msg_equip.save
 					intent.entity.broadcast_self BroadcastScope::SELF
+					intent.entity.broadcast BroadcastScope::SELF, {packets:[{type: 'inventory', list: 'update', items: [target.to_h]}]}.to_json
 			end
 			result
 		end
