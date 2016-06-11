@@ -68,7 +68,11 @@ module Intent
 							return false if value - delta > @entity.send(maximum)
 						end
 
-						return false if value < delta
+						if cost == :ap # AP costs work provided user has at least 1 AP
+							return false if value < 1
+						else
+							return false if value < delta
+						end
 					end
 				end
 			end
