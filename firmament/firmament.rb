@@ -221,10 +221,13 @@ module Firmament
 			Entity::StatusType.purge_cache
 			Entity::StatusType.load_types
 			@characters.keys.each do |id|
-				@characters[id].statuses.each do |status|
+				char = @characters[id]
+				char.weight_max = 50
+				char.hp_max_mod = 0
+				char.statuses.each do |status|
 					status.unserialize
 				end
-				@characters[id].items.each do |item|
+				char.items.each do |item|
 					item.statuses.each do |status|
 						status.unserialize
 					end

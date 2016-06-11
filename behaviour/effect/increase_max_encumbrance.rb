@@ -8,6 +8,7 @@ module Effect
 		def initialize(parent, amount)
 			@parent = parent
 			@amount = amount
+			@applied = false
 			unserialise
 		end
 
@@ -15,7 +16,8 @@ module Effect
 			character = @parent
 			character = @parent.stateful if character.is_a? Entity::Status
 			character = @parent.carrier if character.is_a? Entity::Item
-			if character.is_a? Entity::Character
+			if @applied === false && character.is_a?(Entity::Character)
+				@applied = true
 				character.weight_max += amount
 				character.broadcast BroadcastScope::SELF, {packets:[{type: 'inventory', weight_max: character.weight_max, list:'add', items: []}]}.to_json
 			end
