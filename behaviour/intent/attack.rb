@@ -16,15 +16,14 @@ module Intent
 		attr_accessor :target
 		attr_accessor :entity
 
-		attr_accessor :additional_text
-
 		def initialize(entity, target = nil)
 			super entity
 			@target = target
 			@attack_roll = rand(1..100)
 			debug "Attack Roll: #{@attack_roll}"
 			@xp_granted = 0
-			@additional_text = ''
+			@additional_text_attacker = ''
+			@additional_text_defender = ''
 		end
 
 		def weapon=(weap)
@@ -77,9 +76,15 @@ module Intent
 			return Set[:all, :archery, :firearm, :magical, :thrown ].include? @family
 		end
 
-		def append_message(text)
-			@additional_text << ' '
-			@additional_text << text
+		def append_message(text, scope = :all)
+			unless scope === :defender
+				@additional_text_attacker << ' '
+				@additional_text_attacker << text
+			end
+			unless scope === :attacker
+				@additional_text_defender << ' '
+				@additional_text_defender << text
+			end
 		end
 
 		def describe(scope, defend)
@@ -92,16 +97,16 @@ module Intent
 					debug_broadcast(@entity.id)
 					kill_msg = " This was enough to kill #{@target.pronoun(:him)}!" if @target.dead?
 					if hit?
-						return "You attack #{@target.name_link} with your #{@weapon.name} and hit, dealing #{defend.damage_taken.to_s} #{@damage_type.to_s} damage.#{defend_msg}#{@additional_text}#{xp_message}#{kill_msg}"
+						return "You attack #{@target.name_link} with your #{@weapon.name} and hit, dealing #{defend.damage_taken.to_s} #{@damage_type.to_s} damage.#{defend_msg}#{@additional_text_attacker}#{xp_message}#{kill_msg}"
 					else
-						return "You attack #{@target.name_link} with your #{@weapon.name} and miss.#{defend_msg}#{@additional_text}"
+						return "You attack #{@target.name_link} with your #{@weapon.name} and miss.#{defend_msg}#{@additional_text_attacker}"
 					end
 				when BroadcastScope::TARGET
 					kill_msg = ' This was enough to kill you' if @target.dead?
 					if hit?
-						return "#{@entity.name_link} attacked you with #{@entity.pronoun(:their)} #{@weapon.name} and hit, dealing #{defend.damage_taken.to_s} #{@damage_type.to_s} damage.#{defend_msg}#{@additional_text}#{kill_msg}"
+						return "#{@entity.name_link} attacked you with #{@entity.pronoun(:their)} #{@weapon.name} and hit, dealing #{defend.damage_taken.to_s} #{@damage_type.to_s} damage.#{defend_msg}#{@additional_text_defender}#{kill_msg}"
 					else
-						return "#{@entity.name_link} attacked you with #{@entity.pronoun(:their)} #{@weapon.name} and missed.#{defend_msg}#{@additional_text}"
+						return "#{@entity.name_link} attacked you with #{@entity.pronoun(:their)} #{@weapon.name} and missed.#{defend_msg}#{@additional_text_defender}"
 					end
 				when BroadcastScope::TILE
 					kill_msg = ", killing #{@target.pronoun(:him)}" if @target.dead?
