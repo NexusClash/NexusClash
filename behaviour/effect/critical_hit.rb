@@ -34,7 +34,7 @@ module Effect
 				intent.attack.debug self
 				roll = rand(1..100)
 				if roll < chance
-					intent.attack.append_message(' This was a critical hit!')  if intent.hit?
+					intent.attack.append_message(' This was a critical hit!')  if intent.attack.hit?
 					damage = base_bonus + (intent.entity.level * level_mult / level_div).floor
 					intent.attack.damage += damage
 					intent.attack.debug "#{chance}% crit roll... #{roll} = CRIT! Increasing damage by #{damage}."
