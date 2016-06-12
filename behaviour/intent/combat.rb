@@ -85,6 +85,22 @@ module Intent
 			message_atk.save
 			message_def.save
 			message_death.save unless message_death === nil
+
+			weapon = attack.weapon
+			alters = []
+
+			entity.each_applicable_effect do |effect|
+				alters << effect if effect.respond_to?(:alter_attack_intent)
+			end
+
+			intent = weapon.weapon_intent(Intent::Attack.new(entity, attack.target))
+			alters.each do |alter|
+				intent = alter.alter_attack_intent(intent)
+			end
+			weaps_hash = {}
+			weaps_hash[weapon.object_id] = intent.to_hash
+
+			entity.broadcast BroadcastScope::SELF, {packets: [{type: 'actions', mode: 'update', actions: {attacks: weaps_hash}}]}.to_json
 		end
 
 		private
