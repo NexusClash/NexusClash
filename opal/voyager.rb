@@ -124,21 +124,19 @@ class Voyager < Expedition
 						$document['tile_description'].inner_html = "<h4>#{target.name} (#{target.x}, #{target.y}, <a href='/autowiki/tile/#{target.x}/#{target.y}/#{target.z}' target='_blank' style='color:black'>#{target.type}</a>)</h4><p>#{target.description}</p><p>There #{target.occupants == 1 ? 'is' : 'are'} #{target.occupants} other #{target.occupants == 1 ? 'person' : 'people'} here.</p>" if target.x == @adventurer.x && target.y == @adventurer.y && target.z == @adventurer.z
 					end
 				when 'actions'
-					mode = :replace
-					mode = ent['mode'].to_sym if ent.has_key? 'mode'
-
+					action_mode = :replace
+					action_mode = ent['mode'].to_sym if ent.has_key? 'mode'
 					if ent['actions'].has_key? 'attacks'
-
-						if mode == :update
-
+						if action_mode == :update
 							data = ent['actions']['attacks']
 							data.keys.each do |action_id|
 								action = data[action_id]
 								next if action['name'] == ''
-								option = $document["#target_information #action_attack option[value=#{action_id}]"]
-								option.inner_html = "#{action['name']} - #{action['damage']} #{action['damage_type']} @ #{action['hit_chance']}%" unless option === nil
+								option = $document["#target_information #action_attack option[value='#{action_id}']"]
+								unless option === nil
+									option.inner_html = "#{action['name']} - #{action['damage']} #{action['damage_type']} @ #{action['hit_chance']}%"
+								end
 							end
-
 						else
 							oldweap = $document['#action_attack option:checked']
 							if oldweap === nil
