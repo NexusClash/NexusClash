@@ -127,9 +127,10 @@ module Entity
 
 		def respawn
 			cost = ((self.level - 1) / 3).floor + 1
-			if self.ap >= cost
+			if self.ap >= 1
 				self.ap -= cost
 				self.hp = self.hp_max
+				self.visibility = Visibility::VISIBLE
 				game = Firmament::Plane.fetch Instance.plane
 				if Instance.plane == 3
 					move! game.map(rand(12...15),rand(10...16),0)
