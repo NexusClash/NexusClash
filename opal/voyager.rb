@@ -124,16 +124,34 @@ class Voyager < Expedition
 						$document['tile_description'].inner_html = "<h4>#{target.name} (#{target.x}, #{target.y}, <a href='/autowiki/tile/#{target.x}/#{target.y}/#{target.z}' target='_blank' style='color:black'>#{target.type}</a>)</h4><p>#{target.description}</p><p>There #{target.occupants == 1 ? 'is' : 'are'} #{target.occupants} other #{target.occupants == 1 ? 'person' : 'people'} here.</p>" if target.x == @adventurer.x && target.y == @adventurer.y && target.z == @adventurer.z
 					end
 				when 'actions'
+
+					oldweap = $document['#action_attack option:checked']
+					if oldweap === nil
+             oldweap = 0
+					else
+						oldweap = oldweap.attributes[:value]
+					end
+					weap_index = 0
+
 					html = "<li><button data-action-type='attack' data-action-vars='target:#{@adventurer.target.id},target_type:#{@adventurer.target.type}' data-action-user-vars='weapon:#action_attack option:checked,charge_attack:.charge_attack:checked'>Attack with</button> <select id='action_attack'>"
 					if ent['actions'].has_key? 'attacks'
 						data = ent['actions']['attacks']
+						weapi = 0
 						data.keys.each do |action_id|
 							action = data[action_id]
 							next if action['name'] == ''
+							weap_index = weapi if oldweap == action_id
+							weapi += 1
 							html = html + "<option value='#{action_id}'>#{action['name']} - #{action['damage']} #{action['damage_type']} @ #{action['hit_chance']}%</option>"
 						end
 						html = html + '</select></li>'
 						$document['#target_information .attacks'].inner_html = html
+						attacks_node = $document['#target_information #action_attack']
+						if weap_index != 0
+							attacks_node = Native.convert attacks_node
+							weap_index = Native.convert weap_index
+							`attacks_node.selectedIndex = weap_index`
+						end
 					end
 					if ent['actions'].has_key? 'charge_attacks'
 						html = ''
