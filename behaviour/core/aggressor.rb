@@ -66,8 +66,11 @@ module Behaviour
 			dmg.post_soak_multiplier = attack.weapon.post_soak_damage_multiplier if attack.weapon.respond_to? :post_soak_damage_multiplier
 
 			combat = Intent::Combat.new(attack, Intent::Defend.new(target, dmg))
-			combat.realise
-			attack.entity.broadcast_self BroadcastScope::SELF
+			if combat.realise
+				attack.entity.broadcast_self BroadcastScope::SELF
+			else # Try again without charge attack if not able to do charge attack
+				attack target, weapon_id unless charge_attack === nil
+			end
 		end
 	end
 end
