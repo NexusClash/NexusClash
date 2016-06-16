@@ -192,7 +192,7 @@ get '/' do
 
 	events = []
 
-	Entity::Message.where({type: MessageType::CLASS_LEARNT}).desc('_id').limit(3).each do |msg|
+	Entity::Message.where({type: MessageType::CLASS_LEARNT}).desc('_id').limit(5).each do |msg|
 
 		ele = msg.message.split(' has become a ')
 		ele[1].chomp! '!'
@@ -200,11 +200,9 @@ get '/' do
 		events << {header: "#{ele[0]} became a #{ele[1]}", time: Time::at(msg.timestamp.to_i).strftime('%Y-%m-%d %H:%M:%S'), background: ele[1], body:"<a class='ui-button' href='/character/#{ele[0]}'>View Profile</a> <a class='ui-button' href='/wiki/#{ele[1]}'>Learn About #{ele[1]}s</a>"}
 	end
 
-	while events.count < 4 do
+	while events.count < 5 do
 		events.unshift({header: '', time: '', background: intro_class[rand(1..(intro_class.count)) - 1], body: ''})
 	end
-
-	events << events[0]
 
 	haml :home, :layout => @layout, :locals => {:slides => events, :message => '<h1>Welcome to Nexus Clash!</h1><p>Welcome to the B4 Alpha!<br/><br/>Nexus Clash is a browser-based MMORPG that continues the saga of Nexus War. Each character in the game is a soul entrapped in this eternal struggle that rages across worlds. Characters can choose to become fearsome Demons, mighty Wizards, powerful warriors, or even Angels - and every action is measured in the scales of reality to determine what new worlds will be formed in each new Breath of Creation.</p>'}
 end

@@ -10,18 +10,18 @@
 		border:none;
 		background-color:transparent;
 	}
-	#primary-box > h1{ z-index:1; position:fixed;top:100px;left:30px;}
-	#primary-box > p{ width:50vw;max-width:500px; z-index:1; position:fixed;top:140px;left:30px;/*background:rgba(255,255,255,0.7);border-radius:5px;padding:5px;*/ }
-#primary-box.outlined
-	= message
+#primary-box
+	%article
+		!= message
 #slider-container
 	#slider
 		%figure
+			- first = true
 			- slides.each do |slide|
-				%div(class="#{slide.has_key?(:background) ? 'bg-' + slide[:background].gsub(' ', '-') : ''}")
-					%div
-						%h1.outlined
-							= slide[:header]
-						= slide[:body]
-					- if slide.has_key? :image
-						%img(src="#{slide[:image]}")
+				%div(class="#{slide.has_key?(:background) ? 'bg-' + slide[:background].gsub(' ', '-') : ''}#{ first ? ' first-panel' : ''} panel")
+					- first = false
+					- if slide.has_key?(:header) || slide.has_key?(:body)
+						%article
+							%h1
+								= slide[:header]
+							!= slide[:body]
