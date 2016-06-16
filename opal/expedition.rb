@@ -120,6 +120,11 @@ class Expedition
 	end
 
 	def attach_html_bindings
+		$document.on :touchstart, '.action[data-action-type]' do |event|
+			event.target.trigger :click
+			event.prevent
+		end
+
 		$document.on :click, 'button[data-action-type], .action[data-action-type]' do |event|
 			if self.state == :connected && (((event.button == 0 || event.button == 1) && event.target['data-action-type'] != nil) || (event.button == 2 && developer_mode && event.target['data-dev-action-type'] != nil))
 				target = event.target['data-action-type']
