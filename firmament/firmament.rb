@@ -222,6 +222,7 @@ module Firmament
 			Entity::StatusType.load_types
 			@characters.keys.each do |id|
 				char = @characters[id]
+				char.transient_tags.clear
 				char.weight_max = 50
 				char.hp_max_mod = 0
 				char.statuses.each do |status|

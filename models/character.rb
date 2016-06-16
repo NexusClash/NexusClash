@@ -36,6 +36,13 @@ module Entity
 		attr_accessor :weight_max
 		attr_accessor :hp_max_mod
 
+
+		attr_accessor :transient_tags
+
+		def transient_tags
+			@transient_tags ||= ThreadSafe::Cache.new
+		end
+
 		@revealed_to = ThreadSafe::Array.new
 
 		def shard

@@ -24,23 +24,21 @@ module Effect
 			@character = @parent.carrier if @character.is_a? Entity::Item
 
 			@explosive_murder = nil
+			active_explode_ability = @character.respond_to?(:transient_tags) && @character.transient_tags.key?(:can_manual_explosive_murder)
 
-			first = true
-			if @character.respond_to? :each_applicable_effect
+			if @character.respond_to?(:each_applicable_effect) && !active_explode_ability
 				@character.each_applicable_effect do |effect|
-					@explosive_murder = effect if effect.is_a? Effect::ExplosiveMurder
-					if effect.is_a? Effect::ExplosiveMurderManualActivation
-						first = effect == self
-						break unless @explosive_murder === nil
+					if effect.is_a? Effect::ExplosiveMurder
+						@explosive_murder = effect
+						break
 					end
 				end
-			end
 
-			# Only the first instance of ExplosiveMurderManualActivation gets to define the ability
-
-			if first && @explosive_murder != nil
-				define_singleton_method :activate_self_intent do |*args|
-					voluntary_explosion_intent *args
+				if @explosive_murder != nil && !active_explode_ability
+					define_singleton_method :activate_self_intent do |*args|
+						voluntary_explosion_intent *args
+					end
+					@character.transient_tags[:can_manual_explosive_murder] = true
 				end
 			end
 		end
