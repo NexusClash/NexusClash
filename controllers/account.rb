@@ -112,7 +112,8 @@ class Dash < Sinatra::Application
 		else
 			newchar = Entity::Character.new(name: params[:charname])
 			newchar.gender = params[:gender].to_i
-			newchar.statuses << Entity::Status.source_from(1)
+			mortal_id = Entity::StatusType.where(name: 'Mortal').first.id || 1
+			newchar.statuses << Entity::Status.source_from(mortal_id)
 			@user.characters << newchar
 			# Push existence to game map
 			game = Firmament::Plane.fetch Instance.plane

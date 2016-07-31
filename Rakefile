@@ -4,8 +4,16 @@ task :environment do
 	Bundler.require
 	Mongoid.load!('mongoid.yml')
 	require_rel 'enums'
+	require_rel 'config'
+	require_rel 'behaviour/core'
+	require_rel 'behaviour/intent/generic'
+	require_rel 'behaviour/intent'
+	require_rel 'behaviour/effect/generic'
+	require_rel 'behaviour/effect'
 	require_rel 'mixins'
 	require_rel 'models'
+	require_rel 'firmament/entities'
+	require_rel 'firmament'
 	puts 'Done.'
 	puts
 end
