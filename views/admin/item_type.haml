@@ -1,0 +1,130 @@
+%table#item_types.display
+	%thead
+	%tbody
+	%tfoot
+:javascript
+	var subtable, item_type_sub_id;
+	var editor = new $.fn.dataTable.Editor( {
+		ajax: "/admin/editor/item_type",
+		idSrc: 'id',
+		table: '#item_types',
+		fields: [
+			{label: "Name",name: "name", type: 'text'},
+			{label: "Category",name: "category", type: 'select', ipOpts: ['alcohol', 'ammo', 'armour', 'clothing', 'component', 'food', 'mundane', 'mystic', 'potion', 'weapon']},
+			{label: "Weight",name: "weight", type: 'text'}
+		]
+		} );
+
+	var item_types = $('#item_types').DataTable({  "dom": '<"status_effect_buttons">T<"clear">lfrtip',
+		"tableTools": { "aButtons": [ { sExtends: "editor_create", editor: editor },{ sExtends: "editor_edit",   editor: editor }, 'xls', 'print' ],
+						"deferRender": true,
+						"sSwfPath": "/swf/copy_csv_xls.swf",
+						"sRowSelect": "single",
+					},
+		"order": [[2, "asc"]],"bJQueryUI": false,"bAutoWidth":false, "bPaginate": true,
+		"deferRender": true,
+		"ajax":'/admin/datasource/item_type',
+		"aoColumns": [
+			{
+				title: 'Edit',
+				data: null,
+				render: function(data, type, row){
+					return  '<a style="text-decoration:none;" href="#" class="DTTT_button DTTT_button_text details-control show_effects"><span>Effects</span></a>';
+				},
+				width: '30px'
+			},
+			{ title: "#", data:"id" },
+			{ title: "Name", data:"name" },
+			{ title: "Category", data:"category"},
+			{ title: "Weight", data:"weight"},
+			{ title: "Description", data:"game_effects"}
+		]
+		});
+
+		$('#item_types tbody').on('click', '.show_effects', function () {
+		var tr = $(this).closest('tr');
+		var row = item_types.row( tr );
+		var item_type_sub_id = row.data().id;
+
+		if ( row.child.isShown() ) {
+			// This row is already open - close it
+			row.child.hide();
+			tr.removeClass('shown');
+		}
+		else {
+			// Open this row
+
+			$('#item_types > tbody tr').each(function(tr2){
+
+				var srow = item_types.row( tr2 );
+
+				if ( srow.child.isShown() ) {
+					// This row is already open - close it
+					srow.child.hide();
+					$(tr2).removeClass('shown');
+				}
+
+			});
+
+			row.child( '<div id="item_type_sub_' + item_type_sub_id + '"><div class="sk-folding-cube"><div class="sk-cube sk-cube1"></div><div class="sk-cube sk-cube2"></div><div class="sk-cube sk-cube4"></div><div class="sk-cube sk-cube3"></div></div><div style="text-align:center">Loading...</div></div>' ).show();
+			$.ajax({
+				url: "/admin/item_type/" + item_type_sub_id + "/statuses"
+			})
+			.done(function( html ) {
+				$('#item_type_sub_' + item_type_sub_id).html(html);
+				var editor2 = new $.fn.dataTable.Editor( {
+					ajax: "/admin/editor/item_type/" + item_type_sub_id + "/statuses",
+					idSrc: 'index',
+					table: '#item_type_subtable_' + item_type_sub_id,
+					fields: [
+						{label: "Status", type: 'select', name: 'id'}
+					]
+					} );
+
+				$.getJSON( "/admin/statuses_by_id", function( data ) {
+					editor2.field('id').update(data);
+				});
+
+				subtable = $('#item_type_subtable_' + item_type_sub_id).DataTable({  "dom": 'T<"clear">lfrtip',
+						"tableTools": { "aButtons": [ { sExtends: "editor_create", editor: editor2 },{ sExtends: "editor_edit",   editor: editor2 },{ sExtends: "editor_remove", editor: editor2 }, 'xls', 'print' ],
+										"deferRender": true,
+										"sSwfPath": "/swf/copy_csv_xls.swf",
+										"sRowSelect": "single",
+									},
+						"order": [],"bJQueryUI": false,"bAutoWidth":false, "bPaginate": true,
+						"deferRender": true,
+						"ajax":'/admin/datasource/item_type/' + item_type_sub_id + '/statuses',
+						"aoColumns": [
+							{ title: "Name", data:"name" },
+							{ title: "Description", data:"description" }
+						]
+					});
+
+				editor2.on('postRemove', function(e, json, data){
+					var api = new $.fn.dataTable.Api('#item_type_subtable_' + item_type_sub_id);
+					api.ajax.reload();
+				});
+				editor2.on('postCreate postEdit postRemove', function(e, json, data){
+
+					$.getJSON( "/admin/datasource/item_type/" + item_type_sub_id, function( data ) {
+
+						var nData = data.data;
+
+						item_types.rows().eq(0).each(function(idx){
+
+	                        var row = item_types.row(idx);
+
+	                        if(row.data().id == nData.id)
+	                        {
+	                            row.data(nData);
+	                        }
+
+	                    });
+					});
+				});
+
+			});
+			tr.addClass('shown');
+
+
+		}});

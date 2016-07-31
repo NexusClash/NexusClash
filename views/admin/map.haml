@@ -1,0 +1,90 @@
+%style#map_styles
+%style#map_editor_zoom
+#game.ui-helper-hidden
+	#hud_player_vitals
+		%button#zoom_in
+			Zoom In
+		%button#zoom_out
+			Zoom Out
+		%span#ws-connection.ui-ws-signal(data-state="disconnected")
+		%span
+		#developer_mode_message.ui-helper-hidden(style="margin-left:5px;")
+			%h2(style="color:red") DevMode ON
+		.clear-left
+	#left_panel
+		%h3.ui-corner-top.ui-widget-header
+			Map Editor
+		#map_edit_container(style="overflow:auto")
+			#map_edit_view
+	#right_panel
+		%ul.css-tabs
+			%li
+				%input(type="radio" name="css-tab-right" id="css-tab-r1" checked)
+				%label(for="css-tab-r1")
+					Edit Single Tile
+				#css-tab-content-r1.css-tab-content
+					#edit_tile_single.ui-widget-content.ui-corner-all.padding-10
+						#target_information.ui-widget-content.ui-corner-all.padding-10(data-target-type="")
+							.target-tile-dev
+								.tile(style="float:right")
+								%h4
+									Editing Tile
+									%span.x(style="margin-left:5px")
+									,
+									%span.y(style="margin-left:5px")
+									,
+									%span.z(style="margin-left:5px")
+								%p
+									%label(for="tile-dev-name") Name:
+									%input.tname(name="tile-dev-name" type="text")
+								%p
+									Type:
+									%select.type_id
+								%p
+									Description:
+								%p.description
+									%textarea
+								%ul.list-plain.list-horizontal
+									%li
+										%button(data-action-trigger-click="css-tab-r1" data-action-type="dev_tile" data-action-vars="edit:1" data-action-user-vars="x:#target_information .target-tile-dev .x,y:#target_information .target-tile-dev .y,z:#target_information .target-tile-dev .z,name:#target_information .target-tile-dev .tname,type_id:#target_information .target-tile-dev .type_id option:checked,description:#target_information .target-tile-dev .description textarea") Save
+									%li
+										%button(data-action-type="dev_tile" data-action-vars="z:0" data-action-user-vars="x:#target_information .target-tile-dev .x,y:#target_information .target-tile-dev .y") Edit Exterior
+									%li
+										%button(data-action-type="dev_tile" data-action-vars="z:1" data-action-user-vars="x:#target_information .target-tile-dev .x,y:#target_information .target-tile-dev .y") Edit Interior
+								.clear-left
+			%li
+				%input(type="radio" name="css-tab-right" id="css-tab-r2")
+				%label(for="css-tab-r2")
+					Edit Multiple Tiles
+				#css-tab-content-r2.css-tab-content
+					#edit_tile_multiple.ui-widget-content.ui-corner-all.padding-10
+						.tile(style="float:right")
+						%h4
+							Source Tile
+						%p
+							%input(name="use-stamp-name" type="checkbox")
+							%label(for="stamp-name") Name:
+							%input.tname(name="stamp-name" type="text")
+						%p
+							%input(name="use-stamp-type" type="checkbox")
+							Type:
+							%input(name="stamp-type" type="hidden")
+							%span#stamp_type
+						%p
+							%input(name="use-stamp-description" type="checkbox")
+							Description:
+						%p.description
+							%textarea
+						.clear-left
+
+#game_loading
+	.sk-folding-cube
+		.sk-cube.sk-cube1
+		.sk-cube.sk-cube2
+		.sk-cube.sk-cube4
+		.sk-cube.sk-cube3
+	.message
+		Initialising...
+%script(src="/rb/cartographer.js")
+%script
+	Opal.require("cartographer")

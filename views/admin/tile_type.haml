@@ -1,0 +1,176 @@
+%p
+	Tile type changes get saved straight away, but aren't sent through to players until they move
+%table#tile_types.display
+	%thead
+	%tbody
+	%tfoot
+:javascript
+	var subtable, item_type_sub_id;
+	var editor = new $.fn.dataTable.Editor( {
+		ajax: "/admin/editor/tile_type",
+		idSrc: 'id',
+		table: '#tile_types',
+		fields: [
+			{label: "Name",name: "name", type: 'text'},
+			{label: "Search success rate %",name: "search_rate", type: 'text'},
+			{label: "Hide success rate %",name: "hide_rate", type: 'text'},
+			{label: "Description",name: "description", type: 'textarea'},
+			{label: "Tile appearance (CSS)",name: "css", type: 'textarea'}
+		]
+		} );
+
+	var tile_types = $('#tile_types').DataTable({  "dom": '<"status_effect_buttons">T<"clear">lfrtip',
+		"tableTools": { "aButtons": [ { sExtends: "editor_create", editor: editor },{ sExtends: "editor_edit",   editor: editor }, 'xls', 'print' ],
+						"deferRender": true,
+						"sSwfPath": "/swf/copy_csv_xls.swf",
+						"sRowSelect": "single",
+					},
+		"order": [[1, "asc"]],"bJQueryUI": false,"bAutoWidth":false, "bPaginate": true,
+		"deferRender": true,
+		"ajax":'/admin/datasource/tile_type',
+		"aoColumns": [
+			{
+				title: 'Edit',
+				data: null,
+				render: function(data, type, row){
+					return  '<a style="text-decoration:none;" href="#" class="DTTT_button DTTT_button_text details-control show_effects"><span>Search Odds</span></a><a style="text-decoration:none;" href="#" class="DTTT_button DTTT_button_text details-control2 show_statuses"><span>Statuses</span></a>';
+				},
+				width: '75px'
+			},
+			{ title: "Name", data:"name" },
+			{ title: "Statuses", data:"game_effects" },
+			{ title: "Description", data:"description"},
+			{ title: "Preview", width:"75px", data: null, render: function(data, type, row){
+				return '<div class="tile" data-type="' + row.name + '"></div><style>' + row.css + '</style>';
+			}}
+		]
+		});
+
+		$('#tile_types tbody').on('click', '.show_effects', function () {
+		var tr = $(this).closest('tr');
+		var row = tile_types.row( tr );
+		var tile_type_sub_id = row.data().id;
+
+		if ( row.child.isShown() ) {
+			// This row is already open - close it
+			row.child.hide();
+			tr.removeClass('shown');
+		}
+		else {
+			// Open this row
+
+			$('#tile_types > tbody tr').each(function(tr2){
+
+				var srow = tile_types.row( tr2 );
+
+				if ( srow.child.isShown() ) {
+					// This row is already open - close it
+					srow.child.hide();
+					$(tr2).removeClass('shown');
+				}
+
+			});
+
+			row.child( '<div id="tile_search_odds_sub_' + tile_type_sub_id + '"><div class="sk-folding-cube"><div class="sk-cube sk-cube1"></div><div class="sk-cube sk-cube2"></div><div class="sk-cube sk-cube4"></div><div class="sk-cube sk-cube3"></div></div><div style="text-align:center">Loading...</div></div>' ).show();
+			$.ajax({
+				url: "/admin/tile_type/" + tile_type_sub_id + "/search_odds"
+			})
+			.done(function( html ) {
+				$('#tile_search_odds_sub_' + tile_type_sub_id).html(html);
+				var editor2 = new $.fn.dataTable.Editor( {
+					ajax: "/admin/editor/tile_type/" + tile_type_sub_id + "/search_odds",
+					idSrc: 'index',
+					table: '#tile_search_odds_' + tile_type_sub_id,
+					fields: [
+						{label: "Item", type: 'select', name: 'id'},
+						{label: "Find Weight", type: 'text', name: 'rate'}
+					]
+					} );
+
+				$.getJSON( "/admin/item_types_by_id", function( data ) {
+					editor2.field('id').update(data);
+				});
+
+				subtable = $('#tile_search_odds_' + tile_type_sub_id).DataTable({  "dom": 'T<"clear">lfrtip',
+						"tableTools": { "aButtons": [ { sExtends: "editor_create", editor: editor2 },{ sExtends: "editor_edit",   editor: editor2 },{ sExtends: "editor_remove", editor: editor2 }, 'xls', 'print' ],
+										"deferRender": true,
+										"sSwfPath": "/swf/copy_csv_xls.swf",
+										"sRowSelect": "single",
+									},
+						"order": [[0, "desc"]],"bJQueryUI": false,"bAutoWidth":false, "bPaginate": true,
+						"deferRender": true,
+						"ajax":'/admin/datasource/tile_type/' + tile_type_sub_id + '/search_odds',
+						"aoColumns": [
+							{ title: "Weight", data:"rate", width:"75px" },
+							{ title: "Item", data:"name" }
+						]
+					});
+			});
+			tr.addClass('shown');
+
+
+		}});
+
+		$('#tile_types tbody').on('click', '.show_statuses', function () {
+		var tr = $(this).closest('tr');
+		var row = tile_types.row( tr );
+		var tile_type_sub_id = row.data().id;
+
+		if ( row.child.isShown() ) {
+			// This row is already open - close it
+			row.child.hide();
+			tr.removeClass('shown');
+		}
+		else {
+			// Open this row
+
+			$('#tile_types > tbody tr').each(function(tr2){
+
+				var srow = tile_types.row( tr2 );
+
+				if ( srow.child.isShown() ) {
+					// This row is already open - close it
+					srow.child.hide();
+					$(tr2).removeClass('shown');
+				}
+
+			});
+
+			row.child( '<div id="tile_type_sub_' + tile_type_sub_id + '"><div class="sk-folding-cube"><div class="sk-cube sk-cube1"></div><div class="sk-cube sk-cube2"></div><div class="sk-cube sk-cube4"></div><div class="sk-cube sk-cube3"></div></div><div style="text-align:center">Loading...</div></div>' ).show();
+			$.ajax({
+				url: "/admin/tile_type/" + tile_type_sub_id + "/statuses"
+			})
+			.done(function( html ) {
+				$('#tile_type_sub_' + tile_type_sub_id).html(html);
+				var editor2 = new $.fn.dataTable.Editor( {
+					ajax: "/admin/editor/tile_type/" + tile_type_sub_id + "/statuses",
+					idSrc: 'index',
+					table: '#tile_type_subtable_' + tile_type_sub_id,
+					fields: [
+						{label: "Status", type: 'select', name: 'id'}
+					]
+					} );
+
+				$.getJSON( "/admin/statuses_by_id", function( data ) {
+					editor2.field('id').update(data);
+				});
+
+				subtable = $('#tile_type_subtable_' + tile_type_sub_id).DataTable({  "dom": 'T<"clear">lfrtip',
+						"tableTools": { "aButtons": [ { sExtends: "editor_create", editor: editor2 },{ sExtends: "editor_edit",   editor: editor2 },{ sExtends: "editor_remove", editor: editor2 }, 'xls', 'print' ],
+										"deferRender": true,
+										"sSwfPath": "/swf/copy_csv_xls.swf",
+										"sRowSelect": "single",
+									},
+						"order": [],"bJQueryUI": false,"bAutoWidth":false, "bPaginate": true,
+						"deferRender": true,
+						"ajax":'/admin/datasource/tile_type/' + tile_type_sub_id + '/statuses',
+						"aoColumns": [
+							{ title: "Name", data:"name" },
+							{ title: "Description", data:"description" }
+						]
+					});
+			});
+			tr.addClass('shown');
+
+
+		}});

@@ -1,0 +1,142 @@
+%p
+	Once you've finished editing statuses, you will need to synchronise active characters in order to apply the changes:
+	%a.ui-button.ui-widget.ui-corner-all.ui-button-text-only(href="/admin/sync") Synchronise Status Effects
+%table#status_effects.display
+	%thead
+	%tbody
+	%tfoot
+:javascript
+	var editor, subtable, status_effect_sub_id;
+	var status_editor = new $.fn.dataTable.Editor( {
+		ajax: "/admin/editor/status_type",
+		idSrc: 'id',
+		table: '#status_effects',
+		fields: [
+			{label: "Name",name: "name", type: 'text'},
+			{label: "Activation",name: "activation", type: 'select', ipOpts: ['standard'], def: 'standard'},
+			{label: "Family",name: "family", type: 'select', ipOpts: ['class', 'magical', 'mundane', 'skill'], def: 'skill'}
+		]
+		} );
+	var status_effects = $('#status_effects').DataTable({  "dom": '<"status_effect_buttons">T<"clear">lfrtip',
+		"tableTools": { aButtons: [{ sExtends: "editor_create", editor: status_editor },{ sExtends: "editor_edit",   editor: status_editor }, 'xls', 'print' ],
+						"deferRender": true,
+						"sSwfPath": "/swf/copy_csv_xls.swf",
+						"sRowSelect": "os"
+					},
+		"order": [[3, "asc"], [2, "asc"]],"bJQueryUI": false,"bAutoWidth":false, "bPaginate": true,
+		"deferRender": true,
+		"ajax":'/admin/datasource/status_effect',
+		"aoColumns": [
+			{
+				title: 'Edit',
+				data: null,
+				render: function(data, type, row){
+					return  '<a style="text-decoration:none;" href="#" class="DTTT_button DTTT_button_text details-control show_effects"><span>Effects</span></a>';
+				},
+				width: '30px'
+			},
+			{ title: "#", data:"id" },
+			{ title: "Name", data:"name" },
+			{ title: "Type", data:"family"},
+			{ title: "Effects", data:"impacts" }
+		]
+		});
+
+		$('#status_effects tbody').on('click', '.show_effects', function () {
+		var tr = $(this).closest('tr');
+		var row = status_effects.row( tr );
+		var status_effect_sub_id = row.data().id
+
+
+		if ( row.child.isShown() ) {
+			// This row is already open - close it
+			row.child.hide();
+			tr.removeClass('shown');
+		}
+		else {
+			// Open this row
+
+			$('#status_effects > tbody tr').each(function(tr2){
+
+				var srow = status_effects.row( tr2 );
+
+				if ( srow.child.isShown() ) {
+					// This row is already open - close it
+					srow.child.hide();
+					$(tr2).removeClass('shown');
+				}
+
+			});
+
+			row.child( '<div id="status_effect_sub_' + status_effect_sub_id + '"><div class="sk-folding-cube"><div class="sk-cube sk-cube1"></div><div class="sk-cube sk-cube2"></div><div class="sk-cube sk-cube4"></div><div class="sk-cube sk-cube3"></div></div><div style="text-align:center">Loading...</div></div>' ).show();
+			$.ajax({
+				url: "/admin/status_effect/" + status_effect_sub_id + "/effects"
+			})
+			.done(function( html ) {
+				$('#status_effect_sub_' + status_effect_sub_id).html(html);
+				editor = new $.fn.dataTable.Editor( {
+					ajax: "/admin/editor/status_effect/" + status_effect_sub_id + "/effects",
+					idSrc: 'index',
+					table: '#status_effect_subtable_' + status_effect_sub_id,
+					fields: [
+						{label: "Type",name: "type", type: 'select', ipOpts:['Activated', 'ActivatedTarget', 'AlonaiAegisAbility', 'Ammo', 'Armour', 'AttackHitIncreasesDuration',  'BloodClaws', 'BloodTaste', 'ChargeAttack', 'ClassTier', 'CombinationAttack', 'Component', 'CraftingRecipe', 'CriticalHit', 'CustomText', 'DamageReducesDuration', 'Defence', 'Duration', 'Equippable', 'ExplosiveMurder', 'ExplosiveMurderManualActivation', 'FirstAidKit', 'GrantStatus', 'HandOfZealotry', 'HealingOnTick', 'HolierThanThou', 'IncreaseHealing', 'IncreaseMaxEncumbrance', 'IncreaseMaxHitpoints', 'LimitedUses', 'MoralityRestriction', 'MoralityRestrictionTarget', 'Regen', 'Reloadable', 'RendFlesh', 'SeeHitPoints', 'SeePowerState', 'SendMessage', 'SenseMorality', 'SenseMagic', 'ShieldOfFaith', 'SkillPrerequisite', 'SkillPurchasable', 'Smite', 'TogglePower', 'Weapon', 'WeaponBuff', 'WeaponWithAmmo'], def: 'Regen'},
+						{label: "",name: "select_1", type: 'select'},
+						{label: "",name: "text_1", type: 'text'},
+						{label: "",name: "select_2", type: 'select'},
+						{label: "",name: "text_2", type: 'text'},
+						{label: "",name: "select_3", type: 'select'},
+						{label: "",name: "text_3", type: 'text'},
+						{label: "",name: "select_4", type: 'select'},
+						{label: "",name: "text_4", type: 'text'},
+						{label: "",name: "select_5", type: 'select'},
+						{label: "",name: "text_5", type: 'text'},
+						{label: "",name: "text_6", type: 'text'},
+						{label: "",name: "text_7", type: 'text'}
+					]
+					} );
+
+				editor.dependent('type', '/admin/datatable/effect/define');
+				subtable = $('#status_effect_subtable_' + status_effect_sub_id).DataTable({  "dom": 'T<"clear">lfrtip',
+						"tableTools": { "aButtons": [ { sExtends: "editor_create", editor: editor },{ sExtends: "editor_edit",   editor: editor },{ sExtends: "editor_remove", editor: editor }, 'xls', 'print' ],
+										"deferRender": true,
+										"sSwfPath": "/swf/copy_csv_xls.swf",
+										"sRowSelect": "os",
+									},
+						"order": [],"bJQueryUI": false,"bAutoWidth":false, "bPaginate": true,
+						"deferRender": true,
+						"ajax":'/admin/datasource/status_effect/' + status_effect_sub_id + '/effects',
+						"aoColumns": [
+							{ title: "Type", data:"type" },
+							{ title: "Description", data:"description" }
+						]
+					});
+
+				editor.on('postRemove', function(e, json, data){
+					var api = new $.fn.dataTable.Api('#status_effect_subtable_' + status_effect_sub_id);
+					api.ajax.reload();
+				});
+
+				editor.on('postCreate postEdit postRemove', function(e, json, data){
+
+					$.getJSON( "/admin/datasource/status_effect/" + status_effect_sub_id, function( data ) {
+
+						var nData = data.data;
+
+						status_effects.rows().eq(0).each(function(idx){
+
+	                        var row = status_effects.row(idx);
+
+	                        if(row.data().id == nData.id)
+	                        {
+	                            row.data(nData);
+	                        }
+
+	                    });
+					});
+				});
+
+			});
+			tr.addClass('shown');
+
+
+		}});
