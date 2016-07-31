@@ -143,11 +143,9 @@ class Dash < Sinatra::Application
 			Rack::Utils.escape_html(text)
 		end
 
-		def protected!(role = nil)
+		def protected!(role = nil)			
 			return if role === nil && auth?
-			if auth?
-					return if @user.roles != nil && @user.has_role?(role)
-			end
+			return if auth? && @user.roles != nil && @user.has_role?(role)
 			halt 401, "Not authorized\n"
 		end
 

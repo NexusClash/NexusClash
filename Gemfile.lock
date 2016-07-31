@@ -121,7 +121,7 @@ DEPENDENCIES
   eventmachine
   faye-websocket
   haml
-  mongoid
+  mongoid (~> 4)
   mongoid-autoinc
   opal
   opal-browser
@@ -139,4 +139,4 @@ DEPENDENCIES
   websocket-extensions
 
 BUNDLED WITH
-   1.11.2
+   1.12.5

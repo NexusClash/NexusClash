@@ -45,7 +45,7 @@ module Firmament
 			@pending_save = Queue.new
 
 			@id = plane.to_i
-			@plane = Entity::Plane.where({plane: plane.to_i}).first
+			@plane = Entity::Plane.where({plane: plane.to_i}).first || Entity::Plane.new
 			@@planes[plane.to_i] = self
 
 			@dead_tile = VoidTile.new(@plane.id, VoidTile::DEAD_COORDINATE, VoidTile::DEAD_COORDINATE, VoidTile::DEAD_COORDINATE)
