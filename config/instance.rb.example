@@ -7,7 +7,7 @@ class Instance
 	end
 
 	def self.domain
-		'ruby.windrunner.mx'
+		'localhost'
 	end
 
 	def self.port
@@ -19,7 +19,7 @@ class Instance
 	end
 
 	def self.endpoint
-		'ws://ruby.windrunner.mx:4020/42'
+		"ws://#{self.domain}:#{self.port}/42"
 	end
 
 	@@debug = true

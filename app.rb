@@ -143,7 +143,7 @@ class Dash < Sinatra::Application
 			Rack::Utils.escape_html(text)
 		end
 
-		def protected!(role = nil)			
+		def protected!(role = nil)
 			return if role === nil && auth?
 			return if auth? && @user.roles != nil && @user.has_role?(role)
 			halt 401, "Not authorized\n"
@@ -206,7 +206,6 @@ get '/' do
 end
 
 server = 'puma'
-host = '127.0.0.1'
 port = ENV['OS'] == 'Windows_NT' ? '80' : Instance.port
 web_app = Dash.new
 
@@ -349,7 +348,7 @@ end
 Rack::Server.start({
 		                   app: dispatch,
 		                   server: server,
-		                   Host: host,
+		                   Host: Instance.domain,
 		                   Port: port
                    })
 

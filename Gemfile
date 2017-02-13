@@ -23,3 +23,4 @@ gem 'cucumber', :require => false, :group => :test
 gem 'simplecov', :require => false, :group => :test
 gem 'simplecov-json', :require => false, :group => :test
 gem 'simplecov-rcov', :require => false, :group => :test
+gem 'pry', :require => false, :group => :test
