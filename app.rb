@@ -27,7 +27,7 @@ require_rel 'models'
 require_rel 'firmament/entities'
 require_rel 'firmament'
 require_rel 'wayfarer'
-require_rel 'datatables'
+# require_rel 'datatables'
 
 require 'rack/session/abstract/id'
 require 'thread'
