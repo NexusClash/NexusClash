@@ -31,7 +31,7 @@ module Entity
 
 		def type_id=(type_id)
 			self[:type_id] = type_id
-			@type = Entity::TileType.find(type_id)
+			@type = Entity::TileType.find_by({tile_type_id: type_id.to_i})
 			update_type_statuses
 		end
 

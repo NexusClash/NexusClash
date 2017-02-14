@@ -3,8 +3,8 @@ class Dash < Sinatra::Application
 			redirect to("http://nexusclash.windrunner.mx/wiki/index.php?title=#{params[:page].gsub(' ', '_')}")
 	end
 
-	get '/autowiki/location/:id/:name' do
-		location = Entity::TileType.find(params[:id])
+	get '/autowiki/location/:tile_type_id/:name' do
+		location = Entity::TileType.find_by({tile_type_id: params[:tile_type_id]})
 		rnd_max = location.search_table.inject(0) { |sum, itm| sum + itm[1] }
 		haml :'autowiki/location', :layout => @layout, :locals => {:location => location, :search_rate_total => rnd_max}
 	end

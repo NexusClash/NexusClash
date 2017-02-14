@@ -6,8 +6,7 @@ module Entity
 		include Mongoid::Autoinc
 		include IndefiniteArticle
 
-		field :id, type: Integer
-		increments :id
+		field :tile_type_id, type: Integer
 
 		field :name, type: String
 		field :description, type: String
@@ -22,8 +21,8 @@ module Entity
 		field :statuses, type: Array, default: []
 
 		@@types = ThreadSafe::Cache.new do |hash, typeident|
-			if Entity::TileType.where({id: typeident}).exists? then
-				eff = Entity::TileType.find_by({id: typeident})
+			if Entity::TileType.where({tile_type_id: typeident}).exists? then
+				eff = Entity::TileType.find_by({tile_type_id: typeident})
 				hash[typeident] = eff
 			else
 				Entity::VoidTileType

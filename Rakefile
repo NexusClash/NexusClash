@@ -2,6 +2,7 @@ task :environment do
 	puts 'Setting up environment... '
 	require 'bundler'
 	Bundler.require
+    #require 'pry'
 	Mongoid.load!('mongoid.yml')
 	require_rel 'enums'
 	require_rel 'config'
@@ -41,8 +42,10 @@ end
 desc 'Deletes all the things from the db'
 task :wipe => :environment do
 	Entity.constants.select{|c| Entity.const_get(c).is_a? Class}.each do |klass_sym|
+		klass = Entity.class_eval(klass_sym.to_s)
+		next unless klass.respond_to?(:destroy_all)
 		puts "Wiping #{klass_sym}... "
-		count = Entity.class_eval(klass_sym.to_s).destroy_all
+		count = klass.destroy_all
 		puts " Done. (removed #{count} records)"
 	end
 	puts

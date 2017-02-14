@@ -47,7 +47,7 @@ module Firmament
 			@plane = Entity::Plane.where({plane: plane.to_i}).first || Entity::Plane.new
 			@@planes[plane.to_i] = self
 
-			#@dead_tile = VoidTile.new(@plane.id, VoidTile::DEAD_COORDINATE, VoidTile::DEAD_COORDINATE, VoidTile::DEAD_COORDINATE)
+			@dead_tile = VoidTile.new(@plane.id, VoidTile::DEAD_COORDINATE, VoidTile::DEAD_COORDINATE, VoidTile::DEAD_COORDINATE)
 
 			@scheduler = Rufus::Scheduler.new
 
@@ -76,28 +76,28 @@ module Firmament
 			@locations = ThreadSafe::Cache.new do |hashx, x|
 				hashx[x.to_i] = ThreadSafe::Cache.new do |hashy, y|
 					hashy[y.to_i] = ThreadSafe::Cache.new do |hashz, z|
-						#puts "Loading tile ##{x},#{y},#{z}, #{@plane.plane}"
+						puts "Loading tile ##{x},#{y},#{z}, #{@plane.plane}"
                         
 						newtile = VoidTile.new(@plane.plane.to_i, x.to_i, y.to_i, z.to_i)
 
-						#if Entity::Tile.where({plane: @plane.plane.to_i, x: x.to_i, y: y.to_i, z:z.to_i}).exists? then
-						#	newtile = Entity::Tile.find_by({plane: @plane.plane.to_i, x: x.to_i, y: y.to_i, z:z.to_i})
-						#	newtile.characters = ThreadSafe::Array.new
-						#else
-						#	newtile = VoidTile.new @plane.plane.to_i, x.to_i, y.to_i, z.to_i
-						#end
+						if Entity::Tile.where({plane: @plane.plane.to_i, x: x.to_i, y: y.to_i, z:z.to_i}).exists? then
+							newtile = Entity::Tile.find_by({plane: @plane.plane.to_i, x: x.to_i, y: y.to_i, z:z.to_i})
+							newtile.characters = ThreadSafe::Array.new
+						else
+							newtile = VoidTile.new @plane.plane.to_i, x.to_i, y.to_i, z.to_i
+						end
 
-						#hashz[z.to_i] = newtile
+						hashz[z.to_i] = newtile
 
-						#Entity::Character.where({plane: @plane.plane.to_i, x: x.to_i, y: y.to_i, z:z.to_i}).each do |char|
-						#	if self.character? char.id.to_i
-						#		newtile.characters << @characters[char.id.to_i]
-						#	else
-						#		char.location = newtile
-						#		@characters[char.id.to_i] = char
-						#		newtile.characters << char
-						#	end
-						#end
+						Entity::Character.where({plane: @plane.plane.to_i, x: x.to_i, y: y.to_i, z:z.to_i}).each do |char|
+							if self.character? char.id.to_i
+								newtile.characters << @characters[char.id.to_i]
+							else
+								char.location = newtile
+								@characters[char.id.to_i] = char
+								newtile.characters << char
+							end
+						end
 
 						newtile
 					end
