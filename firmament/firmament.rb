@@ -168,7 +168,6 @@ module Firmament
 		end
 
 		def remove_void(x, y ,z)
-            binding.pry
 			x = x.to_i
 			y = y.to_i
 			z = z.to_i
