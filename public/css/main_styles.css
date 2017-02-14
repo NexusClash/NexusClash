@@ -582,6 +582,7 @@ select, .ui-button, input[type="button"], input[type="reset"], input[type="submi
     margin-right: 0.1em;
     border-radius: 2px !important;
 }
+label.disabled,
 button:disabled {
 	background: repeating-linear-gradient(45deg,#FFADBA,#ffadba 10px,#DDD 10px,#EEE 20px);
 	color:black;

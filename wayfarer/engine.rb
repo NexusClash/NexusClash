@@ -140,7 +140,7 @@ module Wayfarer
 				abilities_hash = Hash.new
 				abilities.keys.each do |ability_i|
 					ability = abilities[ability_i]
-					abilities_hash[ability_i] = {name: ability.name}
+					abilities_hash[ability_i] = { name: ability.name }
 				end
 				output[:abilities] = abilities_hash
 			end
@@ -148,7 +148,12 @@ module Wayfarer
 				charge_attacks = character.charge_attacks
 				charge_attacks_hash = Hash.new
 				charge_attacks.each do |charge_attack|
-					charge_attacks_hash[charge_attack.object_id] = {name: charge_attack.name, description: charge_attack.describe}
+					charge_attacks_hash[charge_attack.object_id] =
+                    {
+                        name: charge_attack.name,
+                        description: charge_attack.describe,
+                        possible: charge_attack.possible?(character)
+                    }
 				end
 				output[:charge_attacks] = charge_attacks_hash
 			end
