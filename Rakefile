@@ -23,7 +23,8 @@ desc 'Puts initial data in the db '
 task :seed => :environment do
 	Dir[Dir.pwd+"/seeds/*.json"].each do |seed_file|
 		next unless File.file? seed_file
-		klass = File.basename(seed_file, '.json').classify
+		trimmedFileName = File.basename(seed_file, '.json').split(" ")
+        klass = trimmedFileName[1].classify
 		puts "Seeding #{klass}... "
 		(seeds = JSON.parse(File.read(seed_file))).each do |seed|
 			entity = Entity.class_eval(klass).new

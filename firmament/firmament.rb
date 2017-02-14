@@ -40,7 +40,6 @@ module Firmament
 		attr_reader :pending_deletion, :pending_save
 
 		def initialize(plane)
-
 			@pending_deletion = Queue.new
 			@pending_save = Queue.new
 
@@ -48,7 +47,7 @@ module Firmament
 			@plane = Entity::Plane.where({plane: plane.to_i}).first || Entity::Plane.new
 			@@planes[plane.to_i] = self
 
-			@dead_tile = VoidTile.new(@plane.id, VoidTile::DEAD_COORDINATE, VoidTile::DEAD_COORDINATE, VoidTile::DEAD_COORDINATE)
+			#@dead_tile = VoidTile.new(@plane.id, VoidTile::DEAD_COORDINATE, VoidTile::DEAD_COORDINATE, VoidTile::DEAD_COORDINATE)
 
 			@scheduler = Rufus::Scheduler.new
 
@@ -78,7 +77,7 @@ module Firmament
 				hashx[x.to_i] = ThreadSafe::Cache.new do |hashy, y|
 					hashy[y.to_i] = ThreadSafe::Cache.new do |hashz, z|
 						#puts "Loading tile ##{x},#{y},#{z}, #{@plane.plane}"
-
+                        
 						newtile = VoidTile.new(@plane.plane.to_i, x.to_i, y.to_i, z.to_i)
 
 						#if Entity::Tile.where({plane: @plane.plane.to_i, x: x.to_i, y: y.to_i, z:z.to_i}).exists? then
@@ -169,7 +168,7 @@ module Firmament
 		end
 
 		def remove_void(x, y ,z)
-
+            binding.pry
 			x = x.to_i
 			y = y.to_i
 			z = z.to_i

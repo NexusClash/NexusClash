@@ -9,6 +9,7 @@ require 'permessage_deflate'
 require 'tilt/haml'
 Bundler.require
 require 'digest/sha1'
+#require 'pry'
 
 puts 'Loading base system...'
 
