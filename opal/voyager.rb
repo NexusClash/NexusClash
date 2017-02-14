@@ -180,7 +180,8 @@ class Voyager < Expedition
 						data.keys.each do |action_id|
 							action = data[action_id]
 							next if action['name'] == ''
-							html = html + "<input type='radio' id='charge_attack_#{action_id}' name='charge_attack' class='charge_attack' value='#{action_id}'><label class='ui-button' for='charge_attack_#{action_id}' title='#{action['description']}'>#{action['name']}</label>"
+							disabledUnlessActionPossible = action['possible'] ? '' : 'disabled'
+							html = html + "<input type='radio' #{disabledUnlessActionPossible} id='charge_attack_#{action_id}' name='charge_attack' class='charge_attack' value='#{action_id}'><label class='ui-button #{disabledUnlessActionPossible}' for='charge_attack_#{action_id}' title='#{action['description']}'>#{action['name']}</label>"
 						end
 						html = html + '</li>'
 						$document['#target_information .charge_attacks'].inner_html = html

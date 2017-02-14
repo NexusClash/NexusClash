@@ -35,10 +35,15 @@ module Effect
 			msg = "#{@name} is a charge attack costing #{@costs[:ap].to_s} AP + #{@costs[:mp].to_s} MP."
 			msg << " Increases damage by #{damage}." if damage != 0
 			msg << " Changes damage type to #{damage_type}." unless damage_type == nil || damage_type == :none
-			msg << " Increases hit chance by #{hit_chance}." if damage != 0
+			msg << " Increases hit chance by #{hit_chance}." if hit_chance != 0
 			return msg
 		end
-
+		
+		def possible?(entity)
+		    theoretical_attack = Attack.new(entity)
+		    theoretical_attack.charge_attack = self
+		    theoretical_attack.possible?
+		end
 
 		def save_state
 			['ChargeAttack', @costs, @name, @damage, @damage_type, @hit_chance]
