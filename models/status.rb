@@ -12,10 +12,10 @@ module Entity
 
 		field :link, type: Integer
 
-		#field :name, type: String
-		#field :impacts, type: Array
-		#field :custom, type: Boolean
-		#field :family, type: Symbol
+		field :name, type: String
+		field :impacts, type: Array
+		field :custom, type: Boolean
+		field :family, type: Symbol
 
 		attr_accessor :temp_effect_vars
 
