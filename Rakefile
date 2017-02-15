@@ -22,7 +22,7 @@ end
 
 desc 'Puts initial data in the db '
 task :seed => :environment do
-	Dir[Dir.pwd+"/seeds/*.json"].each do |seed_file|
+	Dir[Dir.pwd+"/seeds/*.json"].sort.each do |seed_file|
 		next unless File.file? seed_file
 		trimmedFileName = File.basename(seed_file, '.json').split(" ")
         klass = trimmedFileName[1].classify
