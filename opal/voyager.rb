@@ -415,8 +415,14 @@ class Voyager < Expedition
 						costs = ''
 
 						if recipe['costs'].size > 0
+							xp_gain = -(recipe['costs'][:xp] || 0)
+
+							unless xp_gain.nil? || xp_gain <= 0
+								html = html + '<span class="xp">Grants ' + xp_gain.to_s + ' XP</span>'
+							end
 
 							recipe['costs'].each do |name, q|
+								next if name == :xp && q <= 0
 								costs = costs + "#{q} #{name.to_s.upcase},"
 							end
 

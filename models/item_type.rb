@@ -7,7 +7,7 @@ module Entity
 		include IndefiniteArticle
 
 		field :id, type: Integer
-		increments :id
+		#increments :id
 
 		field :name, type: String
 		field :category, type: Symbol
