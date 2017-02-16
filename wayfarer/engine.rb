@@ -124,7 +124,7 @@ module Wayfarer
 			end
 		end
 
-		def select_target(json, include = {attacks: true, abilities: true, charge_attacks: true})
+		def select_target(json = {}, include = {attacks: true, abilities: true, charge_attacks: true})
 			self.target = game.character(json['char_id']) if json.has_key? 'char_id'
 			output = {}
 			if include[:attacks]
@@ -200,8 +200,10 @@ module Wayfarer
 			return if throttle :attack, json, 300
 			case json['target_type']
 				when 'character'
-					character.attack game.character(json['target'].to_i), json['weapon'].to_i, (json.has_key?('charge_attack') && json['charge_attack'] != '' ? json['charge_attack'].to_i : nil)
+					self.target = game.character(json['target'].to_i)
+					character.attack self.target, json['weapon'].to_i, (json.has_key?('charge_attack') && json['charge_attack'] != '' ? json['charge_attack'].to_i : nil)
 			end
+			select_target
 		end
 
 		def respawn(_)
