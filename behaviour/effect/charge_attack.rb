@@ -40,7 +40,9 @@ module Effect
 		end
 		
 		def possible?(entity)
-		    theoretical_attack = Attack.new(entity)
+		    theoretical_attack = Intent::Attack.new(entity)
+		    theoretical_attack.damage = 0
+		    theoretical_attack.hit_chance = 0
 		    theoretical_attack.charge_attack = self
 		    theoretical_attack.possible?
 		end
