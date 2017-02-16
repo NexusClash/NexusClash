@@ -1,3 +1,4 @@
 [
-{"tile_type_id": 1, "name": "Generic Tile", "description": "Very Generic", "colour": "red", "css": ""}
+{"tile_type_id": 1, "name": "Generic Tile", "description": "Very Generic", "colour": "red", "css": ""},
+{"tile_type_id": 2, "name": "Workshop", "description": "for building stuff", "colour": "purple", "css": "", "statuses": [126], "search_table": [[1,1]], "search_rate": 100}
 ]

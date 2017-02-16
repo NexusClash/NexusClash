@@ -1,6 +1,6 @@
 [
-{"plane": 1, "x": 1, "y": 1, "z": 0, "type_id": 1, "name": "Awesome House 1", "description": "You are standing outside an awesome house.  It's builder was the most awesome and doesn't care about grammar."},
-{"plane": 1, "x": 1, "y": 1, "z": 1, "type_id": 1, "name": "Awesome House", "description": "You are standing inside an awesome house.  Feel special.  There are lots of books.  The grammar is all wrong."},
+{"plane": 1, "x": 1, "y": 1, "z": 0, "type_id": 1, "name": "Awesome House 1", "description": "You are standing outside an awesome house.  You suspect there is a workshop inside, but you're not sure why."},
+{"plane": 1, "x": 1, "y": 1, "z": 1, "type_id": 2, "name": "Secret workshop", "description": "You are standing inside a hustling bustling workshop. You feel like you could forge items here."},
 
 {"plane": 1, "x": 1, "y": 2, "z": 0, "type_id": 1, "name": "Awesome House 2", "description": "You are standing outside an awesome house.  It's builder was the most awesome and doesn't care about grammar."},
 {"plane": 1, "x": 1, "y": 2, "z": 1, "type_id": 1, "name": "Awesome House", "description": "You are standing inside an awesome house.  Feel special.  There are lots of books.  The grammar is all wrong."},

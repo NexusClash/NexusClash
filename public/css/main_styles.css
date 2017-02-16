@@ -1226,7 +1226,7 @@ img[src=""]
 {
 	display:inline;
 }
-.crafting_recipe button, .crafting_recipe .outputs, .crafting_recipe .reagents, .crafting_recipe .catalysts
+.crafting_recipe button, .crafting_recipe .outputs, .crafting_recipe .reagents, .crafting_recipe .catalysts, .crafting_recipe .xp
 {
 	display:block;
 	margin-top:10px;
