@@ -12,6 +12,7 @@ module Entity
 		field :name, type: String
 		field :category, type: Symbol
 		field :weight, type: Integer, default: 0
+		field :giveable?, type: Boolean, default: true
 
 		field :statuses, type: Array, default: []
 
@@ -31,6 +32,10 @@ module Entity
 			else
 				@@types[type]
 			end
+		end
+
+		after_find do |document|
+			(statuses << Effect::Giveable.status_type_id) if giveable? && !statuses.include?(Effect::Giveable.status_type_id)
 		end
 
 		def self.load_types

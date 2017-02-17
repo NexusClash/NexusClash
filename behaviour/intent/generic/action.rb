@@ -30,6 +30,12 @@ module Intent
 		end
 
 		##
+		# Remove a cost from the intended action
+		def remove_cost(cost)
+			@costs.delete cost.to_sym
+		end
+
+		##
 		# Apply the costs of this intended action
 		def apply_costs
 			@costs.each do |cost, delta|
@@ -110,15 +116,15 @@ module Intent
 		end
 
 		def realise
-			if possible?
-				apply_costs
-				take_action if respond_to? :take_action
+			unless possible?
 				debug_broadcast entity
-				broadcast_results if respond_to? :broadcast_results
-				return true
+				return false
 			end
+			apply_costs
+			take_action if respond_to? :take_action
 			debug_broadcast entity
-			return false
+			broadcast_results if respond_to? :broadcast_results
+			return true
 		end
 
 		def debug(log)

@@ -128,8 +128,6 @@ module Entity
 				new_effects << Effect::Base.unserialize(self, impact)
 			end
 			@effects = new_effects
-			game = Firmament::Plane.fetch Instance.plane
-			#@source = game.character(self.source_id) unless self.source_id === nil
 		end
 
 		def self.tick(entity, interval, *args)

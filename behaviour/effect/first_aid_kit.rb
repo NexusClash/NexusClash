@@ -4,8 +4,8 @@ module Effect
 		def initialize(parent, name = 'First Aid Kit', healing = 5)
 			super parent, {ap: 1}, name, [:self, Entity::Character]
 			@healing = healing
-			@costs[:destroy_item] = self.method :destroy_item
-			@costs[:apply_healing] = self.method :apply_healing
+			add_cost(:destroy_item, self.method(:destroy_item))
+			add_cost(:apply_healing, self.method(:apply_healing))
 			unserialise
 		end
 
