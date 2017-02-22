@@ -8,7 +8,7 @@ To get set up as a devloper,
  * install git from the command line with `sudo apt-get install git`
  * clone the repo with `git clone git@github.com:invisime/NexusClash4.git`
  * follow the rvm install instructions here: https://rvm.io/rvm/install
- * install ruby with `rvm install jruby`
+ * install ruby with `rvm install ruby-2.4`
  * follow the mongodb install instructions here: https://docs.mongodb.com/manual/tutorial/install-mongodb-on-debian/
  * from dash root run the following to get your gems installed:
     * `gem install bundle`
