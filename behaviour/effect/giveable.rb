@@ -14,7 +14,7 @@ module Effect
 		def save_state
 			['Giveable']
 		end
-		
+
 		def item
 			return @item unless @item.nil?
 			giveable = parent.parent if parent.respond_to?(:parent)
@@ -26,7 +26,7 @@ module Effect
 			intent.remove_cost :encumbrance_check_callback
 			intent.add_cost(:give_callback, self.method(:give_callback))
 		end
-		
+
 		def give_callback(method, intent)
 			case method
 				when :possible?
@@ -35,7 +35,7 @@ module Effect
 					give(intent.entity, intent.target_entity)
 			end
 		end
-		
+
 		def possible?(recipient)
 			recipient_has_room = recipient.respond_to?(:weight) &&
 				recipient.respond_to?(:weight_max ) &&
@@ -45,7 +45,7 @@ module Effect
 			end
 			return recipient_has_room
 		end
-		
+
 		def give(giver, recipient)
 			item.carrier = recipient
 			Entity::Message.new(
@@ -61,9 +61,9 @@ module Effect
 				message: "#{giver.name_link} gave you #{giver.pronoun :his} #{item.name}."})
 			.save
 		end
-		
+
 		def self.status_type_id
-			@@status_type_id ||= Entity::StatusType.find_by({name: "Giveability"}).id
+			@@status_type_id ||= Entity::StatusType.where({name: "Giveability"}).first_or_initialize.id
 		end
 	end
 end
