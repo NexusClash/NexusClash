@@ -1,4 +1,4 @@
-To get set up as a devloper,
+To get set up as a developer,
 
  * start with a clean Linux Mint install: https://www.linuxmint.com/download.php
  * While you're waiting for it to download and/or install, get accounts on YouTrack & GitHub
@@ -14,5 +14,5 @@ To get set up as a devloper,
     * `gem install bundle`
     * `bundle install`
  * run command `cp "config/instance.rb.example" "config/instance.rb"` to configure default instance
- * populate the db with `rake seed`
+ * populate the db with `rake seed` and `rake fixtures`
  * start the app with `ruby app.rb`
