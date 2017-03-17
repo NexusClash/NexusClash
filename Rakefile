@@ -19,10 +19,9 @@ task :environment do
 	puts
 end
 
-
-desc 'Puts initial data in the db '
-task :seed => :environment do
-	Dir[Dir.pwd+"/seeds/*.json"].sort.each do |seed_file|
+def buildDataForFolder(folder)
+	belongAccount = nil
+	Dir[Dir.pwd+"/" + folder + "/*.json"].sort.each do |seed_file|
 		next unless File.file? seed_file
 		trimmedFileName = File.basename(seed_file, '.json').split(" ")
         klass = trimmedFileName[1].classify
@@ -32,11 +31,29 @@ task :seed => :environment do
 			seed.each_key do |property|
 				entity.send "#{property}=", seed[property]
 			end
+			if folder == "fixtures"
+				if trimmedFileName[0].to_i == 1
+					belongAccount = entity
+				end
+				if trimmedFileName[0].to_i == 2
+					entity.account_id = belongAccount.id
+				end
+			end
 			entity.save
 		end
 		puts " Done. (seeded #{seeds.count} records)"
 	end
 	puts
+end
+
+desc 'Puts initial data in the db '
+task :seed => :environment do
+	buildDataForFolder("seeds")
+end
+
+desc 'Put development accounts in the db'
+task :fixtures => :environment do
+	buildDataForFolder("fixtures")
 end
 
 desc 'Deletes all the things from the db'
@@ -52,7 +69,7 @@ task :wipe => :environment do
 end
 
 desc 'Resets the database to its initial seeded state'
-task :bounce => [:wipe, :seed]
+task :bounce => [:wipe, :seed, :fixtures]
 
 desc 'Starts an irb session with the environment loaded'
 task :console => :environment do
