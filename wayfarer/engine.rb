@@ -124,10 +124,10 @@ module Wayfarer
 			end
 		end
 
-		def select_target(json = {}, include = {attacks: true, abilities: true, charge_attacks: true})
+		def select_target(json = {}, options = [:attacks, :abilities, :charge_attacks])
 			self.target = game.character(json['char_id']) if json.has_key? 'char_id'
 			output = {}
-			if include[:attacks]
+			if options.include? :attacks
 				weaps_hash = Hash.new
 				weaps = character.weaponry
 				weaps.keys.each do |weapi|
@@ -135,7 +135,7 @@ module Wayfarer
 				end
 				output[:attacks] = weaps_hash
 			end
-			if include[:abilities]
+			if options.include? :abilities
 				abilities = character.activated_uses_target @target
 				abilities_hash = Hash.new
 				abilities.keys.each do |ability_i|
@@ -144,7 +144,7 @@ module Wayfarer
 				end
 				output[:abilities] = abilities_hash
 			end
-			if include[:charge_attacks]
+			if options.include? :charge_attacks
 				charge_attacks = character.charge_attacks
 				charge_attacks_hash = Hash.new
 				charge_attacks.each do |charge_attack|
@@ -427,14 +427,14 @@ module Wayfarer
 			uses = character.activated_uses_target @target
 			if uses.has_key? json['status_id'].to_i
 				uses[json['status_id'].to_i].realise
-				select_target({}, {attacks: false, abilities: true, charge_attacks: false})
+				select_target({}, [:abilities])
 			else
 
 				character.items.each do |item|
 					uses = item.activated_uses_target @target
 					if uses.has_key? json['status_id'].to_i
 						uses[json['status_id'].to_i].realise
-						select_target({}, {attacks: false, abilities: true, charge_attacks: false})
+						select_target({}, [:abilities])
 						return
 					end
 				end

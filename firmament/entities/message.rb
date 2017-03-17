@@ -15,12 +15,12 @@ module Entity
 			{type:'message',class: self.type, message: self.message, timestamp: self.timestamp.utc.to_i}
 		end
 
-		def self.send_transient(targets, message, type = :transient)
+		def self.send_transient(target_ids, message, type = :transient)
 			game = Firmament::Plane.fetch Instance.plane
 			json = {packets: [{type:'message',class: type, message: message, timestamp: Time.now.utc.to_i}]}.to_json
-			targets.each do |char|
-				if game.character? char
-					character = game.character char
+			target_ids.each do |char_id|
+				if game.character? char_id
+					character = game.character char_id
 					character.socket.send(json) unless character.socket === nil
 				end
 			end
