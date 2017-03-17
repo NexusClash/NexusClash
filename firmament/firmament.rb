@@ -49,6 +49,7 @@ module Firmament
 
 			@dead_tile = VoidTile.new(@plane.id, VoidTile::DEAD_COORDINATE, VoidTile::DEAD_COORDINATE, VoidTile::DEAD_COORDINATE)
 
+			ENV['TZ'] = 'Europe/London'
 			@scheduler = Rufus::Scheduler.new
 
 			@scheduler.cron '*/15 * * * *', :blocking => true do
@@ -77,7 +78,7 @@ module Firmament
 				hashx[x.to_i] = ThreadSafe::Cache.new do |hashy, y|
 					hashy[y.to_i] = ThreadSafe::Cache.new do |hashz, z|
 						puts "Loading tile ##{x},#{y},#{z}, #{@plane.plane}"
-                        
+
 						newtile = VoidTile.new(@plane.plane.to_i, x.to_i, y.to_i, z.to_i)
 
 						if Entity::Tile.where({plane: @plane.plane.to_i, x: x.to_i, y: y.to_i, z:z.to_i}).exists? then

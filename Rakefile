@@ -1,3 +1,14 @@
+desc 'Resets the database to its initial seeded state'
+task :bounce => [:wipe, :seed, :fixtures]
+
+desc 'Starts an irb session with the environment loaded'
+task :console => :environment do
+	require 'irb'
+	ARGV.clear
+	IRB.start
+end
+task :default => :console
+
 task :environment do
 	puts 'Setting up environment... '
 	require 'bundler'
@@ -19,7 +30,34 @@ task :environment do
 	puts
 end
 
-def buildDataForFolder(folder)
+desc 'Serves the app in dev mode'
+task :serve do
+	`./app.rb`
+end
+
+desc 'Puts initial data in the db '
+task :seed => :environment do
+	buildDataForFolder("seeds")
+end
+
+desc 'Put development accounts in the db'
+task :fixtures => :environment do
+	buildDataForFolder("fixtures")
+end
+
+desc 'Deletes all the things from the db'
+task :wipe => :environment do
+	Entity.constants.select{|c| Entity.const_get(c).is_a? Class}.each do |klass_sym|
+		klass = Entity.class_eval(klass_sym.to_s)
+		next unless klass.respond_to?(:destroy_all)
+		puts "Wiping #{klass_sym}... "
+		count = klass.destroy_all
+		puts " Done. (removed #{count} records)"
+	end
+	puts
+end
+
+def buildDataFromFolder(folder)
 	belongAccount = nil
 	Dir[Dir.pwd+"/" + folder + "/*.json"].sort.each do |seed_file|
 		next unless File.file? seed_file
@@ -45,37 +83,3 @@ def buildDataForFolder(folder)
 	end
 	puts
 end
-
-desc 'Puts initial data in the db '
-task :seed => :environment do
-	buildDataForFolder("seeds")
-end
-
-desc 'Put development accounts in the db'
-task :fixtures => :environment do
-	buildDataForFolder("fixtures")
-end
-
-desc 'Deletes all the things from the db'
-task :wipe => :environment do
-	Entity.constants.select{|c| Entity.const_get(c).is_a? Class}.each do |klass_sym|
-		klass = Entity.class_eval(klass_sym.to_s)
-		next unless klass.respond_to?(:destroy_all)
-		puts "Wiping #{klass_sym}... "
-		count = klass.destroy_all
-		puts " Done. (removed #{count} records)"
-	end
-	puts
-end
-
-desc 'Resets the database to its initial seeded state'
-task :bounce => [:wipe, :seed, :fixtures]
-
-desc 'Starts an irb session with the environment loaded'
-task :console => :environment do
-	require 'irb'
-	ARGV.clear
-	IRB.start
-end
-task :default => :console
-
