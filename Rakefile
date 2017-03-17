@@ -37,12 +37,12 @@ end
 
 desc 'Puts initial data in the db '
 task :seed => :environment do
-	buildDataForFolder("seeds")
+	buildDataFromFolder("seeds")
 end
 
 desc 'Put development accounts in the db'
 task :fixtures => :environment do
-	buildDataForFolder("fixtures")
+	buildDataFromFolder("fixtures")
 end
 
 desc 'Deletes all the things from the db'
