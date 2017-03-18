@@ -44,7 +44,7 @@ class Expedition
 					unless @req_in_air
 						@req_in_air = true
 						@recon_delay = @recon_delay + 1 if @recon_delay < @recon_delay_max
-						Browser::HTTP.get("/validate/#{$document['char_id'].inner_html.to_s.strip}").then {|resp|
+						Browser::HTTP.get("/validate/#{$document.at_css('#char_id').inner_html.to_s.strip}").then {|resp|
 							@req_in_air = false
 							if resp.text == 'ok'
 								self.connect
@@ -59,12 +59,12 @@ class Expedition
 					end
 
 				end
-				$document['#ws-connection']['data-state'] = state.to_s
+				$document.at_css('#ws-connection')['data-state'] = state.to_s
 			when :connected
-				$document['#ws-connection']['data-state'] = state.to_s
+				$document.at_css('#ws-connection')['data-state'] = state.to_s
 				@recon_delay = @recon_delay_min
 			when :unsupported
-				$document['#ws-connection']['data-state'] = 'error'
+				$document.at_css('#ws-connection')['data-state'] = 'error'
 		end
 	end
 
@@ -91,7 +91,7 @@ class Expedition
 
 			socket.on :open do
 				self.state = :connected
-				$document['#game_loading .message'].inner_html = 'Connected!'
+				$document.at_css('#game_loading .message').inner_html = 'Connected!'
 			end
 
 			socket.on :message do |e|
@@ -148,7 +148,7 @@ class Expedition
 				user_defined = '' if user_defined === nil
 				user_defined.split(',').each do |user_var|
 					var = user_var.split(':', 2)
-					elem = $document[var[1]]
+					elem = $document.at_css(var[1])
 					case elem.name.downcase
 						when 'option'
 							packet[var[0]] = elem.attributes[:value]
@@ -163,12 +163,12 @@ class Expedition
 
 				end
 				self.write_message(packet)
-				$document[post_event_click].trigger :click if post_event_click != nil
+				$document.at_css(post_event_click).trigger :click if post_event_click != nil
 			end
 		end
 
 		$document.on :keyup, 'input[data-enter-trigger-action]' do |event|
-			$document[event.target['data-enter-trigger-action']].trigger :click if event.code == 13
+			$document.at_css(event.target['data-enter-trigger-action']).trigger :click if event.code == 13
 		end
 	end
 end

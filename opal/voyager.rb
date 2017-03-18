@@ -34,11 +34,11 @@ class Voyager < Expedition
 	}
 
 	def debug_msg(msg, type)
-		@debug_bar ||= $document['#debugbar']
-		@debug_node ||= $document['#debugbar ul']
+		@debug_bar ||= $document.at_css('#debugbar')
+		@debug_node ||= $document.at_css('#debugbar ul')
 		@debug_i ||= 0
 		@debug_i += 1
-		if @debug_i > 200 && $document['#debug_mode:checked'] === nil
+		if @debug_i > 200 && $document.at_css('#debug_mode:checked') === nil
 			@debug_node.inner_html = ''
 			@debug_i = 0
 		end
@@ -66,21 +66,21 @@ class Voyager < Expedition
 			debug_msg(ent, :informational) unless ent[:type] == 'error' ||  ent[:type] == 'debug'
 			case ent[:type]
 				when 'authentication_request'
-					$document['#game_loading .message'].inner_html = 'Authenticating...'
-					char_id = $document['char_id'].inner_html.to_s.strip
+					$document.at_css('#game_loading .message').inner_html = 'Authenticating...'
+					char_id = $document.at_css('#char_id').inner_html.to_s.strip
 					write_message({type: 'connect', char_id: char_id})
 				when 'debug', 'error'
 					debug_msg ent['message'].gsub('\\n', '<br/>'), ent[:type]
-					$document['#game_loading .message'].inner_html = ent['message'].replace('\\n', '<br/>')
+					$document.at_css('#game_loading .message').inner_html = ent['message'].replace('\\n', '<br/>')
 				when 'self'
 					if @adventurer === nil then
-						$document['#game_loading .message'].inner_html = 'Loading character...'
+						$document.at_css('#game_loading .message').inner_html = 'Loading character...'
 						@adventurer = Adventurer.new ent['character'], true
 						@luggage = Luggage.new
 					else
 						@adventurer.update ent['character']
 						@adventurer.render
-						$document['#activity_log ul'].inner_html = ''
+						$document.at_css('#activity_log ul').inner_html = ''
 					end
 					write_messages([{type: 'refresh_map'}, {type: 'sync_messages', from: (Time.now - (2*24*60*60))}, {type: 'refresh_inventory'}])
 				when 'character'
@@ -95,8 +95,8 @@ class Voyager < Expedition
 					@adventurer.neighbours.delete ent['char_id']
 					@adventurer.render
 				when 'tile'
-					$document['#game_loading'].attributes[:class] = 'ui-helper-hidden'
-					$document['#game'].attributes[:class] = ''
+					$document.at_css('#game_loading').attributes[:class] = 'ui-helper-hidden'
+					$document.at_css('#game').attributes[:class] = ''
 					data = ent['tile']
 					target = @adventurer.map.surrounds[data['x'] - @adventurer.x][data['y'] - @adventurer.y]
 					unless target === nil || (target.z != data['z'] && @adventurer.z != data['z']) then
@@ -121,7 +121,7 @@ class Voyager < Expedition
 						end
 						target.description = data['description'] if data.has_key? 'description'
 						target.render
-						$document['tile_description'].inner_html = "<h4>#{target.name} (#{target.x}, #{target.y}, <a href='/autowiki/tile/#{target.x}/#{target.y}/#{target.z}' target='_blank' style='color:black'>#{target.type}</a>)</h4><p>#{target.description}</p><p>There #{target.occupants == 1 ? 'is' : 'are'} #{target.occupants} other #{target.occupants == 1 ? 'person' : 'people'} here.</p>" if target.x == @adventurer.x && target.y == @adventurer.y && target.z == @adventurer.z
+						$document.at_css('#tile_description').inner_html = "<h4>#{target.name} (#{target.x}, #{target.y}, <a href='/autowiki/tile/#{target.x}/#{target.y}/#{target.z}' target='_blank' style='color:black'>#{target.type}</a>)</h4><p>#{target.description}</p><p>There #{target.occupants == 1 ? 'is' : 'are'} #{target.occupants} other #{target.occupants == 1 ? 'person' : 'people'} here.</p>" if target.x == @adventurer.x && target.y == @adventurer.y && target.z == @adventurer.z
 					end
 				when 'actions'
 					action_mode = :replace
@@ -132,19 +132,18 @@ class Voyager < Expedition
 							data.keys.each do |action_id|
 								action = data[action_id]
 								next if action['name'] == ''
-								option = $document["#target_information #action_attack option[value='#{action_id}']"]
+								option = $document.at_css("#target_information #action_attack option[value='#{action_id}']")
 								unless option === nil
 									option.inner_html = "#{action['name']} - #{action['damage']} #{action['damage_type']} @ #{action['hit_chance']}%"
 								end
 							end
 						else
-							oldweap = 0
-							# $document['#action_attack option:checked']
-							# if oldweap === nil
-							# 	oldweap = 0
-							# else
-							#	oldweap = oldweap.attributes[:value]
-							# end
+							oldweap = $document.at_css('#action_attack option:checked')
+							if oldweap === nil
+								oldweap = 0
+							else
+								oldweap = oldweap.attributes[:value]
+							end
 							weap_index = 0
 
 							html = "<li><button data-action-type='attack' data-action-vars='target:#{@adventurer.target.id},target_type:#{@adventurer.target.type}' data-action-user-vars='weapon:#action_attack option:checked,charge_attack:.charge_attack:checked'>Attack with</button> <select id='action_attack'>"
@@ -159,8 +158,8 @@ class Voyager < Expedition
 								html = html + "<option value='#{action_id}'>#{action['name']} - #{action['damage']} #{action['damage_type']} @ #{action['hit_chance']}%</option>"
 							end
 							html = html + '</select></li>'
-							$document['#target_information .attacks'].inner_html = html
-							attacks_node = $document['#target_information #action_attack']
+							$document.at_css('#target_information .attacks').inner_html = html
+							attacks_node = $document.at_css('#target_information #action_attack')
 							if weap_index != 0
 								attacks_node = Native.convert attacks_node
 								weap_index = Native.convert weap_index
@@ -185,7 +184,7 @@ class Voyager < Expedition
 							html = html + "<input type='radio' #{disabledUnlessActionPossible} id='charge_attack_#{action_id}' name='charge_attack' class='charge_attack' value='#{action_id}'><label class='ui-button #{disabledUnlessActionPossible}' for='charge_attack_#{action_id}' title='#{action['description']}'>#{action['name']}</label>"
 						end
 						html = html + '</li>'
-						$document['#target_information .charge_attacks'].inner_html = html
+						$document.at_css('#target_information .charge_attacks').inner_html = html
 					end
 					if ent['actions'].has_key? 'abilities'
 						html = ''
@@ -195,7 +194,7 @@ class Voyager < Expedition
 							next if action['name'] == ''
 							html = html + "<li><button data-action-type='activate_target' data-action-vars='status_id:#{action_id},target:#{@adventurer.target.id},target_type:#{@adventurer.target.type}'>#{action['name']}</button></li>"
 						end
-						$document['#target_information .abilities'].inner_html = html
+						$document.at_css('#target_information .abilities').inner_html = html
 					end
 				when 'message'
 
@@ -203,9 +202,9 @@ class Voyager < Expedition
 						li
 					}
 					node['data-message-family'] = ent['class']
-					$document['css-tab-r1'].trigger :click if ent['class'] == 'step-inside' || ent['class'] == 'step-outside'
+					$document.at_css('#css-tab-r1').trigger :click if ent['class'] == 'step-inside' || ent['class'] == 'step-outside'
 					node.inner_html = ent['message'] + ' <sup>(' + Time::at(ent['timestamp'].to_i).strftime('%Y-%m-%d %H:%M:%S') + ')</sup>'
-					target_node = Native.convert $document['#activity_log ul']
+					target_node = Native.convert $document.at_css('#activity_log ul')
 					native_node = Native.convert node
 
 					if `target_node.firstChild == null`
@@ -214,12 +213,12 @@ class Voyager < Expedition
 						`target_node.insertBefore(native_node, target_node.firstChild)`
 					end
 
-					native_node = Native.convert $document['#activity_log']
+					native_node = Native.convert $document.at_css('#activity_log')
 					`native_node.scrollTop = 0`
 
 					write_message({type:'request_crafting_recipes'}) if ent['class'] == MessageType::CRAFT_SUCCESS.to_s
 				when 'portals'
-					tile_portals = $document['#tile_portals']
+					tile_portals = $document.at_css('#tile_portals')
 					case ent['action']
 						when 'replace'
 							tile_portals.inner_html = ''
@@ -280,9 +279,9 @@ class Voyager < Expedition
 						end
 
 					}
-					$document['#skill_tree'].inner_html = '<h4>Skill Tree</h4><button data-action-type="request_classes">Classes</button>'
+					$document.at_css('#skill_tree').inner_html = '<h4>Skill Tree</h4><button data-action-type="request_classes">Classes</button>'
 
-					root.append_to($document['#skill_tree'])
+					root.append_to($document.at_css('#skill_tree'))
 
 					ent['tree'].each do |skill|
 
@@ -329,8 +328,8 @@ class Voyager < Expedition
 					end
 
 
-					$document['#skill_tree'].inner_html = '<h4>Classes</h4><button data-action-type="request_skill_tree">Return to Skill Tree</button>'
-					root.append_to($document['#skill_tree'])
+					$document.at_css('#skill_tree').inner_html = '<h4>Classes</h4><button data-action-type="request_skill_tree">Return to Skill Tree</button>'
+					root.append_to($document.at_css('#skill_tree'))
 
 					ent['tree'].each do |skill|
 
@@ -353,28 +352,28 @@ class Voyager < Expedition
 							end
 					end
 				when 'dev_tile'
-					$document['#target_information .tname'].value = ent['tile']['name']
-					$document['#target_information .x'].inner_html = ent['tile']['x']
-					$document['#target_information .y'].inner_html = ent['tile']['y']
-					$document['#target_information .z'].inner_html = ent['tile']['z']
-					$document['#target_information .description'].inner_html = "<textarea>#{ent['tile']['description']}</textarea>"
-					$document['#target_information .z']['data-type'] = ent['tile']['type']
-					$document['#target_information .tile']['data-type'] = ent['tile']['type']
+					$document.at_css('#target_information .tname').value = ent['tile']['name']
+					$document.at_css('#target_information .x').inner_html = ent['tile']['x']
+					$document.at_css('#target_information .y').inner_html = ent['tile']['y']
+					$document.at_css('#target_information .z').inner_html = ent['tile']['z']
+					$document.at_css('#target_information .description').inner_html = "<textarea>#{ent['tile']['description']}</textarea>"
+					$document.at_css('#target_information .z')['data-type'] = ent['tile']['type']
+					$document.at_css('#target_information .tile')['data-type'] = ent['tile']['type']
 					html = ''
 
 					ent['types'].each do |tid, tval|
 						html = html + "<option value='#{tid}' #{tid.to_i == ent['tile']['type_id'].to_i ? 'selected="selected"' : ''}>#{tval}</option>"
 					end
-					$document['#target_information .type_id'].inner_html = html
-					$document['#target_information']['data-target-type'] = 'tile_dev'
-					$document['css-tab-r3'].trigger :click
+					$document.at_css('#target_information .type_id').inner_html = html
+					$document.at_css('#target_information')['data-target-type'] = 'tile_dev'
+					$document.at_css('#css-tab-r3').trigger :click
 				when 'developer_mode'
 					if ent['toggle'] == 'on'
 						developer_mode = true
-						$document['#developer_mode_message'].attributes[:class] = ''
+						$document.at_css('#developer_mode_message').attributes[:class] = ''
 					else
 						developer_mode = false
-						$document['#developer_mode_message'].attributes[:class] = 'ui-helper-hidden'
+						$document.at_css('#developer_mode_message').attributes[:class] = 'ui-helper-hidden'
 					end
 				when 'tile_css'
 					Tile.add_style ent['tile'], ent['css']
@@ -466,8 +465,8 @@ class Voyager < Expedition
 					end
 
 
-					$document['#crafting_recipe_list'].inner_html = ''
-					root.append_to($document['#crafting_recipe_list'])
+					$document.at_css('#crafting_recipe_list').inner_html = ''
+					root.append_to($document.at_css('#crafting_recipe_list'))
 			end
 		end
 	end
@@ -479,8 +478,8 @@ class Voyager < Expedition
 			return unless state == :connected
 			return unless event.button == 0 || event.button == 1
 			if adventurer.neighbours.has_key? event.target['data-char-link'].to_i
-				$document['css-tab-r3'].trigger :click
-				$document['target_information']['data-target-type'] = 'character'
+				$document.at_css('#css-tab-r3').trigger :click
+				$document.at_css('#target_information')['data-target-type'] = 'character'
 				target = adventurer.neighbours[event.target['data-char-link'].to_i]
 				adventurer.target = target
 				adventurer.render
@@ -522,32 +521,32 @@ class Voyager < Expedition
 
 		$document.on :click, '#hud_player_vitals .ui-hud-cp' do |event|
 			if state == :connected
-				$document['#play_pane'].attributes[:class] = 'ui-helper-hidden'
-				$document['#skills_pane'].attributes[:class] = ''
-				$document['#crafting_pane'].attributes[:class] = 'ui-helper-hidden'
+				$document.at_css('#play_pane').attributes[:class] = 'ui-helper-hidden'
+				$document.at_css('#skills_pane').attributes[:class] = ''
+				$document.at_css('#crafting_pane').attributes[:class] = 'ui-helper-hidden'
 				write_message({type: 'request_skill_tree'})
 			end
 		end
 
 		$document.on :click, '.return_to_game' do |event|
-			$document['#play_pane'].attributes[:class] = ''
-			$document['#skills_pane'].attributes[:class] = 'ui-helper-hidden'
-			$document['#crafting_pane'].attributes[:class] = 'ui-helper-hidden'
+			$document.at_css('#play_pane').attributes[:class] = ''
+			$document.at_css('#skills_pane').attributes[:class] = 'ui-helper-hidden'
+			$document.at_css('#crafting_pane').attributes[:class] = 'ui-helper-hidden'
 		end
 
 		$document.on :click, '#view_crafting_recipes' do |event|
 			if state == :connected
-				$document['#play_pane'].attributes[:class] = 'ui-helper-hidden'
-				$document['#skills_pane'].attributes[:class] = 'ui-helper-hidden'
-				$document['#crafting_pane'].attributes[:class] = ''
+				$document.at_css('#play_pane').attributes[:class] = 'ui-helper-hidden'
+				$document.at_css('#skills_pane').attributes[:class] = 'ui-helper-hidden'
+				$document.at_css('#crafting_pane').attributes[:class] = ''
 				write_message({type: 'request_crafting_recipes'})
 			end
 		end
 	end
 end
 
-$document['css-tab-r1'].trigger :click
+$document.at_css('#css-tab-r1').trigger :click
 
-$document['#game_loading .message'].inner_html = 'Connecting...'
+$document.at_css('#game_loading .message').inner_html = 'Connecting...'
 
 voyager = Voyager.new Instance.endpoint

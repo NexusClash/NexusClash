@@ -14,7 +14,7 @@ puts 'Loading Luggage...'
 
 class Luggage
 
-	attr_reader :weight
+	attr_reader :weights
 	attr_reader :weight_max
 
 	def weight=(weight)
@@ -26,8 +26,8 @@ class Luggage
 	end
 
 	def initialize(binding = nil, encumbrance_binding = nil)
-		binding = $document['#inventory_accordion'] if binding === nil
-		encumbrance_binding = $document['#inventory .encumbrance'] if encumbrance_binding === nil
+		binding = $document.at_css('#inventory_accordion') if binding === nil
+		encumbrance_binding = $document.at_css('#inventory .encumbrance') if encumbrance_binding === nil
 		@categories = Hash.new
 		@items_by_id = Hash.new
 		@binding = binding
@@ -50,7 +50,7 @@ class Luggage
 		}
 		node.inner_html = "<input id='inv-category-#{cat}' name='inv-category-#{cat}' type='checkbox' checked='checked'/><label for='inv-category-#{cat}'><span>#{cat.capitalize}</span><span>Wt</span><span></span></label><article id='inv-list-#{cat}'><ol></ol></article>"
 		node.append_to @binding
-		@nodes[cat] = $document["#inv-list-#{cat} ol"]
+		@nodes[cat] = $document.at_css("#inv-list-#{cat} ol")
 	end
 
 	def remove_item(id)

@@ -47,7 +47,7 @@ class Tile
 
 	def self.add_style(type, style)
 		@@css[type] = style
-		$document['#map_styles'].inner_html = $document['#map_styles'].inner_html + style
+		$document.at_css('#map_styles').inner_html = $document.at_css('#map_styles').inner_html + style
 	end
 
 	def self.style_loaded?(style)

@@ -23,7 +23,7 @@ class Adventurer
 
 	def initialize(data, me = false)
 		if me
-			@map = Magellan.new $document['map']
+			@map = Magellan.new $document.at_css('#map')
 			@neighbours = Hash.new{|hash, charid| hash[charid] = Adventurer.new({id: charid})}
 		end
 		@abilities = Array.new
@@ -81,22 +81,22 @@ class Adventurer
 
 	def render
 		if @me
-			$document['#hud_player_vitals .ap'].inner_html = @ap
-			$document['#hud_player_vitals .mp'].inner_html = @mp
-			$document['#hud_player_vitals .cp'].inner_html = @cp
-			$document['#hud_player_vitals .ui-hud-cp']['data-player-cp'] = @cp
-			$document['#hud_player_vitals .mo'].inner_html = sprintf '%.1f' ,@mo / 10
-			$document['#hud_player_vitals .xp'].inner_html = @xp
-			$document['#hud_player_vitals .hp'].inner_html = @hp
-			$document['#hud_player_vitals .level'].inner_html = @level
-			$document['#hud_player_vitals .class'].inner_html = @nexus_class
-			$document['#hud_player_vitals .name'].inner_html = "<a href='/character/#{@id}' style='color:black;text-decoration:none'>#{@name}</a>"
+			$document.at_css('#hud_player_vitals .ap').inner_html = @ap
+			$document.at_css('#hud_player_vitals .mp').inner_html = @mp
+			$document.at_css('#hud_player_vitals .cp').inner_html = @cp
+			$document.at_css('#hud_player_vitals .ui-hud-cp')['data-player-cp'] = @cp
+			$document.at_css('#hud_player_vitals .mo').inner_html = sprintf '%.1f' ,@mo / 10
+			$document.at_css('#hud_player_vitals .xp').inner_html = @xp
+			$document.at_css('#hud_player_vitals .hp').inner_html = @hp
+			$document.at_css('#hud_player_vitals .level').inner_html = @level
+			$document.at_css('#hud_player_vitals .class').inner_html = @nexus_class
+			$document.at_css('#hud_player_vitals .name').inner_html = "<a href='/character/#{@id}' style='color:black;text-decoration:none'>#{@name}</a>"
 
 			status_text = ''
 			self.statuses.each do |status|
 				status_text += "<li title='#{status[:description]}'>#{status[:name]}</li>"
 			end
-			$document['#hud_player_vitals .statuses'].inner_html = status_text
+			$document.at_css('#hud_player_vitals .statuses').inner_html = status_text
 			occupants = ''
 			@neighbours.keys.each do |key|
 				neighbour = @neighbours[key]
@@ -106,8 +106,8 @@ class Adventurer
 				mo_widget = "<span class='mo-widget' data-state='#{neighbour.alignment}' title='#{neighbour.alignment}'></span>" if sense_mo
 				occupants += "<li><span data-char-link='#{neighbour.id}'>#{neighbour.name}</span> (#{neighbour.level})<span class='hp-widget' data-state='#{neighbour.hp_fuzzy}' #{sense_hp ? "title='#{neighbour.hp}/#{neighbour.hp_max}'" : ''}></span>#{mp_widget}#{mo_widget}</li>"
 			end
-			$document['tile_occupants_players'].inner_html = occupants
-			ability_ul = $document['#abilities']
+			$document.at_css('#tile_occupants_players').inner_html = occupants
+			ability_ul = $document.at_css('#abilities')
 			ability_ul.inner_html = ''
 
 			@abilities.each do |ability|
@@ -126,25 +126,25 @@ class Adventurer
 				node2.append_to ability_ul
 			end
 			if @target === nil
-				$document['#target_information .name'].inner_html = ''
-				$document['#target_information .class_image'].attributes['src'] = ''
-				$document['#target_information .stats'].inner_html = ''
-				$document['#target_information .actions'].inner_html = ''
+				$document.at_css('#target_information .name').inner_html = ''
+				$document.at_css('#target_information .class_image').attributes['src'] = ''
+				$document.at_css('#target_information .stats').inner_html = ''
+				$document.at_css('#target_information .actions').inner_html = ''
 			else
-				$document['#target_information .name'].inner_html = "<a href='/character/#{@target.id}' style='color:black;text-decoration:none'>#{@target.name}</a>"
-				$document['#target_information .class_image'].attributes['src'] = "/img/class/colour/#{@target.nexus_class}.png"
+				$document.at_css('#target_information .name').inner_html = "<a href='/character/#{@target.id}' style='color:black;text-decoration:none'>#{@target.name}</a>"
+				$document.at_css('#target_information .class_image').attributes['src'] = "/img/class/colour/#{@target.nexus_class}.png"
 				stats = "<li>Level #{target.level} #{@target.nexus_class}</li><li>HP: #{sense_hp ? "#{@target.hp} / #{@target.hp_max}" : @target.hp_fuzzy}</li>"
 				stats = stats + "<li>MP: #{@target.mp} / #{@target.mp_max}</li>" if sense_mp
 				stats = stats + "<li>Alignment: #{@target.alignment}</li>" if sense_mo
-				$document['#target_information .stats'].inner_html = stats
-				$document['#target_information .actions'].inner_html = '' unless @neighbours.has_key? @target.id
+				$document.at_css('#target_information .stats').inner_html = stats
+				$document.at_css('#target_information .actions').inner_html = '' unless @neighbours.has_key? @target.id
 			end
 			if @hp <= 0 || (@x == -9001 && @y == -9001 && @z == -9001)
-				$document['#details_pane_alive'].attributes[:class] = 'ui-helper-hidden'
-				$document['#details_pane_dead'].attributes[:class] = ''
+				$document.at_css('#details_pane_alive').attributes[:class] = 'ui-helper-hidden'
+				$document.at_css('#details_pane_dead').attributes[:class] = ''
 			else
-				$document['#details_pane_alive'].attributes[:class] = ''
-				$document['#details_pane_dead'].attributes[:class] = 'ui-helper-hidden'
+				$document.at_css('#details_pane_alive').attributes[:class] = ''
+				$document.at_css('#details_pane_dead').attributes[:class] = 'ui-helper-hidden'
 			end
 		end
 	end

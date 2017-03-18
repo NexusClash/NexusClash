@@ -30,7 +30,7 @@ class Cartographer < Expedition
 		@map_x = -20
 		@map_y = 20
 		self.zoom = 0.5
-		@map = Magellan.new $document['#map_edit_view'], @size
+		@map = Magellan.new $document.at_css('#map_edit_view'), @size
 		super addr, :editor, true
 	end
 
@@ -38,21 +38,21 @@ class Cartographer < Expedition
 		@zoom = zoom
 		px = zoom * 75
 		css = "#map_edit_container{max-height:80vh} #map_edit_view{width:#{px * @size * 2 + px * 2 + @size * 2 + 80}px; height:#{px * @size * 2 + px * 2 + @size * 2}px}  #map_edit_view .tile {width: #{px}px; height: #{px}px; max-width:#{px}px !important} "
-		$document['#map_editor_zoom'].inner_html = css
+		$document.at_css('#map_editor_zoom').inner_html = css
 	end
 
 	def handle_message(m)
 		JSON.parse(m.data)[:packets].each do |ent|
 			case ent[:type]
 				when 'authentication_request'
-					$document['#game_loading .message'].inner_html = 'Authenticating...'
+					$document.at_css('#game_loading .message').inner_html = 'Authenticating...'
 					write_message({type: 'connect', admin: true})
 				when 'debug', 'error'
 					puts "#{ent[:type]}: #{ent['message']}"
-					$document['#game_loading .message'].inner_html = ent['message'].replace('\\n', '<br/>')
+					$document.at_css('#game_loading .message').inner_html = ent['message'].replace('\\n', '<br/>')
 				when 'developer_mode'
-					$document['#game_loading'].attributes[:class] = 'ui-helper-hidden'
-					$document['#game'].attributes[:class] = ''
+					$document.at_css('#game_loading').attributes[:class] = 'ui-helper-hidden'
+					$document.at_css('#game').attributes[:class] = ''
 
 					# Request map
 					write_message({type: 'admin_map_load', x: @map_x - @size, y: @map_y - @size, z: @map_z, w: @size * 2 + 1, h: @size * 2 + 1})
@@ -61,21 +61,21 @@ class Cartographer < Expedition
 
 					if ent['type'] == 'dev_tile'
 						if @click_x == ent['tile']['x'].to_i && @click_y == ent['tile']['y'].to_i
-							$document['#target_information .tname'].value = ent['tile']['name']
-							$document['#target_information .x'].inner_html = ent['tile']['x']
-							$document['#target_information .y'].inner_html = ent['tile']['y']
-							$document['#target_information .z'].inner_html = ent['tile']['z']
-							$document['#target_information .description'].inner_html = "<textarea>#{ent['tile']['description']}</textarea>"
-							$document['#target_information .z']['data-type'] = ent['tile']['type']
-							$document['#target_information .tile']['data-type'] = ent['tile']['type']
+							$document.at_css('#target_information .tname').value = ent['tile']['name']
+							$document.at_css('#target_information .x').inner_html = ent['tile']['x']
+							$document.at_css('#target_information .y').inner_html = ent['tile']['y']
+							$document.at_css('#target_information .z').inner_html = ent['tile']['z']
+							$document.at_css('#target_information .description').inner_html = "<textarea>#{ent['tile']['description']}</textarea>"
+							$document.at_css('#target_information .z')['data-type'] = ent['tile']['type']
+							$document.at_css('#target_information .tile')['data-type'] = ent['tile']['type']
 							html = ''
 
 							ent['types'].each do |tid, tval|
 								html = html + "<option value='#{tid}' #{tid.to_i == ent['tile']['type_id'].to_i ? 'selected="selected"' : ''}>#{tval}</option>"
 							end
-							$document['#target_information .type_id'].inner_html = html
-							$document['#target_information']['data-target-type'] = 'tile_dev'
-							$document['css-tab-r1'].trigger :click
+							$document.at_css('#target_information .type_id').inner_html = html
+							$document.at_css('#target_information')['data-target-type'] = 'tile_dev'
+							$document.at_css('#css-tab-r1').trigger :click
 						end
 					end
 
@@ -102,10 +102,10 @@ class Cartographer < Expedition
 				when 'developer_mode'
 					if ent['toggle'] == 'on'
 						self.developer_mode = true
-						$document['#developer_mode_message'].attributes[:class] = ''
+						$document.at_css('#developer_mode_message').attributes[:class] = ''
 					else
 						self.developer_mode = false
-						$document['#developer_mode_message'].attributes[:class] = 'ui-helper-hidden'
+						$document.at_css('#developer_mode_message').attributes[:class] = 'ui-helper-hidden'
 					end
 				when 'tile_css'
 					Tile.add_style ent['tile'], ent['css']
@@ -138,25 +138,25 @@ class Cartographer < Expedition
 			if state == :connected
 				if event.button == 2
 					#right click - select tile as the clone source if the multiple tile stamping tab is open
-					unless $document['#css-tab-r2:checked'] === nil
+					unless $document.at_css('#css-tab-r2:checked') === nil
 
 						x = event.target['data-x'].to_i - map_x
 						y = event.target['data-y'].to_i - map_y
 
 						tile = map.surrounds[x][y]
 
-						$document['#edit_tile_multiple input[name=stamp-name'].value = tile.name
-						$document['#edit_tile_multiple .description textarea'].value = tile.description
-						$document['#edit_tile_multiple .tile']['data-type'] = tile.type
-						$document['#edit_tile_multiple #stamp_type'].inner_html = tile.type
-						$document['#edit_tile_multiple input[name=stamp-type]'].value = tile.type_id
-						$document['#edit_tile_multiple']['data-target-type'] = 'tile_dev'
+						$document.at_css('#edit_tile_multiple input[name=stamp-name').value = tile.name
+						$document.at_css('#edit_tile_multiple .description textarea').value = tile.description
+						$document.at_css('#edit_tile_multiple .tile')['data-type'] = tile.type
+						$document.at_css('#edit_tile_multiple #stamp_type').inner_html = tile.type
+						$document.at_css('#edit_tile_multiple input[name=stamp-type]').value = tile.type_id
+						$document.at_css('#edit_tile_multiple')['data-target-type'] = 'tile_dev'
 
 					end
 
 					event.stop
 				else
-					unless $document['#css-tab-r1:checked'] === nil
+					unless $document.at_css('#css-tab-r1:checked') === nil
 						# Single tile edit mode
 						@click_x = event.target['data-x'].to_i
 						@click_y = event.target['data-y'].to_i
@@ -164,11 +164,11 @@ class Cartographer < Expedition
 					else
 						# Tile stamping mode
 						changes = {type: 'dev_tile', edit: true, x: event.target['data-x'].to_i, y: event.target['data-y'].to_i, z: event.target['data-z'].to_i}
-						changes['name'] = $document['#edit_tile_multiple  input[name=stamp-name'].value unless $document['#edit_tile_multiple input[name=use-stamp-name]:checked'] === nil
-						changes['type_id'] = $document['#edit_tile_multiple  input[name=stamp-type]'].value unless $document['#edit_tile_multiple input[name=use-stamp-type]:checked'] === nil
+						changes['name'] = $document.at_css('#edit_tile_multiple  input[name=stamp-name').value unless $document.at_css('#edit_tile_multiple input[name=use-stamp-name]:checked') === nil
+						changes['type_id'] = $document.at_css('#edit_tile_multiple  input[name=stamp-type]').value unless $document.at_css('#edit_tile_multiple input[name=use-stamp-type]:checked') === nil
 
-						unless $document['#edit_tile_multiple input[name=use-stamp-description]:checked'] === nil
-							node = $document['#edit_tile_multiple .description textarea'].value
+						unless $document.at_css('#edit_tile_multiple input[name=use-stamp-description]:checked') === nil
+							node = $document.at_css('#edit_tile_multiple .description textarea').value
 							native_node = Native.convert node
 							changes['description'] = `node.value`
 						end
@@ -199,13 +199,13 @@ class Cartographer < Expedition
 				packet = {type: target}
 				defined = '' if defined === nil
 				defined.split(',').each do |defined_var|
-					var = defined_var.split(':', 2)
+				var = defined_var.split(':', 2)
 					packet[var[0]] = var[1]
 				end
 				user_defined = '' if user_defined === nil
 				user_defined.split(',').each do |user_var|
 					var = user_var.split(':', 2)
-					elem = $document[var[1]]
+					elem = $document.at_css(var[1])
 					case elem.name.downcase
 						when 'option'
 							packet[var[0]] = elem.attributes[:value]
@@ -220,20 +220,20 @@ class Cartographer < Expedition
 
 				end
 				self.write_message(packet)
-				$document[post_event_click].trigger :click if post_event_click != nil
+				$document.at_css(post_event_click).trigger :click if post_event_click != nil
 			end
 		end
 
 		$document.on :keyup, 'input[data-enter-trigger-action]' do |event|
-			$document[event.target['data-enter-trigger-action']].trigger :click if event.code == 13
+			$document.at_css(event.target['data-enter-trigger-action']).trigger :click if event.code == 13
 		end
 
 
 	end
 end
 
-$document['css-tab-r1'].trigger :click
+$document.at_css('#css-tab-r1').trigger :click
 
-$document['#game_loading .message'].inner_html = 'Connecting...'
+$document.at_css('#game_loading .message').inner_html = 'Connecting...'
 
 cartographer = Cartographer.new Instance.endpoint
