@@ -1,3 +1,0 @@
-[
-{ "domain" : "localhost", "name" : "Harriston Heights", "plane" : 1, "daytime_inside_message": "Ample sunlight streams through openings in the building around you.", "daytime_outside_message": "The sun shines down brightly all around you.", "nighttime_inside_message": "The room around you is dimly lit. Shadows obscure your vision.", "nighttime_outside_message": "The weak moon is mostly covered by thick clouds. The little light that pokes through is fleeting at best." }
-]
