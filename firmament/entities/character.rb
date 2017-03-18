@@ -152,7 +152,7 @@ module Entity
 				(-2..2).each do |y|
 					(-2..2).each do |x|
 						tile = game.map(self.x + x, self.y + y, self.z)
-						packets << { type: 'tile', tile:{ x: tile.x, y: tile.y, z: tile.z, name: tile.name, description: tile.description, colour: tile.colour, type: tile.type.name, occupants: tile.visible_character_count}}
+						packets << { type: 'tile', tile: tile.to_h}
 					end
 				end
 			else
@@ -160,7 +160,7 @@ module Entity
 					(-2..2).each do |x|
 						if x == 0 && y == 0
 							tile = game.map(self.x + x, self.y + y, self.z)
-							packets << { type: 'tile', tile:{ x: tile.x, y: tile.y, z: tile.z, name: tile.name, description: tile.description, colour: tile.colour, type: tile.type.name, occupants: tile.visible_character_count}}
+							packets << { type: 'tile', tile: tile.to_h}
 						else
 							packets << {type: 'tile', tile: VoidTile.generate_hash(self.x + x, self.y + y, self.z)}
 						end

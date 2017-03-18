@@ -98,7 +98,9 @@ module Entity
 		end
 
 		def to_h
-			{name: self.name, type: self.type.name, type_id: self.type_id, description: self.description, x: self.x, y: self.y, z: self.z, plane: self.plane}
+			current_plane = Firmament::Plane.fetch(self.plane)
+
+			{name: self.name, type: self.type.name, type_id: self.type_id, description: self.description, colour: self.colour, x: self.x, y: self.y, z: self.z, plane: self.plane, occupants: self.visible_character_count, is_day: current_plane.is_day?}
 		end
 
 		after_initialize do |document|

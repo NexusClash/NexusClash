@@ -338,7 +338,7 @@ module Wayfarer
 						tile.save
 					end
 
-					packet = {packets:[{ type: 'tile', tile:{ x: tile.x, y: tile.y, z: tile.z, name: tile.name, description: tile.description, colour: tile.colour, type: tile.type.name, occupants: tile.characters.count}}]}.to_json
+					packet = {packets:[ { type: 'tile', tile: tile.to_h}]}.to_json
 
 					chars = Array.new
 
@@ -361,7 +361,7 @@ module Wayfarer
 						char.socket.send(packet) unless char.socket === nil
 					end
 
-					packet = {packets:[{ type: 'tile', tile:{ x: tile.x, y: tile.y, z: tile.z, name: tile.name, description: tile.description, colour: tile.colour, type: tile.type.name, type_id: tile.type.id, occupants: tile.characters.count}}]}.to_json
+					packet = {packets:[{ type: 'tile', tile: tile.to_h}]}.to_json
 
 					Firmament::Plane.admins.each do |admin|
 						admin.send(packet)
