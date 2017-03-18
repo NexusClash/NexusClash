@@ -1243,6 +1243,11 @@ img[src=""]
 	font-style:italic;
 }
 
+.tile-time-indicator
+{
+	vertical-align: middle;
+}
+
 @media only screen and (max-device-width: 960px)
 {
 	#tile_occupants_players

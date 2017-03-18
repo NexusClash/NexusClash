@@ -20,6 +20,7 @@ class Tile
 	attr_accessor :y
 	attr_accessor :z
 	attr_accessor :occupants
+	attr_accessor :is_day
 	attr_accessor :description
 	attr_accessor :origin_tile
 	attr_accessor :clear_left
@@ -34,6 +35,7 @@ class Tile
 		@name = ''
 		@type = 'Void'
 		@occupants = 0
+		@is_day = false
 		@origin_tile = false
 		@clear_left = false
 		@type_id = -1

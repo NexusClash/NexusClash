@@ -103,6 +103,8 @@ class Voyager < Expedition
 						target.colour = data['colour'] if data.has_key? 'colour'
 						target.name = data['name'] if data.has_key? 'name'
 						target.type = data['type'] if data.has_key? 'type'
+						target.is_day = data['is_day'] if data.has_key? 'is_day'
+
 						# If we don't have the tile type's CSS loaded then request from server
 						if data.has_key?('type') && !Tile.style_loaded?(data['type'])
 							write_message({type: 'request_tile_css', coordinates: {x: data['x'], y: data['y'], z:data['z']}})
@@ -121,7 +123,7 @@ class Voyager < Expedition
 						end
 						target.description = data['description'] if data.has_key? 'description'
 						target.render
-						$document.at_css('#tile_description').inner_html = "<h4>#{target.name} (#{target.x}, #{target.y}, <a href='/autowiki/tile/#{target.x}/#{target.y}/#{target.z}' target='_blank' style='color:black'>#{target.type}</a>)</h4><p>#{target.description}</p><p>There #{target.occupants == 1 ? 'is' : 'are'} #{target.occupants} other #{target.occupants == 1 ? 'person' : 'people'} here.</p>" if target.x == @adventurer.x && target.y == @adventurer.y && target.z == @adventurer.z
+						$document.at_css('#tile_description').inner_html = "<h4><img class='tile-time-indicator' src='/img/Time-#{target.is_day ? 'Day' : 'Night'}.gif'/> #{target.name} (#{target.x}, #{target.y}, <a href='/autowiki/tile/#{target.x}/#{target.y}/#{target.z}' target='_blank' style='color:black'>#{target.type}</a>)</h4><p>#{target.description}</p><p>There #{target.occupants == 1 ? 'is' : 'are'} #{target.occupants} other #{target.occupants == 1 ? 'person' : 'people'} here.</p>" if target.x == @adventurer.x && target.y == @adventurer.y && target.z == @adventurer.z
 					end
 				when 'actions'
 					action_mode = :replace
