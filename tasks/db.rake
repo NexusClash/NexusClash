@@ -3,8 +3,8 @@ unless ENV['RACK_ENV'] == 'production'
     desc 'Resets the database to its initial seeded state'
     task :bounce => ['db:wipe', 'db:seed', 'db:fixtures']
 
-      desc 'Resets the database to its initial seeded state'
-      task :bounce_from_backup => ['db:wipe', 'db:restore_types', 'db:fixtures']
+    desc 'Resets the database by importing from backup and seeding some data'
+    task :bounce_from_backup => ['db:wipe', 'db:restore_types', 'db:fixtures']
 
     desc 'Deletes all the things from the db'
     task :wipe => :environment do
