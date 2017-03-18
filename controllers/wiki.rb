@@ -4,7 +4,7 @@ class Dash < Sinatra::Application
 	end
 
 	get '/autowiki/location/:tile_type_id/:name' do
-		location = Entity::TileType.find_by({tile_type_id: params[:tile_type_id]})
+		location = Entity::TileType.find_by({id: params[:tile_type_id]})
 		rnd_max = location.search_table.inject(0) { |sum, itm| sum + itm[1] }
 		haml :'autowiki/location', :layout => @layout, :locals => {:location => location, :search_rate_total => rnd_max}
 	end
