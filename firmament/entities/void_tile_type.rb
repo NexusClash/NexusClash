@@ -17,6 +17,22 @@ module Entity
 			''
 		end
 
+		def self.daytime_inside_message
+			nil
+		end
+
+		def self.daytime_outside_message
+			nil
+		end
+
+		def self.nighttime_inside_message
+			nil
+		end
+
+		def self.nighttime_outside_message
+			nil
+		end
+
 		def self.to_s
 			self.name
 		end
