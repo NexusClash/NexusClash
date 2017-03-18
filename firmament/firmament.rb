@@ -161,7 +161,7 @@ module Firmament
 		end
 
 		def is_day?
-			1 == Time.now.hour % 2
+			0 == Time.now.hour % 2
 		end
 
 		def self.fetch(name)
