@@ -1,5 +1,14 @@
-desc 'Resets the database to its initial seeded state'
-task :bounce => [:wipe, :seed, :fixtures]
+require 'bundler'
+
+Dir.glob('tasks/*.rake').each { |r| import r }
+
+begin
+	Bundler.setup(:default, :development)
+rescue Bunder::BundlerError => e
+	$stderr.puts e.message
+	$stderr.puts "Run `bundle install` to install missing gems"
+	exit e.status_code
+end
 
 desc 'Starts an irb session with the environment loaded'
 task :console => :environment do
@@ -11,7 +20,7 @@ task :default => :console
 
 task :environment do
 	puts 'Setting up environment... '
-	require 'bundler'
+
 	Bundler.require
     #require 'pry'
 	Mongoid.load!('mongoid.yml')
@@ -33,45 +42,4 @@ end
 desc 'Serves the app in dev mode'
 task :serve do
 	`./app.rb`
-end
-
-desc 'Puts initial data in the db '
-task :seed => :environment do
-	buildDataFromFolder("seeds")
-end
-
-desc 'Put development accounts in the db'
-task :fixtures => :environment do
-	buildDataFromFolder("fixtures")
-end
-
-desc 'Deletes all the things from the db'
-task :wipe => :environment do
-	Entity.constants.select{|c| Entity.const_get(c).is_a? Class}.each do |klass_sym|
-		klass = Entity.class_eval(klass_sym.to_s)
-		next unless klass.respond_to?(:destroy_all)
-		puts "Wiping #{klass_sym}... "
-		count = klass.destroy_all
-		puts " Done. (removed #{count} records)"
-	end
-	puts
-end
-
-def buildDataFromFolder(folder)
-	belongAccount = nil
-	Dir[Dir.pwd+"/" + folder + "/*.json"].sort.each do |seed_file|
-		next unless File.file? seed_file
-		trimmedFileName = File.basename(seed_file, '.json').split(" ")
-        klass = trimmedFileName[1].classify
-		puts "Seeding #{klass}... "
-		(seeds = JSON.parse(File.read(seed_file))).each do |seed|
-			entity = Entity.class_eval(klass).new
-			seed.each_key do |property|
-				entity.send "#{property}=", seed[property]
-			end
-			entity.save
-		end
-		puts " Done. (seeded #{seeds.count} records)"
-	end
-	puts
 end
