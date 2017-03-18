@@ -62,6 +62,13 @@ module Firmament
 				end
 			end
 
+			@scheduler.cron '0 * * * *', :blocking => true do
+				@characters.keys.each do |id|
+					char = @characters[id]
+					char.broadcast BroadcastScope::SELF, {packets:[{type: 'tile', tile: char.location.to_h}]}.to_json
+				end
+			end
+
 			@scheduler.cron '* * * * *', :blocking => true do
 				@characters.keys.each do |id|
 					char = @characters[id]
