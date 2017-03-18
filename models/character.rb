@@ -214,7 +214,7 @@ module Entity
 		end
 
 		def nexus_class
-			nclass = 'Unknown'
+			nclass = 'Mortal'
 			statuses.each do |status|
 				nclass = status.name if status.family == :class
 			end

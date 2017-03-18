@@ -17,6 +17,14 @@ module Effect
 			@name = @parent.name if @name === nil
 		end
 
+		def add_cost(cost, amount)
+			if amount.is_a? Method
+				@costs[cost.to_sym] = amount
+			else
+				@costs[cost.to_sym] += amount
+			end
+		end
+
 		def can_target?(tar)
 			if tar == :self
 				@targets.include? tar

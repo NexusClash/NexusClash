@@ -39,6 +39,15 @@ task :environment do
 	puts
 end
 
+desc "Kills every character"
+task :kill_them_all => :environment do
+	Firmament::Plane.new Instance.plane
+	Entity::Character.all.each do |character|
+		character.kill!
+		character.save
+	end
+end
+
 desc 'Serves the app in dev mode'
 task :serve do
 	`./app.rb`

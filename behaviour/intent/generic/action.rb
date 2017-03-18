@@ -26,7 +26,6 @@ module Intent
 			else
 				@costs[cost.to_sym] += amount
 			end
-
 		end
 
 		##

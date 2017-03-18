@@ -8,6 +8,9 @@ unless ENV['RACK_ENV'] == 'production'
     desc 'Load account data into the database'
     task :fixtures => :environment do
       buildDataFromFolder("fixtures")
+
+      # Harrison Heights has too much void.
+      Rake::Task["kill_them_all"].invoke if Instance.plane == 3
     end
   end
 end
@@ -24,6 +27,7 @@ def buildDataFromFolder(folder)
 			seed.each_key do |property|
 				entity.send "#{property}=", seed[property]
 			end
+      entity.plane = Instance.plane if entity.respond_to? 'plane='
 			entity.save
 		end
 		puts " Done. (seeded #{seeds.count} records)"

@@ -68,9 +68,8 @@ module Effect
 		end
 
 		def tick_activation(*_)
-			@explosive_murder.send(:explosive_murder, nil, false)
+			@explosive_murder.send(:explosive_murder, nil, true)
 		end
-
 
 		def describe
 			"#{@parent.name.to_s} has an activated ability called #{@name} costing #{@costs[:ap].to_s} AP + #{@costs[:mp].to_s} MP, minus 1 MP for each additional copy of itself"

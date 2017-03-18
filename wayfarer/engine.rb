@@ -152,7 +152,7 @@ module Wayfarer
                     {
                         name: charge_attack.name,
                         description: charge_attack.describe,
-                        possible: charge_attack.possible?(character)
+                        possible: charge_attack.possible?(character, self.target)
                     }
 				end
 				output[:charge_attacks] = charge_attacks_hash

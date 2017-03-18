@@ -24,7 +24,7 @@ unless ENV['RACK_ENV'] == 'production'
     end
 
     desc 'Restores the metadata information from backup'
-    task :restore_types do
+    task :restore_types => :environment do
       temp_path = Dir.pwd + '/db/temp'
       full_path = Dir.pwd + '/db/full_backup'
 
@@ -40,6 +40,8 @@ unless ENV['RACK_ENV'] == 'production'
       sh "mongorestore db/temp"
 
       FileUtils.rm_rf(temp_path)
+
+      Entity::Plane.find_by(plane: Instance.plane).update(domain: Instance.domain)
     end
   end
 end

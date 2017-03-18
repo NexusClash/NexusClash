@@ -38,9 +38,9 @@ module Effect
 			msg << " Increases hit chance by #{hit_chance}." if hit_chance != 0
 			return msg
 		end
-		
-		def possible?(entity)
-		    theoretical_attack = Intent::Attack.new(entity)
+
+		def possible?(entity, target)
+		    theoretical_attack = Intent::Attack.new(entity, target)
 		    theoretical_attack.damage = 0
 		    theoretical_attack.hit_chance = 0
 		    theoretical_attack.charge_attack = self
