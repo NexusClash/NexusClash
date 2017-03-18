@@ -17,6 +17,26 @@ module Entity
 			''
 		end
 
+		def self.search_rate
+			0
+		end
+
+		def self.hide_rate
+			0
+		end
+
+		def self.search_table
+			[]
+		end
+
+		def self.statuses
+			[]
+		end
+
+		def traversible?
+			false
+		end
+
 		def self.daytime_inside_message
 			nil
 		end
