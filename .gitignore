@@ -4,3 +4,4 @@ basic-cocomo-report*.txt
 /datatables
 
 db/full_backup
+db/temp
