@@ -69,14 +69,6 @@ def buildDataFromFolder(folder)
 			seed.each_key do |property|
 				entity.send "#{property}=", seed[property]
 			end
-			if folder == "fixtures"
-				if trimmedFileName[0].to_i == 1
-					belongAccount = entity
-				end
-				if trimmedFileName[0].to_i == 2
-					entity.account_id = belongAccount.id
-				end
-			end
 			entity.save
 		end
 		puts " Done. (seeded #{seeds.count} records)"
