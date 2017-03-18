@@ -114,7 +114,7 @@ module Entity
 		def to_h
 			current_plane = Firmament::Plane.fetch(self.plane)
 
-			time_of_day_message = custom_time_of_day_message || current_plane.time_of_day_message(self.inside_tile)
+			time_of_day_message = custom_time_of_day_message || current_plane.time_of_day_message(self.inside_tile) || ""
 			description = self.description + " " + time_of_day_message
 
 			{name: self.name, type: self.type.name, type_id: self.type_id, description: description, colour: self.colour, x: self.x, y: self.y, z: self.z, plane: self.plane, occupants: self.visible_character_count, is_day: current_plane.is_day?}
