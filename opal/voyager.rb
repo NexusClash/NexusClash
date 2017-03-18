@@ -138,12 +138,13 @@ class Voyager < Expedition
 								end
 							end
 						else
-							oldweap = $document['#action_attack option:checked']
-							if oldweap === nil
-								oldweap = 0
-							else
-								oldweap = oldweap.attributes[:value]
-							end
+							oldweap = 0
+							# $document['#action_attack option:checked']
+							# if oldweap === nil
+							# 	oldweap = 0
+							# else
+							#	oldweap = oldweap.attributes[:value]
+							# end
 							weap_index = 0
 
 							html = "<li><button data-action-type='attack' data-action-vars='target:#{@adventurer.target.id},target_type:#{@adventurer.target.type}' data-action-user-vars='weapon:#action_attack option:checked,charge_attack:.charge_attack:checked'>Attack with</button> <select id='action_attack'>"
