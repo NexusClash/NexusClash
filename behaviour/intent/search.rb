@@ -8,9 +8,8 @@ module Intent
 		end
 
 		def take_action
-
 			item_drop = nil
-			item_drop = entity.location.type.search_roll_item if entity.location.type.search_roll
+			item_drop = entity.location.type.search_roll_item if search_succeeded?
 
 			if item_drop === nil
 				message_ent = Entity::Message.new({characters: [entity.id], message: 'You search and find nothing.', type: MessageType::SEARCH_NOTHING})
@@ -39,6 +38,18 @@ module Intent
 
 		def broadcast_results
 			entity.broadcast_self BroadcastScope::SELF
+		end
+
+		def search_succeeded?
+			current_plane = Firmament::Plane.fetch(entity.location.plane)
+
+			search_modifier = current_plane.is_day? ? 1.0 : 0.9
+			roll = rand(0..99)
+			modified_roll = roll * search_modifier
+
+			success = modified_roll < entity.location.type.search_rate
+
+			debug "Success? #{success ? 'Yes' : 'No'} Roll? #{modified_roll} Target? #{entity.location.type.search_rate}" if Instance.debug
 		end
 	end
 end

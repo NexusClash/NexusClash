@@ -38,10 +38,6 @@ module Entity
 			end
 		end
 
-		def search_roll
-			return rand(0..99) < self.search_rate
-		end
-
 		def search_roll_item
 			rnd_max = self.search_table.inject(0) { |sum, itm| sum + itm[1] }
 			return nil unless rnd_max > 0

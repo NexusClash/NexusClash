@@ -160,6 +160,10 @@ module Firmament
 			end
 		end
 
+		def is_day?
+			1 == Time.now.hour % 2
+		end
+
 		def self.fetch(name)
 			return @@planes.fetch(name.to_i, nil)
 		end
