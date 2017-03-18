@@ -41,9 +41,10 @@ def buildDataFromFolder(folder)
       keys = id_keys + other_keys
 
 			keys.each do |property|
-				entity.send "#{property}=", seed[property] unless property == '_id'
+        entity.send "#{property}=", seed[property]
 			end
-      entity.plane = Instance.plane if entity.respond_to? 'plane='
+
+      entity.plane = Instance.plane if entity.respond_to? 'plane=' unless klass == 'Plane'
 			entity.save
 		end
 		puts " Done. (seeded #{seeds.count} records)"
@@ -81,7 +82,14 @@ def build_json_array(collection)
   collection.all.each do |item|
     json = item.to_json
     object = JSON.parse(json)
-    json_array << object.except('_id').to_json
+    if object.keys.include?('_id')
+      if collection.to_s.ends_with?('Type')
+        object['id'] = object['_id']
+      end
+      object = object.except('_id')
+    end
+
+    json_array << object.to_json
   end
 
   json_array

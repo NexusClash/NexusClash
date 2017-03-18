@@ -1,3 +1,7 @@
 [
-{"daytime_inside_message":"Ample sunlight streams through openings in the building around you.","daytime_outside_message":"The sun shines down brightly all around you.","domain":"localhost","name":"Harriston Heights","nighttime_inside_message":"The room around you is dimly lit. Shadows obscure your vision.","nighttime_outside_message":"The weak moon is mostly covered by thick clouds. The little light that pokes through is fleeting at best.","plane":1,"token":null,"ws_port":null}
+{"daytime_inside_message":null,"daytime_outside_message":null,"domain":"clash.windrunner.mx","name":"Valhalla","nighttime_inside_message":null,"nighttime_outside_message":null,"plane":1,"token":null,"ws_port":null},
+{"daytime_inside_message":null,"daytime_outside_message":null,"domain":"laurentia.windrunner.mx","name":"Laurentia","nighttime_inside_message":null,"nighttime_outside_message":null,"plane":2,"token":null,"ws_port":null},
+{"daytime_inside_message":null,"daytime_outside_message":null,"domain":"alpha.nexuscla.sh","name":"Alphaville","nighttime_inside_message":null,"nighttime_outside_message":null,"plane":null,"token":null,"ws_port":null},
+{"daytime_inside_message":null,"daytime_outside_message":null,"domain":"alpha.nexuscla.sh","name":"Harriston Heights","nighttime_inside_message":null,"nighttime_outside_message":null,"plane":3,"token":null,"ws_port":null},
+{"daytime_inside_message":null,"daytime_outside_message":null,"domain":"localhost","name":"Biodome","nighttime_inside_message":null,"nighttime_outside_message":null,"plane":4,"token":null,"ws_port":null}
 ]
