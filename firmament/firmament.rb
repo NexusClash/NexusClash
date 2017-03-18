@@ -171,6 +171,14 @@ module Firmament
 			0 == Time.now.hour % 2
 		end
 
+		def time_of_day_message(inside)
+			if is_day?
+				inside ? @plane.daytime_inside_message : @plane.daytime_outside_message
+			else
+				inside ? @plane.nighttime_inside_message : @plane.nighttime_outside_message
+			end
+		end
+
 		def self.fetch(name)
 			return @@planes.fetch(name.to_i, nil)
 		end

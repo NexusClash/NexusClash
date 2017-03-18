@@ -97,10 +97,27 @@ module Entity
 			true
 		end
 
+		def inside_tile
+			1 == self.z
+		end
+
+		def custom_time_of_day_message
+			current_plane = Firmament::Plane.fetch(self.plane)
+
+			if current_plane.is_day?
+				self.inside_tile ? self.type.daytime_inside_message : self.type.daytime_outside_message
+			else
+				self.inside_tile ? self.type.nighttime_inside_message : self.type.nighttime_outside_message
+			end
+		end
+
 		def to_h
 			current_plane = Firmament::Plane.fetch(self.plane)
 
-			{name: self.name, type: self.type.name, type_id: self.type_id, description: self.description, colour: self.colour, x: self.x, y: self.y, z: self.z, plane: self.plane, occupants: self.visible_character_count, is_day: current_plane.is_day?}
+			time_of_day_message = custom_time_of_day_message || current_plane.time_of_day_message(self.inside_tile)
+			description = self.description + " " + time_of_day_message
+
+			{name: self.name, type: self.type.name, type_id: self.type_id, description: description, colour: self.colour, x: self.x, y: self.y, z: self.z, plane: self.plane, occupants: self.visible_character_count, is_day: current_plane.is_day?}
 		end
 
 		after_initialize do |document|

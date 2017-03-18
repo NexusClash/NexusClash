@@ -20,6 +20,11 @@ module Entity
 
 		field :statuses, type: Array, default: []
 
+		field :daytime_inside_message, type: String
+		field :daytime_outside_message, type: String
+		field :nighttime_inside_message, type: String
+		field :nighttime_outside_message, type: String
+
 		@@types = ThreadSafe::Cache.new do |hash, typeident|
 			if Entity::TileType.where({tile_type_id: typeident}).exists? then
 				eff = Entity::TileType.find_by({tile_type_id: typeident})
