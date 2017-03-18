@@ -14,5 +14,22 @@ unless ENV['RACK_ENV'] == 'production'
       end
       puts
     end
+
+    desc 'Restores the database from backup'
+    task :restore do
+      sh "mongorestore db/full_backup"
+    end
+  end
+end
+
+namespace :db do
+  desc 'Back up the database'
+  task :backup do
+    sh "mongodump --db nexusdash --out db/full_backup"
+  end
+
+  desc 'Remove the database backups'
+  task :clear_backups do
+    FileUtils.rm_rf(Dir.pwd + '/db/full_backup')
   end
 end

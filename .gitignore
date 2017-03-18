@@ -2,3 +2,5 @@
 basic-cocomo-report*.txt
 .idea
 /datatables
+
+db/full_backup
