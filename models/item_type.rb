@@ -12,9 +12,13 @@ module Entity
 		field :name, type: String
 		field :category, type: Symbol
 		field :weight, type: Integer, default: 0
-		field :giveable?, type: Boolean, default: true
 
 		field :statuses, type: Array, default: []
+
+		def initialize(attrs = nil)
+			super
+			self.giveable = true if self.new_record?
+		end
 
 		@@types = ThreadSafe::Cache.new do |hash, typeident|
 			if Entity::ItemType.where({id: typeident}).exists? then
@@ -34,8 +38,15 @@ module Entity
 			end
 		end
 
-		after_find do |document|
-			(statuses << Effect::Giveable.status_type_id) if giveable? && !statuses.include?(Effect::Giveable.status_type_id)
+		def giveable?
+			self.statuses.include?(Effect::Giveable.status_type_id)
+		end
+		def giveable=(value)
+			if value
+				self.statuses << Effect::Giveable.status_type_id unless self.statuses.include?(Effect::Giveable.status_type_id)
+			else
+				self.statuses.delete(Effect::Giveable.status_type_id)
+			end
 		end
 
 		def self.load_types
