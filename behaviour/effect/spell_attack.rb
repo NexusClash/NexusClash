@@ -58,6 +58,15 @@ module Effect
 				intent.debug "total after dropping a #{lowest_die}: #{rolls.sum}"
 			end
 			intent.damage = rolls.sum
+			apply_special_effects(intent)
+		end
+
+		def apply_special_effects(intent)
+			status_roll = 1 #rand(1..100)
+			is_success = status_roll <= special_effect_chance_from_damage_type
+			intent.debug "status roll was #{status_roll} needed #{special_effect_chance_from_damage_type}. roll was #{is_success ? '' : 'un'}successful"
+			return unless is_success
+			special_effect_status_from_damage_type(intent)
 		end
 
 		def describe
@@ -74,7 +83,7 @@ module Effect
 
 		def spell_category_from_damage_type
 			case @damage_type
-				when /(impact|piercing|slashing)/ then :mundage
+				when /(impact|piercing|slashing)/ then :mundane
 				when /(fire|cold|electric)/ then :elemental
 				when /(acid|radiant|necrotic)/ then :exotic
 			end
@@ -82,7 +91,7 @@ module Effect
 
 		def mp_cost_from_spell_category
 			case @spell_category
-				when :mundage then 1
+				when :mundane then 1
 				when :elemental then 2
 				when :exotic then 3
 			end
@@ -90,10 +99,37 @@ module Effect
 
 		def damage_formula_from_spell_category
 			case @spell_category
-				when :mundage then "2d4"
+				when :mundane then "2d4"
 				when :elemental then "2d5"
 				when :exotic then "2d5"
 			end
+		end
+
+		def special_effect_chance_from_damage_type
+			case @damage_type.to_sym
+				when :impact then 10
+				when :piercing then 5
+				when :slashing then 20
+				when :fire then 10
+				when :cold then 10
+				when :electric then 15
+			end
+		end
+
+		def special_effect_status_from_damage_type(intent)
+			# victim = intent.target
+			case @damage_type.to_sym
+				when :impact then intent.debug("double damage vs. forts is not implemented")
+				when :piercing then intent.debug("bleeding is not implemented") #add_status(victim, 192)
+				when :slashing then intent.damage += 4
+				when :fire then intent.debug("burning is not implemented") # add_status(victim, 191)
+				when :cold then intent.debug("freezing is not implemented") # add_status(victim, 193)
+				when :electric then intent.debug("double damage vs. forts is not implemented")
+			end
+		end
+
+		def add_status victim, status_type_id
+			victim.statuses << Entity::Status.source_from(status_type_id)
 		end
 	end
 end

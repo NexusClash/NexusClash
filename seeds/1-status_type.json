@@ -188,5 +188,8 @@
 {"activation":"standard","family":"magical","id":187,"impacts":[["SpellAttackFromScroll","piercing"]],"name":"Quillfire"},
 {"activation":"standard","family":"magical","id":188,"impacts":[["SpellAttackFromScroll","acid"]],"name":"Acid Bolt"},
 {"activation":"standard","family":"magical","id":189,"impacts":[["SpellAttackFromScroll","radiant"]],"name":"Radiant Bolt"},
-{"activation":"standard","family":"magical","id":190,"impacts":[["SpellAttackFromScroll","necrotic"]],"name":"Necrotic Bolt"}
+{"activation":"standard","family":"magical","id":190,"impacts":[["SpellAttackFromScroll","necrotic"]],"name":"Necrotic Bolt"},
+{"activation":"standard","family":"mundane","id":191,"impacts":[["HealingOnTick","status",-3],["Duration",4,"minute"]],"name":"On fire"},
+{"activation":"standard","family":"mundane","id":192,"impacts":[["HealingOnTick","status",-3],["Duration",5,"minute"]],"name":"Bleeding"},
+{"activation":"standard","family":"mundane","id":193,"impacts":[["Defence",null,{"cold":-2},{},{},"bonus"],["Duration",5,"status"]],"name":"Chilled"}
 ]
