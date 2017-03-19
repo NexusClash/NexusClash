@@ -1,6 +1,7 @@
 [
 {"id": "58a70cef0cc47d7118000001", "username": "bob", "password": "jorm", "roles": []},
-{"id": "5bfbf3dad271bf9eaf9055af", "username": "test1", "password": "jorm", "roles": []},
-{"id": "9e8f1f3f89a12d815f3948ff", "username": "test2", "password": "jorm", "roles": []},
-{"id": "c7d4fed93c3ff479023f1d0d", "username": "test3", "password": "jorm", "roles": []}
+{"id": "d0a7ef763920b283c15cb326", "username": "test1", "password": "jorm", "roles": []},
+{"id": "5bfbf3dad271bf9eaf9055af", "username": "test2", "password": "jorm", "roles": []},
+{"id": "9e8f1f3f89a12d815f3948ff", "username": "test3", "password": "jorm", "roles": []},
+{"id": "c7d4fed93c3ff479023f1d0d", "username": "test4", "password": "jorm", "roles": []}
 ]
