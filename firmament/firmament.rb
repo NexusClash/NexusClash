@@ -77,7 +77,8 @@ module Firmament
 				end
 			end
 
-			@scheduler.every '15m', :blocking => true do
+			@scheduler.every Instance.save_schedule, :blocking => true do
+				puts "Saving state"
 				save
 			end
 

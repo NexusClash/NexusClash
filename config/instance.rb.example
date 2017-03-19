@@ -18,6 +18,10 @@ class Instance
 		true
 	end
 
+	def self.save_schedule
+		'15m'
+	end
+
 	def self.endpoint
 		"ws://#{self.domain}:#{self.port}/42"
 	end
