@@ -1,7 +1,7 @@
 [
-{ "name": "Bob Q. Generic", "hp": 50, "ap": 100, "mp": 20, "xp": 0, "level": 10, "mo": 0, "cp": 1000, "x": 1, "y": 1, "z": 0, "plane": 1, "visibility": 0, "gender": 0, "account_id": "58a70cef0cc47d7118000001"},
-{ "name": "Ivanova", "hp": 23, "ap": 55, "mp": 20, "xp": 0, "level": 2, "mo": 0, "cp": 24, "x": 4, "y": 1, "z": 0, "plane": 1, "visibility": 0, "gender": 0, "account_id": "58a70cef0cc47d7118000001"},
-{ "name": "Raskolnikov", "hp": 45, "ap": 111, "mp": 20, "xp": 0, "level": 1, "mo": 0, "cp": 55, "x": 5, "y": 3, "z": 0, "plane": 1, "visibility": 0, "gender": 0, "account_id": "5bfbf3dad271bf9eaf9055af"},
-{ "name": "Fyodor", "hp": 17, "ap": 17, "mp": 20, "xp": 0, "level": 3, "mo": 0, "cp": 39, "x": 1, "y": 6, "z": 1, "plane": 1, "visibility": 0, "gender": 0, "account_id": "9e8f1f3f89a12d815f3948ff"},
+{ "name": "Raskolnikov", "hp": 50, "ap": 100, "mp": 20, "xp": 0, "level": 12, "mo": 0, "cp": 1000, "x": 1, "y": 1, "z": 0, "plane": 1, "visibility": 0, "gender": 0, "account_id": "58a70cef0cc47d7118000001"},
+{ "name": "Avdotya", "hp": 47, "ap": 55, "mp": 20, "xp": 0, "level": 11, "mo": 0, "cp": 24, "x": 4, "y": 1, "z": 0, "plane": 1, "visibility": 0, "gender": 0, "account_id": "58a70cef0cc47d7118000001"},
+{ "name": "Porfiry", "hp": 45, "ap": 111, "mp": 20, "xp": 0, "level": 10, "mo": 0, "cp": 55, "x": 5, "y": 3, "z": 0, "plane": 1, "visibility": 0, "gender": 0, "account_id": "5bfbf3dad271bf9eaf9055af"},
+{ "name": "Sofya", "hp": 17, "ap": 17, "mp": 20, "xp": 0, "level": 3, "mo": 0, "cp": 39, "x": 1, "y": 6, "z": 1, "plane": 1, "visibility": 0, "gender": 0, "account_id": "9e8f1f3f89a12d815f3948ff"},
 { "name": "Dmitri", "hp": 2, "ap": 56, "mp": 20, "xp": 0, "level": 1, "mo": 0, "cp": 7, "x": 5, "y": 6, "z": 0, "plane": 1, "visibility": 0, "gender": 0, "account_id": "c7d4fed93c3ff479023f1d0d"}
 ]

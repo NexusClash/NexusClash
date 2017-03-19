@@ -68,5 +68,56 @@ unless ENV['RACK_ENV'] == 'production'
       character.save
       puts "Gave #{character.name} one #{item.name}."
     end
+
+    desc "Make a character moral"
+    task :moralize, [:char_id] => :environment do |t, args|
+      character = Entity::Character.find(args.char_id.to_i)
+      character.mo = 400
+      character.save
+      puts "Made #{character.name} a paragon of virtue."
+    end
+
+    desc "Make a character immoral"
+    task :immoralize, [:char_id] => :environment do |t, args|
+      character = Entity::Character.find(args.char_id.to_i)
+      character.mo = -400
+      character.save
+      puts "Made #{character.name} a traitorous wretch."
+    end
+
+    desc "Assign a class to a character"
+    task :classify, [:char_id, :classname] => :environment do |t, args|
+      character = Entity::Character.find(args.char_id.to_i)
+      type = Entity::StatusType.find_by({:family => :class, :name => args.classname})
+      status = Entity::Status.source_from(type.id)
+      character.statuses << status
+      character.save
+      puts "Granted #{character.name} the #{args.classname} class."
+    end
+
+    desc "Assign all base-level skills from the (applicable) skill tree to a character"
+    task :skillize, [:char_id] => :environment do |t, args|
+      character = Entity::Character.find(args.char_id.to_i)
+
+      class_names = character.nexus_classes.map {|s| s.name}
+      class_types = character.nexus_classes.map {|s| s.type.id}
+
+      # TODO: instead use the skill_tree(true) on character and loop over that tree
+      added_skills = 0
+      skills = Entity::StatusType.where({:family => 'skill'})
+      skills.each do |skill|
+        skill.impacts.each do |impact|
+          if impact[0] == "SkillPrerequisite" and class_types.include?(impact[1])
+            status = Entity::Status.source_from(skill.id)
+            character.statuses << status
+            added_skills += 1
+          end
+        end
+      end
+
+      character.save
+
+      puts "Granted #{character.name} #{added_skills} skills from #{class_names.join(', ')} classes."
+    end
   end
 end
