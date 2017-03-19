@@ -19,6 +19,7 @@ module Effect
           item = scroll
           unless item.nil?
             item.despawn
+						intent.append_message "Your scroll has been consumed."
             return
           end
           puts 'Failed to consume the scroll!!!'

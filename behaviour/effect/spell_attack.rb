@@ -113,6 +113,7 @@ module Effect
 				when :fire then 10
 				when :cold then 10
 				when :electric then 15
+				else 0
 			end
 		end
 
