@@ -185,5 +185,8 @@
 {"activation":"standard","family":"magical","id":184,"impacts":[["SpellAttackFromScroll","electric"]],"name":"Electric Bolt"},
 {"activation":"standard","family":"magical","id":185,"impacts":[["SpellAttackFromScroll","impact"]],"name":"The Crushing"},
 {"activation":"standard","family":"magical","id":186,"impacts":[["SpellAttackFromScroll","slashing"]],"name":"Thousand Razors"},
-{"activation":"standard","family":"magical","id":187,"impacts":[["SpellAttackFromScroll","piercing"]],"name":"Quillfire"}
+{"activation":"standard","family":"magical","id":187,"impacts":[["SpellAttackFromScroll","piercing"]],"name":"Quillfire"},
+{"activation":"standard","family":"magical","id":188,"impacts":[["SpellAttackFromScroll","acid"]],"name":"Acid Bolt"},
+{"activation":"standard","family":"magical","id":189,"impacts":[["SpellAttackFromScroll","radiant"]],"name":"Radiant Bolt"},
+{"activation":"standard","family":"magical","id":190,"impacts":[["SpellAttackFromScroll","necrotic"]],"name":"Necrotic Bolt"}
 ]

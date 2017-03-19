@@ -101,5 +101,8 @@
 {"category":"weapon","id":668,"name":"Scroll of Lightnight Bolt","statuses":["177","184"],"weight":1},
 {"category":"weapon","id":669,"name":"Scroll of The Crushing","statuses":["177","185"],"weight":1},
 {"category":"weapon","id":670,"name":"Scroll of Thousand Razors","statuses":["177","186"],"weight":1},
-{"category":"weapon","id":671,"name":"Scroll of Quillfire","statuses":["177","187"],"weight":1}
+{"category":"weapon","id":671,"name":"Scroll of Quillfire","statuses":["177","187"],"weight":1},
+{"category":"weapon","id":672,"name":"Scroll of Acid Bolt","statuses":["177","188"],"weight":1},
+{"category":"weapon","id":673,"name":"Scroll of Radiant Bolt","statuses":["177","189"],"weight":1},
+{"category":"weapon","id":674,"name":"Scroll of Necrotic Bolt","statuses":["177","190"],"weight":1}
 ]
