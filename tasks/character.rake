@@ -25,6 +25,7 @@ unless ENV['RACK_ENV'] == 'production'
       end
 
       character.save
+      puts "Gave #{character.name} all the skills."
     end
 
     desc "Grant a specific skill to the specified character"
@@ -35,6 +36,7 @@ unless ENV['RACK_ENV'] == 'production'
       character.statuses << status
 
       character.save
+      puts "Granted #{character.name} the status #{status.name}."
     end
 
     desc "Grant one of each applicable item to the specified character"
@@ -53,6 +55,7 @@ unless ENV['RACK_ENV'] == 'production'
       character.statuses << status
 
       character.save
+      puts "Gave #{character.name} one of each item type (and super strength)."
     end
 
     desc "Grant one specific item to the specified character"
@@ -63,6 +66,7 @@ unless ENV['RACK_ENV'] == 'production'
       character.items << item
 
       character.save
+      puts "Gave #{character.name} one #{item.name}."
     end
   end
 end

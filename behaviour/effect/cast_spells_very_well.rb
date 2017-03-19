@@ -1,5 +1,5 @@
 module Effect
-	class CastSpellsWell
+	class CastSpellsVeryWell
 
 		attr_reader :parent
 
@@ -12,15 +12,15 @@ module Effect
 			character = @parent
 			character = @parent.stateful if character.is_a? Entity::Status
 			character = @parent.carrier if character.is_a? Entity::Item
-			character.casts_at_normal_damage = true if character.respond_to? :casts_at_normal_damage=
+			character.casts_with_bonus_damage = true if character.respond_to? :casts_with_bonus_damage=
 		end
 
 		def describe
-			'Combat spells no longer roll an extra die and drop highest.'
+			'Combat spells roll an extra die and drop the lowest.'
 		end
 
 		def save_state
-			['CastSpellsWell']
+			['CastSpellsVeryWell']
 		end
 	end
 end

@@ -17,11 +17,12 @@ module Effect
 			@armour_pierce = 0
 			@damage = 0
 			@damage_type = damage_type
-			@family = family_from_damage_type
+			@family = :magical
+			@spell_category = spell_category_from_damage_type
 
 			# family-based attributes:
-			@damage_formula = damage_formula_from_family
-			@mp_cost = mp_cost_from_family
+			@damage_formula = damage_formula_from_spell_category
+			@mp_cost = mp_cost_from_spell_category
 			@costs = {mp: @mp_cost}
 		end
 
@@ -39,8 +40,9 @@ module Effect
 		def roll_spell_damage(action, intent)
 			return self.possible?(intent) if action == :possible?
 			casts_at_penalty = !intent.entity.casts_at_normal_damage
+			casts_with_bonus = intent.entity.casts_with_bonus_damage
 			dice, sides = @damage_formula.split('d').map(&:strip).map(&:to_i)
-			dice += 1 if casts_at_penalty
+			dice += 1 if casts_at_penalty or casts_with_bonus
 
 			rolls = self.roll(dice, sides)
 			intent.debug "rolled #{rolls.join ', '}"
@@ -49,6 +51,11 @@ module Effect
 				highest_die = rolls.max
 				rolls.delete_at(rolls.find_index(highest_die))
 				intent.debug "total after dropping a #{highest_die}: #{rolls.sum}"
+			end
+			if casts_with_bonus
+				lowest_die = rolls.min
+				rolls.delete_at(rolls.find_index(lowest_die))
+				intent.debug "total after dropping a #{lowest_die}: #{rolls.sum}"
 			end
 			intent.damage = rolls.sum
 		end
@@ -65,7 +72,7 @@ module Effect
 			dice.times.map{1 + rand(sides)}
 		end
 
-		def family_from_damage_type
+		def spell_category_from_damage_type
 			case @damage_type
 				when /(impact|piercing|slashing)/ then :mundage
 				when /(fire|cold|electric)/ then :elemental
@@ -73,16 +80,16 @@ module Effect
 			end
 		end
 
-		def mp_cost_from_family
-			case @family
+		def mp_cost_from_spell_category
+			case @spell_category
 				when :mundage then 1
 				when :elemental then 2
 				when :exotic then 3
 			end
 		end
 
-		def damage_formula_from_family
-			case @family
+		def damage_formula_from_spell_category
+			case @spell_category
 				when :mundage then "2d4"
 				when :elemental then "2d5"
 				when :exotic then "2d5"

@@ -33,6 +33,7 @@ module Entity
 		attr_accessor :sense_health
 		attr_accessor :cast_spells
 		attr_accessor :casts_at_normal_damage
+		attr_accessor :casts_with_bonus_damage
 		attr_accessor :sense_magic
 		attr_accessor :sense_morality
 		attr_accessor :weight_max
