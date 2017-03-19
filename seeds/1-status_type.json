@@ -180,5 +180,10 @@
 {"activation":"standard","family":"magical","id":179,"impacts":[["SpellAttackFromScroll","fire"]],"name":"Flame Bolt"},
 {"activation":"standard","family":"skill","id":180,"impacts":[["SkillPrerequisite",1],["SkillPurchasable",20],["CastSpellsWell"]],"name":"Combat Casting"},
 {"activation":"standard","family":"skill","id":181,"impacts":[["SkillPrerequisite",9999],["IncreaseMaxEncumbrance",999]],"name":"Super Strength"},
-{"activation":"standard","family":"skill","id":182,"impacts":[["SkillPrerequisite",180],["SkillPurchasable",40],["CastSpellsVeryWell"]],"name":"Advanced Combat Casting"}
+{"activation":"standard","family":"skill","id":182,"impacts":[["SkillPrerequisite",180],["SkillPurchasable",40],["CastSpellsVeryWell"]],"name":"Advanced Combat Casting"},
+{"activation":"standard","family":"magical","id":183,"impacts":[["SpellAttackFromScroll","cold"]],"name":"Ice Bolt"},
+{"activation":"standard","family":"magical","id":184,"impacts":[["SpellAttackFromScroll","electric"]],"name":"Electric Bolt"},
+{"activation":"standard","family":"magical","id":185,"impacts":[["SpellAttackFromScroll","impact"]],"name":"The Crushing"},
+{"activation":"standard","family":"magical","id":186,"impacts":[["SpellAttackFromScroll","slashing"]],"name":"Thousand Razors"},
+{"activation":"standard","family":"magical","id":187,"impacts":[["SpellAttackFromScroll","piercing"]],"name":"Quillfire"}
 ]
