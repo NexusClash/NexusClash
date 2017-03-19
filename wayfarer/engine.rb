@@ -131,7 +131,7 @@ module Wayfarer
 				weaps_hash = Hash.new
 				weaps = character.weaponry
 				weaps.keys.each do |weapi|
-					weaps_hash[weapi] = weaps[weapi].to_hash
+					weaps_hash[weapi] = weaps[weapi].to_hash if weaps[weapi].possible?
 				end
 				output[:attacks] = weaps_hash
 			end

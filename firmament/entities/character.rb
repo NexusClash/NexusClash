@@ -297,10 +297,8 @@ module Entity
 					end
 				end
 			end
-
 			if all
 				unassigned = Array.new
-
 				Entity::StatusType.skills.each do |skill|
 					if skill.family == :skill
 						instance_skill = Entity::Status.source_from(skill.id)
@@ -324,7 +322,6 @@ module Entity
 						end
 					end
 				end
-
 				old_quantity = 0
 				while old_quantity != unassigned.count do
 					old_quantity = unassigned.count
@@ -337,11 +334,6 @@ module Entity
 					end
 				end
 			end
-
-
-
-
-
 			root = [root] unless root.is_a? Array
 			return root
 		end
