@@ -44,7 +44,7 @@ def buildDataFromFolder(folder)
         entity.send "#{property}=", seed[property]
 			end
 
-      entity.plane = Instance.plane if entity.respond_to? 'plane=' unless klass == 'Plane'
+      entity.plane = Instance.plane if entity.respond_to? 'plane=' and klass == 'Character'
 			entity.save
 		end
 		puts " Done. (seeded #{seeds.count} records)"
