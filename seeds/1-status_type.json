@@ -177,7 +177,7 @@
 {"activation":"standard","family":"mundane","id":176,"impacts":[["ExplosiveMurderManualActivation",{"ap":1,"mp":8},"Explosive Murder"],["ExplosiveMurder",50,50,3]],"name":"Location Based Explosive Murder"},
 {"activation":"standard","family":"mundane","id":177,"impacts":[["Giveable"]],"name":"Giveability"},
 {"activation":"standard","family":"skill","id":178,"impacts":[["SkillPrerequisite",1],["SkillPurchasable",10],["CastSpells"]],"name":"Read Magic"},
-{"activation":"standard","family":"magical","id":179,"impacts":[["SpellAttack","fire"]],"name":"Flame Bolt"},
+{"activation":"standard","family":"magical","id":179,"impacts":[["SpellAttackFromScroll","fire"]],"name":"Flame Bolt"},
 {"activation":"standard","family":"skill","id":180,"impacts":[["SkillPrerequisite",1],["SkillPurchasable",20],["CastSpellsWell"]],"name":"Combat Casting"},
 {"activation":"standard","family":"skill","id":181,"impacts":[["SkillPrerequisite",9999],["IncreaseMaxEncumbrance",999]],"name":"Super Strength"}
 ]
