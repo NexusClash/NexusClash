@@ -11,6 +11,7 @@ unless ENV['RACK_ENV'] == 'production'
 
       # Harrison Heights has too much void.
       Rake::Task["character:kill_them_all"].invoke if Instance.plane == 3
+      Rake::Task["character:resurrect_all"].invoke if Instance.plane == 3
     end
 
     desc 'Build seed files from database'

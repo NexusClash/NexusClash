@@ -11,6 +11,26 @@ unless ENV['RACK_ENV'] == 'production'
     		character.plane = Instance.plane
     		character.save
     	end
+
+      puts "Killed all characters in the plane"
+    end
+
+    desc "Resurrects all characters"
+    task :resurrect_all => :environment do
+    	firmament = Firmament::Plane.new Instance.plane
+    	Entity::Character.all.each do |character|
+        if character.hp <= 0
+          character.hp = rand(character.hp_max)
+      		character.x = rand(12...15)
+      		character.y = rand(10...16)
+      		character.z = 0
+          character.save
+        end
+    	end
+
+      firmament.save
+
+      puts "Resurrected all characters in the plane"
     end
 
     desc "Grant all applicable skills to the specified character"
