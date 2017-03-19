@@ -10,7 +10,7 @@ unless ENV['RACK_ENV'] == 'production'
       buildDataFromFolder("fixtures")
 
       # Harrison Heights has too much void.
-      Rake::Task["danger:kill_them_all"].invoke if Instance.plane == 3
+      Rake::Task["character:kill_them_all"].invoke if Instance.plane == 3
     end
 
     desc 'Build seed files from database'
