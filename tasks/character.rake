@@ -27,6 +27,16 @@ unless ENV['RACK_ENV'] == 'production'
       character.save
     end
 
+    desc "Grant a specific skill to the specified character"
+    task :grant, [:char_id, :type_id] => :environment do |t, args|
+      character = Entity::Character.find(args.char_id.to_i)
+
+      status = Entity::Status.source_from(args.type_id.to_i)
+      character.statuses << status
+
+      character.save
+    end
+
     desc "Grant one of each applicable item to the specified character"
     task :endow, [:char_id] => :environment do |t, args|
       character = Entity::Character.find(args.char_id.to_i)
@@ -41,6 +51,16 @@ unless ENV['RACK_ENV'] == 'production'
       status_type = Entity::StatusType.find_by({:name => 'Super Strength'})
       status = Entity::Status.source_from(status_type.id)
       character.statuses << status
+
+      character.save
+    end
+
+    desc "Grant one specific item to the specified character"
+    task :give, [:char_id, :type_id] => :environment do |t, args|
+      character = Entity::Character.find(args.char_id.to_i)
+
+      item = Entity::Item.source_from(args.type_id.to_i)
+      character.items << item
 
       character.save
     end
