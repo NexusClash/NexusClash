@@ -95,5 +95,6 @@
 {"category":"food","id":94,"name":"Can of Beans","statuses":["158",{"$oid":"58cdb9e7520a436935000000"},"177"],"weight":1},
 {"category":"food","id":95,"name":"Can of Chicken Soup","statuses":["158",{"$oid":"58cdb9e7520a436935000000"},"177"],"weight":1},
 {"category":"food","id":96,"name":"Can of chili con carne","statuses":["158",{"$oid":"58cdb9e7520a436935000000"},"177"],"weight":1},
-{"category":"mundane","id":97,"name":"Dusty Old Tome","statuses":["163",{"$oid":"58cdb9e7520a436935000000"},"177"],"weight":2}
+{"category":"mundane","id":97,"name":"Dusty Old Tome","statuses":["163",{"$oid":"58cdb9e7520a436935000000"},"177"],"weight":2},
+{"category":"weapon","id":666,"name":"Scroll of Flame Bolt","statuses":["177","179"],"weight":1}
 ]
