@@ -136,7 +136,7 @@ class Voyager < Expedition
 								next if action['name'] == ''
 								option = $document.at_css("#target_information #action_attack option[value='#{action_id}']")
 								unless option === nil
-									option.inner_html = "#{action['name']} - #{action['damage_description']} #{action['damage_type']} @ #{action['hit_chance']}%"
+									option.inner_html = "#{action['name']} - #{action['damage']} #{action['damage_type']} @ #{action['hit_chance']}%"
 								end
 							end
 						else
@@ -157,7 +157,7 @@ class Voyager < Expedition
 								next if action['name'] == ''
 								weap_index = weapi if oldweap == action_id
 								weapi += 1
-								html = html + "<option value='#{action_id}'>#{action['name']} - #{action['damage_description']} #{action['damage_type']} @ #{action['hit_chance']}%</option>"
+								html = html + "<option value='#{action_id}'>#{action['name']} - #{action['damage']} #{action['damage_type']} @ #{action['hit_chance']}%</option>"
 							end
 							html = html + '</select></li>'
 							$document.at_css('#target_information .attacks').inner_html = html

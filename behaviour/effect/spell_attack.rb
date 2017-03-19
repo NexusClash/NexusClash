@@ -15,6 +15,7 @@ module Effect
 			@name = parent.name
 			@hit_chance = 100
 			@armour_pierce = 0
+			@damage = 0
 			@damage_type = damage_type
 			@family = family_from_damage_type
 
@@ -27,7 +28,7 @@ module Effect
 		def weapon_intent(intent)
 			intent.weapon = self
 			intent.add_cost :spell_damage, self.method(:roll_spell_damage)
-			intent.damage = @damage_formula # will be set to numeric value during roll
+			intent.damage_description = @damage_formula
 			return intent
 		end
 
@@ -57,7 +58,7 @@ module Effect
 		end
 
 		def save_state
-			['SpellAttack', @family, @damage_type]
+			['SpellAttack', @damage_type]
 		end
 
 		def roll dice, sides

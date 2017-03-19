@@ -123,15 +123,15 @@ module Intent
 		end
 
 		def damage_description
-			@damage.to_s
+			@damage_description || @damage.to_s
 		end
 
-		def hit_chance_description
-			@hit_chance.to_s
+		def damage_description=(value)
+			@damage_description = value
 		end
 
 		def to_hash
-			{name: @weapon.name, hit_chance: hit_chance_description, damage: damage_description, damage_type: @damage_type}
+			{name: @weapon.name, hit_chance: hit_chance, damage: damage_description, damage_type: @damage_type}
 		end
 
 	end
