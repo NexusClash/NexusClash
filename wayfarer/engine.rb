@@ -427,14 +427,14 @@ module Wayfarer
 			uses = character.activated_uses_target @target
 			if uses.has_key? json['status_id'].to_i
 				uses[json['status_id'].to_i].realise
-				select_target({}, [:abilities])
+				select_target({})
 			else
 
 				character.items.each do |item|
 					uses = item.activated_uses_target @target
 					if uses.has_key? json['status_id'].to_i
 						uses[json['status_id'].to_i].realise
-						select_target({}, [:abilities])
+						select_target({})
 						return
 					end
 				end
