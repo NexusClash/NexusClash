@@ -5,3 +5,5 @@ basic-cocomo-report*.txt
 
 db/full_backup
 db/temp
+
+.rake_tasks~
