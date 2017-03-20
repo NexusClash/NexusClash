@@ -37,6 +37,11 @@ module Effect
 			@possible ||= intent.entity.cast_spells
 		end
 
+		# to allow override to use super
+		def name
+			@name
+		end
+
 		def roll_spell_damage(action, intent)
 			return self.possible?(intent) if action == :possible?
 			casts_at_penalty = !intent.entity.casts_at_normal_damage
@@ -48,11 +53,13 @@ module Effect
 			intent.debug "rolled #{rolls.join ', '}"
 
 			if casts_at_penalty
+				intent.append_message(" Your effectiveness is somewhat limited by your lack of skill.")
 				highest_die = rolls.max
 				rolls.delete_at(rolls.find_index(highest_die))
 				intent.debug "total after dropping a #{highest_die}: #{rolls.sum}"
 			end
 			if casts_with_bonus
+				intent.append_message(" Your effectiveness is somewhat enahnced by your exceptional skill.")
 				lowest_die = rolls.min
 				rolls.delete_at(rolls.find_index(lowest_die))
 				intent.debug "total after dropping a #{lowest_die}: #{rolls.sum}"
@@ -101,7 +108,7 @@ module Effect
 			case @spell_category
 				when :mundane then "2d4"
 				when :elemental then "2d5"
-				when :exotic then "2d5"
+				when :exotic then "2d6"
 			end
 		end
 
@@ -118,15 +125,33 @@ module Effect
 		end
 
 		def special_effect_status_from_damage_type(intent)
-			# victim = intent.target
-			case @damage_type.to_sym
-				when :impact then intent.debug("double damage vs. forts is not implemented")
-				when :piercing then intent.debug("bleeding is not implemented") #add_status(victim, 192)
-				when :slashing then intent.damage += 4
-				when :fire then intent.debug("burning is not implemented") # add_status(victim, 191)
-				when :cold then intent.debug("freezing is not implemented") # add_status(victim, 193)
-				when :electric then intent.debug("double damage vs. forts is not implemented")
-			end
+			method_to_call = "apply_#{@damage_type}_special_effect"
+			self.send(method_to_call, intent) if self.respond_to?(method_to_call)
+		end
+
+		def	apply_impact_special_effect(intent)
+			intent.debug("double damage vs. forts is not implemented")
+		end
+
+		def	apply_piercing_special_effect(intent)
+			intent.debug("bleeding is not implemented") #add_status(victim, 192)
+		end
+
+		def	apply_slashing_special_effect(intent)
+			intent.damage += 4
+			intent.append_message(" #{intent.target.name} was extraordinarily flayed in this attack.")
+		end
+
+		def	apply_fire_special_effect(intent)
+			intent.debug("burning is not implemented") # add_status(victim, 191)
+		end
+
+		def	apply_cold_special_effect(intent)
+			intent.debug("freezing is not implemented") # add_status(victim, 193)
+		end
+
+		def	apply_electric_special_effect(intent)
+			intent.debug("double damage vs. forts is not implemented")
 		end
 
 		def add_status victim, status_type_id

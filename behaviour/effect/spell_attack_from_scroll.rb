@@ -34,6 +34,10 @@ module Effect
       scroll
     end
 
+		def name
+			return @name ||= 'Scroll of ' + super
+		end
+
 		def describe
       super + " (This consumes the scroll)"
 		end
