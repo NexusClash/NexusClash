@@ -16,7 +16,7 @@ module Effect
 			@hit_chance = 100
 			@armour_pierce = 0
 			@damage = 0
-			@damage_type = damage_type
+			@damage_type = damage_type.downcase
 			@family = :magical
 			@spell_category = spell_category_from_damage_type
 
