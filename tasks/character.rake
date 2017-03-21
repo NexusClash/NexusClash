@@ -33,6 +33,20 @@ unless ENV['RACK_ENV'] == 'production'
       puts "Resurrected all characters in the plane"
     end
 
+    desc "Restores characters to maximum hp, ap, and mp"
+    task :top_up => :environment do
+    	firmament = Firmament::Plane.new Instance.plane
+    	Entity::Character.all.each do |character|
+        character.hp = character.hp_max
+        character.ap = character.ap_max
+        character.mp = character.mp_max
+        character.save
+    	end
+      firmament.save
+
+      puts "All characters topped up to max hp, ap, and mp"
+    end
+
     desc "Grant all applicable skills to the specified character"
     task :deify, [:char_id] => :environment do |t, args|
       character = Entity::Character.find(args.char_id.to_i)
