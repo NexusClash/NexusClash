@@ -79,14 +79,19 @@ unless ENV['RACK_ENV'] == 'production'
     end
 
     desc "Grant one specific item to the specified character"
-    task :give, [:char_id, :type_id] => :environment do |t, args|
+    task :give, [:char_id, :type_id, :quantity] => :environment do |t, args|
       character = Entity::Character.find(args.char_id.to_i)
 
-      item = Entity::Item.source_from(args.type_id.to_i)
-      character.items << item
+      item_type = Entity::ItemType.find(args.type_id.to_i)
+
+      quantity = args.quantity || 1
+      quantity.to_i.times do
+        item = Entity::Item.source_from(args.type_id.to_i)
+        character.items << item
+      end
 
       character.save
-      puts "Gave #{character.name} one #{item.name}."
+      puts "Gave #{character.name} #{quantity} #{item_type.name}."
     end
 
     desc "Make a character moral"

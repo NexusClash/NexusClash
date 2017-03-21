@@ -10,6 +10,8 @@ To get set up as a developer,
  * follow the rvm install instructions here: https://rvm.io/rvm/install
  * install ruby with `rvm install ruby-2.4`
  * follow the mongodb install instructions here: https://docs.mongodb.com/manual/tutorial/install-mongodb-on-debian/
+ * if desired, create a _gemset_ to isolate the gems from the rest of the system
+    * `rvm 2.4@nexus --create --ruby-version`
  * from dash root run the following to get your gems installed:
     * `gem install bundle`
     * `bundle install`
