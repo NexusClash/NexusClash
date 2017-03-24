@@ -1,0 +1,45 @@
+<table *ngIf="character">
+  <thead>
+    <tr>
+      <th>AP</th>
+      <th>HP</th>
+      <th>MP</th>
+      <th>MO</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>{{character.ap}}</td>
+      <td>{{character.hp}}</td>
+      <td>{{character.mp}}</td>
+      <td>{{character.mo}}</td>
+    </tr>
+  </tbody>
+</table>
+<table *ngIf="character">
+  <tbody>
+    <tr *ngFor="let y of ys">
+      <td *ngFor="let x of xs"
+      class="tile"
+      [attr.data-type]="tileService.tile(x,y,character.z,character.plane)?.type?.name">
+        [{{x}},{{y}}]
+      </td>
+    </tr>
+  </tbody>
+</table>
+<ul *ngIf="messageStream">
+  <h1>
+    messages
+  </h1>
+  <li *ngFor="let message of (messages)" class="{{message.class}}">
+    {{message.message}}
+  </li>
+</ul>
+<ul *ngIf="messageStream">
+  <h1>
+    stream
+  </h1>
+  <li *ngFor="let data of (messageStream)">
+    {{data | json}}
+  </li>
+</ul>

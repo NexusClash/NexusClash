@@ -16,4 +16,8 @@ class Dash < Sinatra::Application
 			redirect to("https://#{plane.domain}/warp/#{@user.username}/#{char.id}/#{token}/game")
 		end
 	end
+
+	get '/css/tile' do
+		packets = Entity::TileType.all.map(&:css).join("\n")
+	end
 end
