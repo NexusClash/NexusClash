@@ -4,8 +4,7 @@ import { Tile } from '../tile';
 
 export class TileService implements PacketHandler {
 
-  tiles: Map<String,Tile> = new Map<String,Tile>();
-  tile_css: Map<String,String> = new Map<String,String>();
+  tiles: Map<string,Tile> = new Map<string,Tile>();
 
   isHandlerFor(packet: Packet): boolean {
     return ["tile"].includes(packet.type);
@@ -23,5 +22,12 @@ export class TileService implements PacketHandler {
     return this.tiles.has(tile_id)
       ? this.tiles.get(tile_id)
       : null;
+  }
+
+  dataType(x, y, z, plane): string {
+    let tile = this.tile(x,y,z,plane);
+    return tile && tile.type
+      ? tile.type
+      : "Void";
   }
 }

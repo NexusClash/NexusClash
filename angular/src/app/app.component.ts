@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs/Rx';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/multicast';
+import { Subject } from 'rxjs/Subject';
 import { $WebSocket, WebSocketSendMode } from 'angular2-websocket/angular2-websocket'
 
 import { Character } from './packets/character';
@@ -18,9 +21,16 @@ import { TileService } from './packets/services/tile.service';
 export class AppComponent implements OnInit {
   socketUrl= 'ws://localhost:4567/42'
   socket: $WebSocket;
+  stream: Observable<any>;
   messageStream: any[] = [];
   get character(): Character {
     return this.characterService.character;
+  }
+  get async_character(): Observable<Character> {
+    return this.packetStream
+      .filter(packet => this.characterService.isHandlerFor(packet))
+      .map(packet => Object.assign(new Character(), packet["character"]))
+      .first();
   }
   get xs(): number[] {
     let x = this.character.x;
@@ -46,28 +56,33 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-     this.socket = new $WebSocket(this.socketUrl);
-     let messageStream = this.socket.getDataStream();
-     messageStream.subscribe(
-       (message) => this.handleMesssage(message),
-         (error) => this.handleError(error),
-              () => alert('stream complete')
-     );
+    this.socket = new $WebSocket(this.socketUrl);
+    this.stream = this.socket.getDataStream().asObservable();
+    this.packetStream.subscribe(
+      (packet) => this.handlePacket(packet),
+       (error) => this.handleError(error),
+            () => alert('stream complete'));
+  }
+
+  private streamInProgress: Observable<Packet>;
+  get packetStream(): Observable<Packet> {
+    return this.streamInProgress
+      ? this.streamInProgress
+      : this.stream
+        .map(message => Observable.from(JSON.parse(message.data).packets))
+        .mergeAll()
+        .multicast(
+          () => this.streamInProgress = new Subject<Packet>()
+        )
+        .refCount();
   }
 
   handleError(error: any): void {
     console.error(error);
   }
 
-  handleMesssage(message: MessageEvent): void {
-    let data = JSON.parse(message.data);
-    for (let packet of data.packets) {
-      this.messageStream.push(packet);
-      this.handlePacket(packet);
-    }
-  }
-
   handlePacket(packet: Packet): void {
+    this.messageStream.push(packet);
     let handled = false;
     if(packet.type == "authentication_request") {
       let connectionPackets = {packets: [

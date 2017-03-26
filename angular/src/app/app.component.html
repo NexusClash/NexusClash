@@ -1,3 +1,4 @@
+<div>{{ (async_character | async)?.name }}</div>
 <table *ngIf="character">
   <thead>
     <tr>
@@ -21,8 +22,8 @@
     <tr *ngFor="let y of ys">
       <td *ngFor="let x of xs"
       class="tile"
-      [attr.data-type]="tileService.tile(x,y,character.z,character.plane)?.type?.name">
-        [{{x}},{{y}}]
+      [attr.data-type]="tileService.dataType(x,y,character.z,character.plane)">
+        {{tileService.tile(x,y,character.z,character.plane)?.occupants || 0}}
       </td>
     </tr>
   </tbody>
@@ -37,7 +38,7 @@
 </ul>
 <ul *ngIf="messageStream">
   <h1>
-    stream
+    packets
   </h1>
   <li *ngFor="let data of (messageStream)">
     {{data | json}}

@@ -18,6 +18,7 @@ class Dash < Sinatra::Application
 	end
 
 	get '/css/tile' do
-		packets = Entity::TileType.all.map(&:css).join("\n")
+		content_type 'text/css'
+		Entity::TileType.all.map(&:css).join("\n")
 	end
 end

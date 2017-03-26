@@ -1,7 +1,7 @@
 import { Packet } from './packet';
 import { RequestTileCss } from './request-tile-css';
 
-export class Tile extends Packet {
+export class Tile {
 
   description: String;
   name: String;
@@ -12,10 +12,6 @@ export class Tile extends Packet {
   x: number;
   y: number;
   z: number;
-
-  constructor(){
-    super();
-  }
 
   get id(): string {
     return [
