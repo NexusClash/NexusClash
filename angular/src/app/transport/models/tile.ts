@@ -1,5 +1,4 @@
 import { Packet } from './packet';
-import { RequestTileCss } from './request-tile-css';
 
 export class Tile {
 
@@ -20,13 +19,5 @@ export class Tile {
       this.z,
       this.plane]
     .join(",");
-  }
-
-  get css(): RequestTileCss {
-    return Object.assign(new RequestTileCss(),{coordinates: {
-      x: this.x,
-      y: this.y,
-      z: this.z
-    }});
   }
 }

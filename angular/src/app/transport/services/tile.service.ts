@@ -1,8 +1,18 @@
-import { Packet } from '../packet';
-import { PacketHandler } from '../packet-handler';
-import { Tile } from '../tile';
+import { Injectable } from '@angular/core';
 
-export class TileService implements PacketHandler {
+import { Packet } from '../models/packet';
+import { PacketService } from './packet.service';
+import { SocketService } from './socket.service';
+import { Tile } from '../models/tile';
+
+@Injectable()
+export class TileService extends PacketService {
+
+  constructor(
+    socketService: SocketService
+  ) {
+    super(socketService);
+  }
 
   tiles: Map<string,Tile> = new Map<string,Tile>();
 

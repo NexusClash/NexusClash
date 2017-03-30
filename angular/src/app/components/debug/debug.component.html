@@ -1,0 +1,12 @@
+<label>
+  Display packets
+  <input type="checkbox" [(ngModel)]="show">
+</label>
+<ul [class.hidden]="!show">
+  <h1>
+    {{(socketService.allPackets | async)?.length}} packets
+  </h1>
+  <li *ngFor="let transmission of (socketService.allPackets | async)" class="transmission.class">
+    {{transmission.packet | json}}
+  </li>
+</ul>
