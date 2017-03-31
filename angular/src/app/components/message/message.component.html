@@ -1,12 +1,16 @@
+
+<h1>
+  messages
+</h1>
 <ul>
-  <h1>
-    messages
-  </h1>
   <li *ngFor="let message of messageService.messages"
+    [class]="message.class"
     [class.hidden]="!showDebugMessages && message.class == 'debug'"
-    [innerHtml]="message.message"
+    [title]="message.dateTime | date:'medium'"
     >
+    <span class="timestamp">
+      {{message.dateTime | date:'medium'}}
+    </span>
+    <span class="message" [innerHtml]="message.message"></span>
   </li>
 </ul>
-
-  <!-- [class]="message.class" -->

@@ -2,7 +2,8 @@
   <h1>
     {{(socketService.allPackets | async)?.length}} packets
   </h1>
-  <li *ngFor="let transmission of (socketService.allPackets | async)" class="transmission.class">
+  <li *ngFor="let transmission of ((socketService.allPackets | async)?.reverse())"
+      class="transmission.class">
     {{transmission.packet | json}}
   </li>
 </ul>

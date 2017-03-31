@@ -1,18 +1,28 @@
 <table *ngIf="character">
   <thead>
     <tr>
-      <th>AP</th>
-      <th>HP</th>
-      <th>MP</th>
-      <th>MO</th>
+      <th class="name">
+        {{character.name}}
+      </th>
+      <th class="ap">AP</th>
+      <th class="hp">HP</th>
+      <th class="mp">MP</th>
+      <th class="mo">MO</th>
+      <th class="xp">XP</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td>{{character.ap}}</td>
-      <td>{{character.hp}}</td>
-      <td>{{character.mp}}</td>
-      <td>{{character.mo}}</td>
+      <td title="description">
+        Level
+        {{character.level}}
+        {{character.nexus_class}}
+      </td>
+      <td class="ap">{{character.ap}}</td>
+      <td class="hp">{{character.hp}}</td>
+      <td class="mp">{{character.mp}}</td>
+      <td class="mo">{{character.mo}}</td>
+      <td class="xp">{{character.xp}}</td>
     </tr>
   </tbody>
 </table>

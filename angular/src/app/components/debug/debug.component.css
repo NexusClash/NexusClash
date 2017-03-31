@@ -1,0 +1,27 @@
+ul {
+  list-style: none;
+  padding: none;
+  height: 400px;
+  overflow-y: auto;
+}
+
+li {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+li:hover {
+  font-size: 22px;
+  overflow: inherit;
+  white-space: inherit;
+  text-overflow: inherit;
+}
+
+li.sent {
+  background-color: #555555;
+}
+
+li.recieved {
+  background-color: #888888;
+}

@@ -4,5 +4,5 @@
   (click)="move.emit(tile)"
   [attr.title]="titleText"
 >
-  {{tile?.occupants || 0}}
+  {{tile?.occupants ? tile.occupants : ''}}
 </div>

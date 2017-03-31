@@ -1,0 +1,25 @@
+h1 {
+  background-color: black;
+  color: white;
+  margin: 0px;
+  padding-left: 5px;
+}
+
+ul {
+  height: 337px;
+  border-bottom: 1px solid;
+  border-left: 1px solid;
+  list-style: none;
+  overflow-y: auto;
+  margin: 0px;
+  padding: 10px;
+  padding-bottom: 0px;
+}
+
+.debug {
+  color: red;
+}
+
+.timestamp {
+  font-size: 10px;
+}

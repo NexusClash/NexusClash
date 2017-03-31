@@ -8,16 +8,13 @@ import { Character } from '../../transport/models/character';
   templateUrl: './summary.component.html',
   styleUrls: ['./summary.component.css']
 })
-export class SummaryComponent implements OnInit {
+export class SummaryComponent {
 
   get character(): Character {
     return this.characterService.character;
   }
+
   constructor(
     private characterService: CharacterService
   ) { }
-
-  ngOnInit() {
-  }
-
 }
