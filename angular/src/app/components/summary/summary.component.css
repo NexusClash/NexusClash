@@ -4,8 +4,15 @@ table {
   margin-bottom: 20px;
 }
 
-td, th {
+tr {
   height: 50px;
+}
+
+tr.statuses {
+  height: 25px;
+}
+
+td, th {
   min-width: 50px;
   text-align: center;
   border: 1px solid;

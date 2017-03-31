@@ -6,6 +6,7 @@ import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 
 import { AuthService } from './transport/services/auth.service';
+import { BasicService } from './transport/services/basic.service';
 import { CharacterService } from './transport/services/character.service';
 import { MessageService } from './transport/services/message.service';
 import { SocketService } from './transport/services/socket.service';
@@ -17,6 +18,7 @@ import { SummaryComponent } from './components/summary/summary.component';
 import { TileComponent } from './components/tile/tile.component';
 import { DescriptionComponent } from './components/description/description.component';
 import { TargetableCharacterComponent } from './components/targetable-character/targetable-character.component';
+import { BasicActionsComponent } from './components/basic-actions/basic-actions.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +29,8 @@ import { TargetableCharacterComponent } from './components/targetable-character/
     SummaryComponent,
     TileComponent,
     DescriptionComponent,
-    TargetableCharacterComponent
+    TargetableCharacterComponent,
+    BasicActionsComponent
   ],
   imports: [
     BrowserModule,
@@ -35,8 +38,8 @@ import { TargetableCharacterComponent } from './components/targetable-character/
     HttpModule
   ],
   providers: [
-    AuthService, CharacterService, MessageService,
-    SocketService, TileService
+    AuthService, BasicService, CharacterService,
+    MessageService, SocketService, TileService
   ],
   bootstrap: [AppComponent]
 })

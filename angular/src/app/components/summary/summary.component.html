@@ -14,15 +14,23 @@
   <tbody>
     <tr>
       <td title="description">
-        Level
-        {{character.level}}
-        {{character.nexus_class}}
+        Level {{character.level}} {{character.nexus_class}}
       </td>
       <td class="ap">{{character.ap}}</td>
       <td class="hp">{{character.hp}}</td>
       <td class="mp">{{character.mp}}</td>
       <td class="mo">{{character.mo}}</td>
       <td class="xp">{{character.xp}}</td>
+    </tr>
+    <tr class="statuses" 
+      [class.hidden]="!character.visible_statuses.length">
+      <td colspan="6">
+        <span
+          class="status"
+          *ngFor="let status of character.visible_statuses"
+          [title]="status.description"
+        >{{status.name}}</span>
+      </td>
     </tr>
   </tbody>
 </table>

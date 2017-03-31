@@ -33,6 +33,6 @@ export class DebugComponent {
 
   private filteredOutByContent(packet: any): boolean {
     return this.contentFilter
-      && !JSON.stringify(packet).includes(this.contentFilter);
+      && !JSON.stringify(packet).toLowerCase().includes(this.contentFilter.toLowerCase());
   }
 }

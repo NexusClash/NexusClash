@@ -21,6 +21,7 @@ export class Character extends Packet {
   sense_mp: Boolean;
   sense_mo: Boolean;
   alignment: String;
+  visible_statuses = [];
 
   constructor(){
     super("character");

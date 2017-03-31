@@ -28,12 +28,15 @@ export class CharacterService extends PacketService {
   }
 
   handle(packet: Packet): void {
-    let character: Character = Object.assign(new Character(), packet["character"]);
-    this.characters.set(character.id, this.characters.has(character.id)
-      ? Object.assign(this.characters.get(character.id), character)
-      : character);
+    let characterFromPacket = packet["character"];
+    let id = characterFromPacket["id"]
+    let existingCharacter = this.characters.has(id)
+      ? this.characters.get(id)
+      : new Character();
+    this.characters.set(id,
+      Object.assign(existingCharacter, characterFromPacket));
     if(packet.type == "self") {
-      this.selfId = character.id;
+      this.selfId = id;
     }
   }
 
