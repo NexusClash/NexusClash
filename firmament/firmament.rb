@@ -62,7 +62,7 @@ module Firmament
 				end
 			end
 
-			@scheduler.cron '0 * * * *', :blocking => true do
+			@scheduler.cron '* * * * *', :blocking => true do
 				@characters.keys.each do |id|
 					char = @characters[id]
 					char.broadcast BroadcastScope::SELF, {packets:[{type: 'tile', tile: char.location.to_h}]}.to_json
@@ -169,7 +169,7 @@ module Firmament
 		end
 
 		def is_day?
-			0 == Time.now.hour % 2
+			0 == Time.now.min % 2
 		end
 
 		def time_of_day_message(inside)

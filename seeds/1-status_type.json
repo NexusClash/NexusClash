@@ -36,7 +36,6 @@
 {"activation":"standard","family":"skill","id":35,"impacts":[["CraftingRecipe",{"ap":5,"mp":5},{},{},{"10":1},"You spend some time writing what is sure to be a bestseller!","Book"],["SkillPurchasable",10],["CraftingRecipe",{"ap":5,"mp":5},{"book":1},{},{"10":1},"You write a sequel to the book! Isn't that grand?","Sequel"]],"name":"Penmanship"},
 {"activation":"standard","family":"magical","id":36,"impacts":[["Weapon","magical",70,"electric",5,"Laser Turret"]],"name":"Laser Turret"},
 {"activation":"standard","family":"mundane","id":37,"impacts":[["WeaponBuff","all",-99,-99]],"name":"Test Effect - Code of Pacifism"},
-{"activation":"standard","family":"skill","id":38,"impacts":[["Weapon","thrown",100,"arcane",0],["GrantStatus","item_activation",9,"character","extend"],["GrantStatus","item_activation",14,"character","extend"],["GrantStatus","item_activation",15,"character","extend"],["SkillPurchasable",40]],"name":"Advancedest Thrown Resolve of Coldness"},
 {"activation":"standard","family":"magical","id":39,"impacts":[["Regen","ap","hp",-5],["WeaponBuff","melee",-25,5,"Fire"],["WeaponBuff","melee",0,5]],"name":"Ooops I'm on fire"},
 {"activation":"standard","family":"skill","id":40,"impacts":[["Regen","ap","hp",-1]],"name":"Albino2.0"},
 {"activation":"standard","family":"mundane","id":41,"impacts":[["Regen","item_activation","xp",10000],["Activated",{"ap":0,"mp":0},"Activate!"]],"name":"Test - Level up quick-found at tree house"},
