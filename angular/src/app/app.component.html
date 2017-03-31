@@ -1,4 +1,14 @@
+<div class="options">
+  <label>
+    Display debug messages ( {{showDebugMessages}} )
+    <input type="checkbox" [(ngModel)]="showDebugMessages">
+  </label>
+  <label>
+    Display packet traffic ( {{showPacketTraffic}} )
+    <input type="checkbox" [(ngModel)]="showPacketTraffic">
+  </label>
+</div>
 <app-summary></app-summary>
 <app-map></app-map>
-<app-messages></app-messages>
-<app-stream-debug></app-stream-debug>
+<app-messages [showDebugMessages]="showDebugMessages"></app-messages>
+<app-stream-debug [class.hidden]="!showPacketTraffic"></app-stream-debug>

@@ -34,10 +34,14 @@ export class TileService extends PacketService {
       : null;
   }
 
-  dataType(x, y, z, plane): string {
-    let tile = this.tile(x,y,z,plane);
-    return tile && tile.type
-      ? tile.type
-      : "Void";
+  move(x, y, z) {
+    this.send(Object.assign(
+      new Packet("movement"),
+      {
+        x: x,
+        y: y,
+        z: z
+      }
+    ));
   }
 }

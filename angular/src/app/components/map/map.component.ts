@@ -10,16 +10,12 @@ import { TileService } from '../../transport/services/tile.service';
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.css']
 })
-export class MapComponent implements OnInit {
-
+export class MapComponent {
 
   constructor(
     private tileService: TileService,
     private characterService: CharacterService
   ) { }
-
-  ngOnInit() {
-  }
 
   get character(): Character {
     return this.characterService.character;
@@ -35,13 +31,15 @@ export class MapComponent implements OnInit {
     for(let y = minY; y <= maxY; y++){
       for(let x = minX; x <= maxX; x++){
         tiles.push(this.tileService.tile(
-          x,
-          y,
-          this.character.z,
+          x, y, this.character.z,
           this.character.plane
         ));
       }
     }
     return tiles;
+  }
+
+  move(tile) {
+    this.tileService.move(tile.x, tile.y, tile.z);
   }
 }

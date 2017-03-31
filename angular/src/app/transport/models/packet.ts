@@ -1,3 +1,5 @@
 export class Packet {
-  type: string;
+  constructor(
+    public type: string
+  ) { }
 }

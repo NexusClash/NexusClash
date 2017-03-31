@@ -1,3 +1,8 @@
-<p>
-  tile works!
-</p>
+<div
+  [attr.data-type]="tile?.type || 'Void'"
+  [class]="classesFromTile(tile)"
+  (click)="move.emit(tile)"
+  [attr.title]="titleText"
+>
+  {{tile?.occupants || 0}}
+</div>

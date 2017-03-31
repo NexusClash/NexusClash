@@ -1,8 +1,4 @@
-<label>
-  Display packets
-  <input type="checkbox" [(ngModel)]="show">
-</label>
-<ul [class.hidden]="!show">
+<ul>
   <h1>
     {{(socketService.allPackets | async)?.length}} packets
   </h1>

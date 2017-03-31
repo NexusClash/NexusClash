@@ -13,7 +13,7 @@ export class AuthService extends PacketService {
 
   handle(packet: Packet): void {
     this.send(
-      <Packet>{type: "connect", char_id: "124"}, // TODO handle this better
+      <Packet>{type: "connect", char_id: "39"}, // TODO handle this better
       <Packet>{type: "refresh_map"},
       <Packet>{type: "sync_messages"}
     );

@@ -3,7 +3,10 @@
     messages
   </h1>
   <li *ngFor="let message of messageService.messages"
-    [class]="message.class"
-    [innerHtml]="message.message">
+    [class.hidden]="!showDebugMessages && message.class == 'debug'"
+    [innerHtml]="message.message"
+    >
   </li>
 </ul>
+
+  <!-- [class]="message.class" -->

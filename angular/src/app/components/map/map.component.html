@@ -1,7 +1,8 @@
 <div *ngIf="character" class="map">
-  <span *ngFor="let tile of tilesInOrder()"
-    class="tile"
-    [attr.data-type]="tile?.type || 'Void'">
-    {{tile?.occupants || 0}}
-  </span>
+  <app-tile
+    *ngFor="let tile of tilesInOrder()"
+    [tile]="tile"
+    (move)="move($event)"
+  >
+  </app-tile>
 </div>
