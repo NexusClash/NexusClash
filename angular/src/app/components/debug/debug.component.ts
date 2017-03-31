@@ -12,7 +12,27 @@ import { SocketService } from '../../transport/services/socket.service';
 })
 export class DebugComponent {
 
+  typeFilter: string;
+  contentFilter: string;
+
   constructor(
     private socketService: SocketService
   ) { }
+
+  shouldHide(packet: any): boolean {
+    return this.filteredOutByType(packet)
+        || this.filteredOutByContent(packet);
+  }
+
+  private filteredOutByType(packet: any): boolean {
+    return this.typeFilter
+      && this.typeFilter.trim()
+      && this.typeFilter.split(/\s+/)
+        .every((typeSubStr) => !packet.type.includes(typeSubStr));
+  }
+
+  private filteredOutByContent(packet: any): boolean {
+    return this.contentFilter
+      && !JSON.stringify(packet).includes(this.contentFilter);
+  }
 }

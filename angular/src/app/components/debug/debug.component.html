@@ -1,9 +1,19 @@
+<h1 class="pane-header">
+  {{(socketService.allPackets | async)?.length}} packets
+</h1>
+<div class="filter">
+  <input type="text"
+    [(ngModel)]="typeFilter"
+    placeholder="Type the types of packets you want to see, separated by spaces">
+  <input type="text"
+    [(ngModel)]="contentFilter"
+    placeholder="Type the content you're looking for">
+</div>
 <ul>
-  <h1>
-    {{(socketService.allPackets | async)?.length}} packets
-  </h1>
   <li *ngFor="let transmission of ((socketService.allPackets | async)?.reverse())"
-      class="transmission.class">
+    [class]="transmission.class"
+    [class.hidden]="shouldHide(transmission.packet)"
+  >
     {{transmission.packet | json}}
   </li>
 </ul>

@@ -27,14 +27,14 @@ export class TileService extends PacketService {
     }
   }
 
-  tile(x, y, z, plane): Tile {
+  tile(x: number, y: number, z: number, plane: number): Tile {
     let tile_id = [x, y, z, plane].join(",");
     return this.tiles.has(tile_id)
       ? this.tiles.get(tile_id)
       : null;
   }
 
-  move(x, y, z) {
+  move(x: number, y: number, z: number) {
     this.send(Object.assign(
       new Packet("movement"),
       {

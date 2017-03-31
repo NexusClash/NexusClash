@@ -15,6 +15,8 @@ import { MapComponent } from './components/map/map.component';
 import { MessageComponent } from './components/message/message.component';
 import { SummaryComponent } from './components/summary/summary.component';
 import { TileComponent } from './components/tile/tile.component';
+import { DescriptionComponent } from './components/description/description.component';
+import { TargetableCharacterComponent } from './components/targetable-character/targetable-character.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +25,9 @@ import { TileComponent } from './components/tile/tile.component';
     MapComponent,
     MessageComponent,
     SummaryComponent,
-    TileComponent
+    TileComponent,
+    DescriptionComponent,
+    TargetableCharacterComponent
   ],
   imports: [
     BrowserModule,

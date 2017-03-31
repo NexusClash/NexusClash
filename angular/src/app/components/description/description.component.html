@@ -1,0 +1,26 @@
+<h1 class="pane-header">
+  description
+</h1>
+<div>
+  <div>
+    <img [src]="tile?.is_day ? '/assets/img/Time-Day.gif' : '/assets/img/Time-Night.gif'">
+    {{tile?.name}} ({{tile?.x}}, {{tile?.y}},
+    <a [href]="tile?.autowiki">{{tile?.type}}</a>)
+  </div>
+  <div>
+    {{tile?.description}}
+  </div>
+  <div>
+    <span [ngSwitch]="tile?.occupants || 0">
+      <ng-template [ngSwitchCase]="0">No one seems to be here. Not even you.</ng-template>
+      <ng-template [ngSwitchCase]="1">You seem to be alone here.</ng-template>
+      <ng-template [ngSwitchCase]="2">You only see one other person here:</ng-template>
+      <ng-template ngSwitchDefault>You see {{tile?.occupants - 1}} other people here:</ng-template>
+    </span>
+    <app-targetable-character
+      *ngFor="let other of others()"
+      [character]="other"
+      (select)="selectTarget(other)"
+    ></app-targetable-character>
+  </div>
+</div>

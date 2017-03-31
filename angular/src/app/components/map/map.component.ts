@@ -39,7 +39,7 @@ export class MapComponent {
     return tiles;
   }
 
-  move(tile) {
+  move(tile: Tile): void {
     if(tile.x == this.character.x
     && tile.y == this.character.y)
       tile.z = (tile.z + 1) % 2;

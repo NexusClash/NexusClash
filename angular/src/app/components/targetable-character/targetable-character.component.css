@@ -1,0 +1,36 @@
+div {
+  display: inline-block;
+}
+
+.hp {
+  height: calc(100% - 4px);
+  width: 6px;
+  border: 1px solid red;
+  border-bottom-width: 2px;
+  display: inline-block;
+  position: relative;
+}
+
+.hp::before {
+  background-color: red;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: inline-block;
+  content: ""
+}
+
+.hp.full::before {
+  height: 100%;
+}
+
+.hp.high::before {
+  height: 85%;
+}
+.hp.mid::before {
+  height: 50%;
+}
+.hp.low::before {
+  height: 0%;
+}

@@ -2,7 +2,7 @@
   <app-tile
     *ngFor="let tile of tilesInOrder()"
     [tile]="tile"
-    (move)="move($event)"
+    (move)="move(tile)"
   >
   </app-tile>
 </div>

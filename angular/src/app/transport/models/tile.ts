@@ -20,4 +20,8 @@ export class Tile {
       this.plane]
     .join(",");
   }
+
+  get autowiki(): string {
+    return ["","autowiki","tile", this.x, this.y, this.z].join("/");
+  }
 }

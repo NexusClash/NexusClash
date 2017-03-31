@@ -1,0 +1,8 @@
+app-targetable-character::after {
+  content: ", ";
+  margin-left: -2px;
+}
+
+app-targetable-character:last-child::after {
+  content: ""
+}

@@ -8,7 +8,14 @@ import { SocketService } from './socket.service';
 @Injectable()
 export class CharacterService extends PacketService {
 
-  character: Character;
+  selfId: number;
+  characters = new Map<number,Character>();
+
+  get character(): Character {
+    return this.selfId && this.characters.has(this.selfId)
+      ? this.characters.get(this.selfId)
+      : null;
+  }
 
   constructor(
     socketService: SocketService
@@ -21,12 +28,26 @@ export class CharacterService extends PacketService {
   }
 
   handle(packet: Packet): void {
-    this.character = this.character || new Character();
-    let characterFromPacket = packet["character"];
-    if(characterFromPacket
-      && (!this.character.id
-        || characterFromPacket.id == this.character.id)){
-      this.character = Object.assign(this.character, characterFromPacket);
+    let character: Character = Object.assign(new Character(), packet["character"]);
+    this.characters.set(character.id, this.characters.has(character.id)
+      ? Object.assign(this.characters.get(character.id), character)
+      : character);
+    if(packet.type == "self") {
+      this.selfId = character.id;
     }
+  }
+
+  charactersAt(x: number, y: number, z: number): Character[] {
+    return Array.from(this.characters.values()).filter(character =>
+      character.x == x &&
+      character.y == y &&
+      character.z == z
+    );
+  }
+
+  selectTarget(characterId: number): void {
+    this.send(Object.assign(new Packet("select_target"),
+      { char_id: characterId }
+    ));
   }
 }

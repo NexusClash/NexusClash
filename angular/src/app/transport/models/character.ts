@@ -23,8 +23,7 @@ export class Character extends Packet {
   alignment: String;
 
   constructor(){
-    super();
-    this.type = "character";
+    super("character");
   }
 
 }
