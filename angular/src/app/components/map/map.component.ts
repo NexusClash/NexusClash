@@ -40,6 +40,9 @@ export class MapComponent {
   }
 
   move(tile) {
+    if(tile.x == this.character.x
+    && tile.y == this.character.y)
+      tile.z = (tile.z + 1) % 2;
     this.tileService.move(tile.x, tile.y, tile.z);
   }
 }
