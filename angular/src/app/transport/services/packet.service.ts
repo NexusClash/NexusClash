@@ -11,11 +11,11 @@ export abstract class PacketService {
 
   protected defaultObserver = {
     next: (packet) => this.handle(packet),
-    error: (error) => this.handleError(error),
-    complete: () => this.handleError("Stream closed.")
+    error: (error) => console.error(error),
+    complete: () => console.error("Stream closed.")
   }
 
-  protected relevantPackets = this.socketService.packetStream()
+  protected relevantPackets = this.socketService.rxPackets
     .filter(packet => this.isHandlerFor(packet))
     .share();
 
@@ -29,10 +29,8 @@ export abstract class PacketService {
 
   protected handle(packet: Packet): void {
     // override to do something to every relevant packet
-  }
-
-  protected handleError(error: any): void {
-    console.error(error);
+    console.error("Unhandled packet");
+    console.log(packet)
   }
 
   protected send(...packets: Packet[]): void {

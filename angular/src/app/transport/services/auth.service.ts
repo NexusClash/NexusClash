@@ -15,7 +15,7 @@ export class AuthService extends PacketService {
     this.connect();
   }
 
-  connect(): void {
+  public connect(): void {
     this.send(
       new Packet("connect", { char_id: this.characterId }),
       new Packet("refresh_map"),
