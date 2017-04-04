@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
-import { CharacterService } from '../../transport/services/character.service';
 import { Character } from '../../transport/models/character';
 
 @Component({
@@ -10,11 +9,6 @@ import { Character } from '../../transport/models/character';
 })
 export class SummaryComponent {
 
-  get character(): Character {
-    return this.characterService.character;
-  }
+  @Input() character: Character;
 
-  constructor(
-    private characterService: CharacterService
-  ) { }
 }

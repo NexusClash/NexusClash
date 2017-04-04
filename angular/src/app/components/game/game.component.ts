@@ -1,7 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/of';
 
 import { AuthService } from '../../transport/services/auth.service';
+import { Character } from '../../transport/models/character';
+import { CharacterService } from '../../transport/services/character.service';
 
 @Component({
   selector: 'app-game',
@@ -13,9 +17,12 @@ export class GameComponent implements OnInit {
   showDebugMessages: Boolean = false;
   showPacketTraffic: Boolean = false;
 
+  character = this.characterService.myself;
+
   constructor(
+    private route: ActivatedRoute,
     private authService: AuthService,
-    private route: ActivatedRoute
+    private characterService: CharacterService
   ){ }
 
   ngOnInit() {

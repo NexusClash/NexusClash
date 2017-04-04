@@ -10,7 +10,6 @@ import { Character } from '../../transport/models/character';
 export class TargetableCharacterComponent {
 
   @Input() character: Character;
-  @Output() select = new EventEmitter();
+  @Output() select = new EventEmitter<Character>();
 
-  constructor() { }
 }

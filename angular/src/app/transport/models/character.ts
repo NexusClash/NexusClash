@@ -1,4 +1,5 @@
 import { Packet } from './packet';
+import { Status } from './status';
 
 export class Character extends Packet {
   id: number;
@@ -21,7 +22,7 @@ export class Character extends Packet {
   sense_mp: Boolean;
   sense_mo: Boolean;
   alignment: String;
-  visible_statuses = [];
+  visible_statuses: Status[] = [];
 
   constructor(){
     super("character");

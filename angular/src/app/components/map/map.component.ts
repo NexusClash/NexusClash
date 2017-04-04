@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 import { Character } from '../../transport/models/character';
 import { CharacterService } from '../../transport/services/character.service';
@@ -12,14 +12,12 @@ import { TileService } from '../../transport/services/tile.service';
 })
 export class MapComponent {
 
+  @Input() character: Character;
+
   constructor(
     private tileService: TileService,
     private characterService: CharacterService
   ) { }
-
-  get character(): Character {
-    return this.characterService.character;
-  }
 
   tilesInOrder(): Tile[] {
     const viewDistance = 2;

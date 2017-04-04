@@ -1,4 +1,7 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
+import 'rxjs/add/operator/startWith';
 
 import { Character } from '../models/character';
 import { Packet } from '../models/packet';
@@ -8,39 +11,54 @@ import { SocketService } from './socket.service';
 @Injectable()
 export class CharacterService extends PacketService {
 
-  selfId: number;
-  characters = new Map<number,Character>();
+  private characterCache = new Map<number,Character>();
+  characters = new Subject<Map<number, Character>>();
+  myself = new Subject<Character>();
 
-  get character(): Character {
-    return this.selfId && this.characters.has(this.selfId)
-      ? this.characters.get(this.selfId)
-      : null;
-  }
-
-  handledPacketTypes = ["self","character"];
+  handledPacketTypes = ['self', 'character', 'remove_character'];
 
   handle(packet: Packet): void {
-    let characterFromPacket = packet["character"];
-    let id = characterFromPacket["id"]
-    let existingCharacter = this.characters.has(id)
-      ? this.characters.get(id)
-      : new Character();
-    this.characters.set(id,
-      Object.assign(existingCharacter, characterFromPacket));
-    if(packet.type == "self") {
-      this.selfId = id;
+    if('remove_character' == packet.type){
+      this.removeCharacter(packet);
+    } else {
+      this.upsertCharacter(packet);
     }
+    this.characters.next(this.characterCache);
   }
 
-  charactersAt(x: number, y: number, z: number): Character[] {
-    return Array.from(this.characters.values()).filter(character =>
-      character.x == x &&
-      character.y == y &&
-      character.z == z
-    );
+  charactersAt(x: number, y: number, z: number): Observable<Character[]> {
+    return this.characters
+      .startWith(this.characterCache)
+      .map(map => Array.from(map.values())
+        .filter(character =>
+          character.x == x &&
+          character.y == y &&
+          character.z == z
+        )
+      );
   }
 
   selectTarget(characterId: number): void {
-    this.send(new Packet("select_target", { char_id: characterId }));
+    this.send(new Packet('select_target', { char_id: characterId }));
+  }
+
+  private upsertCharacter(packet: Packet): Character {
+    let characterFromPacket = packet['character'];
+    let id = +characterFromPacket['id']
+    let isMe = 'self' == packet.type;
+    let existingCharacter = this.characterCache.has(id)
+      ? this.characterCache.get(id)
+      : new Character();
+    let updatedCharacter = Object.assign(existingCharacter, characterFromPacket);
+    this.characterCache.set(id, updatedCharacter);
+    if(isMe) {
+      this.myself.next(updatedCharacter);
+    }
+    return updatedCharacter;
+  }
+
+  private removeCharacter(packet: Packet): void {
+    this.characterCache.delete(+packet['char_id']);
+
   }
 }

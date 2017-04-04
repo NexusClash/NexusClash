@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 
 import { Character } from '../../transport/models/character';
 import { CharacterService } from '../../transport/services/character.service';
@@ -12,9 +13,7 @@ import { TileService } from '../../transport/services/tile.service';
 })
 export class DescriptionComponent {
 
-  get character(): Character {
-    return this.characterService.character;
-  }
+  @Input() character: Character;
 
   get tile(): Tile {
     return this.character
@@ -31,14 +30,17 @@ export class DescriptionComponent {
     private characterService: CharacterService
   ) { }
 
-  others(): Character[] {
+  others(): Observable<Character[]> {
     return this.character
       ? this.characterService.charactersAt(
-        this.character.x,
-        this.character.y,
-        this.character.z)
-        .filter(character => character.id != this.character.id)
-      : [];
+          this.character.x,
+          this.character.y,
+          this.character.z
+        )
+        .map(characters => characters
+          .filter(character => character.id != this.character.id)
+        )
+      : Observable.of([]);
   }
 
   selectTarget(character: Character) {
