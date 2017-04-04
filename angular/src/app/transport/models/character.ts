@@ -24,8 +24,11 @@ export class Character extends Packet {
   alignment: String;
   visible_statuses: Status[] = [];
 
+  get locationId(): string {
+    return [this.x,this.y,this.z,this.plane].join(',');
+  }
+
   constructor(){
     super("character");
   }
-
 }

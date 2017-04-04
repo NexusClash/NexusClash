@@ -10,12 +10,7 @@ import { Tile } from '../../transport/models/tile';
 export class TileComponent {
 
   @Input() tile: Tile;
-
-  // These are not take from the tile, since they may not be hydrated.
-  @Input() x: number;
-  @Input() y: number;
-
-  @Output() move = new EventEmitter();
+  @Output() move = new EventEmitter<Tile>();
 
   get titleText() {
     return !!this.tile
@@ -30,7 +25,8 @@ export class TileComponent {
     if(tile.type) {
       title += ", a " + tile.type;
     }
-    return title + ")";
+    title += ") [ " + tile.occupants +" ]";
+    return title;
   }
 
   classesFromTile(tile): string {

@@ -1,8 +1,8 @@
-<div *ngIf="character" class="map">
+<div *ngIf="!!character" class="map">
   <app-tile
-    *ngFor="let tile of tilesInOrder()"
-    [tile]="tile"
-    (move)="move(tile)"
+    *ngFor="let coordinates of (viewableCoordinates | async)"
+    [tile]="tileService.tile(coordinates) | async"
+    (move)="move($event)"
   >
   </app-tile>
 </div>

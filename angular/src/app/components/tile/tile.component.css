@@ -4,6 +4,9 @@
   position: relative;
   border: 1px solid black;
   float: left;
+  font-size: 24pt;
+  font-weight: bold;
+  text-align: center;
 }
 
 .tile::before {

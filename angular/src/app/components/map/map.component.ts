@@ -1,4 +1,7 @@
 import { Component, Input } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/combineLatest';
+import 'rxjs/add/operator/switchMap';
 
 import { Character } from '../../transport/models/character';
 import { CharacterService } from '../../transport/services/character.service';
@@ -12,30 +15,14 @@ import { TileService } from '../../transport/services/tile.service';
 })
 export class MapComponent {
 
+
   @Input() character: Character;
+  viewableCoordinates = this.characterService.visibleTiles();
 
   constructor(
     private tileService: TileService,
     private characterService: CharacterService
   ) { }
-
-  tilesInOrder(): Tile[] {
-    const viewDistance = 2;
-    let minX = this.character.x - viewDistance;
-    let maxX = this.character.x + viewDistance;
-    let minY = this.character.y - viewDistance;
-    let maxY = this.character.y + viewDistance;
-    let tiles = [];
-    for(let y = minY; y <= maxY; y++){
-      for(let x = minX; x <= maxX; x++){
-        tiles.push(this.tileService.tile(
-          x, y, this.character.z,
-          this.character.plane
-        ));
-      }
-    }
-    return tiles;
-  }
 
   move(tile: Tile): void {
     if(tile.x == this.character.x

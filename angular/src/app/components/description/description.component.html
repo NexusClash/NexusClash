@@ -1,7 +1,7 @@
 <h1 class="pane-header">
   description
 </h1>
-<div>
+<div *ngIf="tile">
   <div>
     <img [src]="tile?.is_day ? '/assets/img/Time-Day.gif' : '/assets/img/Time-Night.gif'">
     {{tile?.name}} ({{tile?.x}}, {{tile?.y}},
@@ -18,7 +18,7 @@
       <ng-template ngSwitchDefault>You see {{tile?.occupants - 1}} other people here:</ng-template>
     </span>
     <app-targetable-character
-      *ngFor="let other of (others() | async)"
+      *ngFor="let other of (others | async)"
       [character]="other"
       (select)="selectTarget($event)"
     ></app-targetable-character>
