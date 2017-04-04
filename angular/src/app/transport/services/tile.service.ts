@@ -8,17 +8,9 @@ import { Tile } from '../models/tile';
 @Injectable()
 export class TileService extends PacketService {
 
-  constructor(
-    socketService: SocketService
-  ) {
-    super(socketService);
-  }
-
   tiles: Map<string,Tile> = new Map<string,Tile>();
 
-  isHandlerFor(packet: Packet): boolean {
-    return ["tile"].includes(packet.type);
-  }
+  handledPacketTypes = ["tile"];
 
   handle(packet: Packet): void {
     if(packet.type == "tile"){

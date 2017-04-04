@@ -10,15 +10,7 @@ export class MessageService extends PacketService {
 
   messages: Message[] = [];
 
-  constructor(
-    socketService: SocketService
-  ) {
-    super(socketService);
-  }
-
-  isHandlerFor(packet: Packet): boolean {
-    return ["message"].includes(packet.type);
-  }
+  handledPacketTypes = ["message"];
 
   handle(packet: Packet): void {
     let message = Object.assign(new Message(), packet);

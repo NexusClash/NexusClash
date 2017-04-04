@@ -17,15 +17,7 @@ export class CharacterService extends PacketService {
       : null;
   }
 
-  constructor(
-    socketService: SocketService
-  ) {
-    super(socketService);
-  }
-
-  isHandlerFor(packet: Packet): boolean {
-    return ["self","character"].includes(packet.type);
-  }
+  handledPacketTypes = ["self","character"];
 
   handle(packet: Packet): void {
     let characterFromPacket = packet["character"];
@@ -49,8 +41,6 @@ export class CharacterService extends PacketService {
   }
 
   selectTarget(characterId: number): void {
-    this.send(Object.assign(new Packet("select_target"),
-      { char_id: characterId }
-    ));
+    this.send(new Packet("select_target", { char_id: characterId }));
   }
 }

@@ -15,12 +15,20 @@ export abstract class PacketService {
     complete: () => this.handleError("Stream closed.")
   }
 
+  protected relevantPackets = this.socketService.packetStream()
+    .filter(packet => this.isHandlerFor(packet))
+    .share();
+
+  protected abstract handledPacketTypes: string[];
+
   constructor(
     private socketService: SocketService
   ) {
-    this.socketService.packetStream()
-      .filter(packet => this.isHandlerFor(packet))
-      .subscribe(this.defaultObserver);
+      this.relevantPackets.subscribe(this.defaultObserver);
+  }
+
+  protected handle(packet: Packet): void {
+    // override to do something to every relevant packet
   }
 
   protected handleError(error: any): void {
@@ -31,6 +39,7 @@ export abstract class PacketService {
     this.socketService.send(packets).subscribe();
   }
 
-  protected abstract isHandlerFor(packet: Packet): boolean;
-  protected abstract handle(packet: Packet): void;
+  protected isHandlerFor(packet: Packet): boolean{
+    return this.handledPacketTypes.includes(packet.type);
+  }
 }

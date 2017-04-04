@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Params } from '@angular/router';
 import { Observable } from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/multicast';
@@ -12,12 +13,17 @@ import { AuthService } from './transport/services/auth.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
 
   showDebugMessages: Boolean = false;
   showPacketTraffic: Boolean = false;
 
   constructor(
     private authService: AuthService,
+    private route: ActivatedRoute
   ){ }
+
+  ngOnInit() {
+    this.authService.characterId = +this.route.snapshot.params['id'];
+  }
 }

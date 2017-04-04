@@ -7,13 +7,7 @@ import { Packet } from '../models/packet';
 @Injectable()
 export class BasicService extends PacketService {
 
-  isHandlerFor(packet: Packet): boolean {
-    return false;
-  }
-
-  handle(packet: Packet): void {
-    throw("Basic service does not recieve packets");
-  }
+  handledPacketTypes = [];
 
   hide(): void {
     this.send(new Packet("hide"));

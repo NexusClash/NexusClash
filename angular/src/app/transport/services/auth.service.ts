@@ -7,15 +7,19 @@ import { Packet } from '../models/packet';
 @Injectable()
 export class AuthService extends PacketService {
 
-  isHandlerFor(packet: Packet): boolean {
-    return ["authentication_request"].includes(packet.type);
+  characterId: number;
+
+  handledPacketTypes = ["authentication_request"];
+
+  handle(packet: Packet) {
+    this.connect();
   }
 
-  handle(packet: Packet): void {
+  connect(): void {
     this.send(
-      <Packet>{type: "connect", char_id: "124"}, // TODO handle this better
-      <Packet>{type: "refresh_map"},
-      <Packet>{type: "sync_messages"}
+      new Packet("connect", { char_id: this.characterId }),
+      new Packet("refresh_map"),
+      new Packet("sync_messages")
     );
   }
 }
