@@ -16,4 +16,8 @@ export class BasicService extends PacketService {
   search(): void {
     this.send(new Packet("search"));
   }
+
+  speech(message: text): void {
+    this.send(new Packet('speech', {message: message}));
+  }
 }
