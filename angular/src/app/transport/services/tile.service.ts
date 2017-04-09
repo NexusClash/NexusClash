@@ -4,6 +4,7 @@ import { Subject } from 'rxjs/Subject';
 
 import { Packet } from '../models/packet';
 import { PacketService } from './packet.service';
+import { SocketService } from './socket.service';
 import { Tile } from '../models/tile';
 
 @Injectable()
@@ -14,6 +15,12 @@ export class TileService extends PacketService {
   tiles = new Subject<Map<string, Tile>>();
 
   handledPacketTypes = ["tile"];
+
+  constructor(
+    protected socketService: SocketService
+  ) {
+    super(socketService);
+  }
 
   handle(packet: Packet): void {
     let tileFromPacket = packet['tile'];

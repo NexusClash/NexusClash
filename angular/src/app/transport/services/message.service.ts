@@ -12,6 +12,12 @@ export class MessageService extends PacketService {
 
   handledPacketTypes = ["message"];
 
+  constructor(
+    protected socketService: SocketService
+  ) {
+    super(socketService);
+  }
+
   handle(packet: Packet): void {
     let message = Object.assign(new Message(), packet);
     this.messages = [message].concat(this.messages);

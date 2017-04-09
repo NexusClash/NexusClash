@@ -6,7 +6,6 @@ import 'rxjs/add/operator/filter';
 import { Packet } from '../models/packet';
 import { SocketService } from './socket.service';
 
-@Injectable()
 export abstract class PacketService {
 
   protected defaultObserver = {
@@ -15,15 +14,16 @@ export abstract class PacketService {
     complete: () => console.error("Stream closed.")
   }
 
-  protected relevantPackets = this.socketService.rxPackets
-    .filter(packet => this.isHandlerFor(packet))
-    .share();
-
   protected abstract handledPacketTypes: string[];
 
+  protected relevantPackets: Observable<Packet>;
+
   constructor(
-    private socketService: SocketService
+     protected socketService: SocketService
   ) {
+      this.relevantPackets = socketService.rxPackets
+        .filter(packet => this.isHandlerFor(packet))
+        .share();
       this.relevantPackets.subscribe(this.defaultObserver);
   }
 

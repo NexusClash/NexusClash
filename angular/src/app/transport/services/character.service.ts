@@ -17,6 +17,12 @@ export class CharacterService extends PacketService {
   myId: number;
 
   handledPacketTypes = ['self', 'character', 'remove_character'];
+  
+  constructor(
+    protected socketService: SocketService
+  ) {
+    super(socketService);
+  }
 
   handle(packet: Packet): void {
     if('remove_character' == packet.type){

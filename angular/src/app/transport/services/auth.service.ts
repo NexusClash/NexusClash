@@ -2,10 +2,17 @@ import { Injectable } from '@angular/core';
 import { $WebSocket, WebSocketSendMode } from 'angular2-websocket/angular2-websocket'
 
 import { PacketService } from './packet.service';
+import { SocketService } from './socket.service';
 import { Packet } from '../models/packet';
 
 @Injectable()
 export class AuthService extends PacketService {
+
+  constructor(
+    protected socketService: SocketService
+  ) {
+    super(socketService);
+  }
 
   characterId: number;
 
