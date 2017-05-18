@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
 import { AppRoutingModule } from './app-routing.module';
+import { AdvancementService } from './transport/services/advancement.service';
 import { AuthService } from './transport/services/auth.service';
 import { BasicService } from './transport/services/basic.service';
 import { CharacterService } from './transport/services/character.service';
@@ -11,6 +12,7 @@ import { MessageService } from './transport/services/message.service';
 import { SocketService } from './transport/services/socket.service';
 import { TileService } from './transport/services/tile.service';
 import { AppComponent } from './app.component';
+import { AdvancementComponent } from './components/advancement/advancement.component';
 import { BasicActionsComponent } from './components/basic-actions/basic-actions.component';
 import { GameComponent } from './components/game/game.component';
 import { DebugComponent } from './components/debug/debug.component';
@@ -34,7 +36,8 @@ import { SpeechComponent } from './components/speech/speech.component';
     TileComponent,
     DescriptionComponent,
     TargetableCharacterComponent,
-    SpeechComponent
+    SpeechComponent,
+    AdvancementComponent
   ],
   imports: [
     BrowserModule,
@@ -43,6 +46,7 @@ import { SpeechComponent } from './components/speech/speech.component';
     AppRoutingModule
   ],
   providers: [
+    AdvancementService,
     AuthService, BasicService, CharacterService,
     MessageService, SocketService, TileService
   ],

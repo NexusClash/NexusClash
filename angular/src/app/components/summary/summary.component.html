@@ -9,6 +9,10 @@
       <th class="mp">MP</th>
       <th class="mo">MO</th>
       <th class="xp">XP</th>
+      <th class="cp">
+        CP
+        <a [routerLink]="[{ outlets: { popup: ['advancement'] } }]">Buy Skills</a>
+      </th>
     </tr>
   </thead>
   <tbody>
@@ -21,10 +25,11 @@
       <td class="mp">{{character.mp}}</td>
       <td class="mo">{{character.mo}}</td>
       <td class="xp">{{character.xp}}</td>
+      <td class="xp">{{character.cp}}</td>
     </tr>
-    <tr class="statuses" 
+    <tr class="statuses"
       [class.hidden]="!character.visible_statuses.length">
-      <td colspan="6">
+      <td colspan="7">
         <span
           class="status"
           *ngFor="let status of character.visible_statuses"

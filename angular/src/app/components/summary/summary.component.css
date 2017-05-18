@@ -18,3 +18,7 @@ td, th {
   border: 1px solid;
   margin: 0;
 }
+
+.cp a {
+  display: block;
+}
