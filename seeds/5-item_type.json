@@ -16,7 +16,6 @@
 {"category":"weapon","id":15,"name":"Sling","statuses":["31",{"$oid":"58cdb9e7520a436935000000"},"177"],"weight":3},
 {"category":"mundane","id":16,"name":"Match","statuses":["33",{"$oid":"58cdb9e7520a436935000000"},"177"],"weight":1},
 {"category":"mundane","id":17,"name":"Match","statuses":[{"$oid":"58cdb9e7520a436935000000"},"177"],"weight":1},
-{"category":"clothing","id":18,"name":"Amulet of Pacifism","statuses":["37",{"$oid":"58cdb9e7520a436935000000"},"177"],"weight":1},
 {"category":"mystic","id":19,"name":"Albino Amulet","statuses":["38","40",{"$oid":"58cdb9e7520a436935000000"},"177"],"weight":0},
 {"category":"mundane","id":20,"name":"Item of levelling super fast","statuses":["41",{"$oid":"58cdb9e7520a436935000000"},"177"],"weight":0},
 {"category":"mundane","id":21,"name":"Holy Book","statuses":["48",{"$oid":"58cdb9e7520a436935000000"},"177"],"weight":1},
