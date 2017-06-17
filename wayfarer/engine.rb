@@ -45,7 +45,7 @@ module Wayfarer
 			@@api_functions ||= Set.new Wayfarer::Engine.instance_methods(false).select{|method| (method.to_s.end_with?('=') || [:user, :character, :identifier, :target, :admin, :plane, :game].include?(method)) ? false : true}
 		end
 
-		def request_character(_)
+		def request_character(*_)
 			send({packets: [{type: 'character', character: character.to_hash}]}.to_json)
 		end
 
@@ -247,6 +247,7 @@ module Wayfarer
 			learn = Intent::Learn.new character, skill
 			if learn.realise
 				request_skill_tree
+				request_character
 			else
 				Entity::Message.send_transient([character.id], 'You cannot learn this skill at this time!', MessageType::FAILED)
 			end

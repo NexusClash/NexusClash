@@ -21,8 +21,7 @@ export class GameComponent implements OnInit {
 
   character: Subject<Character> = this.characterService.myself;
   tile: Observable<Tile> = this.characterService.myself
-    .switchMap<Character,Tile>(character => this.tileService.tile(character.locationId))
-    .do(() => "My tile updated.");
+    .switchMap<Character,Tile>(character => this.tileService.tile(character.locationId));
 
   constructor(
     private route: ActivatedRoute,

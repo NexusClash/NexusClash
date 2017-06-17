@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/startWith';
+import 'rxjs/add/operator/take';
 
 import { Character } from '../models/character';
 import { Packet } from '../models/packet';
@@ -17,7 +18,7 @@ export class CharacterService extends PacketService {
   myId: number;
 
   handledPacketTypes = ['self', 'character', 'remove_character'];
-  
+
   constructor(
     protected socketService: SocketService
   ) {
@@ -62,6 +63,14 @@ export class CharacterService extends PacketService {
       .share();
   }
 
+  doWhenCharacterIsKnown(callback: Function): void {
+    if(this.myId != null) {
+      callback();
+    } else {
+      this.myself.take(1).subscribe(() => callback());
+    }
+  }
+
   private upsertCharacter(packet: Packet): Character {
     let characterFromPacket = packet['character'];
     let id = +characterFromPacket['id'];
@@ -80,6 +89,5 @@ export class CharacterService extends PacketService {
 
   private removeCharacter(packet: Packet): void {
     this.characterCache.delete(+packet['char_id']);
-
   }
 }

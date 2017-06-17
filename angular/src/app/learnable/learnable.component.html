@@ -1,0 +1,22 @@
+<div *ngIf="learnable && learnable.type == 'skill'">
+  <span *ngIf="learnable.learned"
+    [title]="learnable?.description">
+    {{learnable.name}}
+  </span>
+  <button *ngIf="!learnable.learned"
+    [title]="learnable?.description"
+    (click)="doLearn()">
+    Learn
+    {{ learnable.name }}
+    ({{learnable.cost}} CP)
+  </button>
+</div>
+<div *ngIf="learnable && learnable.type == 'class'">
+  {{learnable.name}} Skills:
+</div>
+
+<ul *ngIf="learnable && learnable.children && learnable.children.length">
+  <li *ngFor="let child of learnable.children">
+    <app-learnable [learnable]="child" (learn)="doLearn($event)" ></app-learnable>
+  </li>
+</ul>

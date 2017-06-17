@@ -16,7 +16,7 @@ import { Packet } from '../models/packet';
 export class SocketService {
 
   private socketUrl = 'ws://localhost:4567/42'
-  private socket = new $WebSocket(this.socketUrl);
+  private socket: any = new $WebSocket(this.socketUrl);
 
   public rxPackets: Observable<Packet> = this.socket
     .getDataStream()

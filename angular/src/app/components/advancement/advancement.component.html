@@ -1,1 +1,8 @@
-<a [routerLink]="['/game', characterService.myId]">Back to game</a>
+<div class="modal">
+  <ul>
+    <li *ngFor="let learnable of advancementService.learnables">
+      <app-learnable [learnable]="learnable" (learn)="advancementService.purchase($event)"></app-learnable>
+    </li>
+  </ul>
+  <button (click)="dismiss()">Back to game</button>
+</div>

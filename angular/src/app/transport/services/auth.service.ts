@@ -23,6 +23,7 @@ export class AuthService extends PacketService {
   }
 
   public connect(): void {
+    console.log("connecting with character id");
     this.send(
       new Packet("connect", { char_id: this.characterId }),
       new Packet("refresh_map"),

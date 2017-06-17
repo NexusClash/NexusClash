@@ -9,7 +9,7 @@ const appRoutes: Routes = [
     path: 'game/:id',
     children: [
       { path: '', component: GameComponent },
-      { path: ':advancement', component: AdvancementComponent, outlet: 'popup' }
+      { path: 'advancement', component: AdvancementComponent, outlet: 'popup' }
     ]
   }
 ];
