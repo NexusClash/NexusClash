@@ -24,4 +24,10 @@ export class AdvancementComponent {
       popup: null,
     }}], { relativeTo: this.route.root });
   }
+
+  switchToClassSelection(): void {
+    this.router.navigate([{ outlets: {
+      popup: 'choose-class'
+    }}], { relativeTo: this.route.parent });
+  }
 }

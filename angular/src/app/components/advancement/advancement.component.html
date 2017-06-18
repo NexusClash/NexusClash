@@ -4,5 +4,9 @@
       <app-learnable [learnable]="learnable" (learn)="advancementService.purchase($event)"></app-learnable>
     </li>
   </ul>
-  <button (click)="dismiss()">Back to game</button>
+  <div>
+    <button (click)="dismiss()">Back to game</button>
+    <button *ngIf="advancementService.classChoices.length"
+      (click)="switchToClassSelection()">Choose class</button>
+  </div>
 </div>

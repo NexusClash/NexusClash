@@ -1,0 +1,15 @@
+<div class="modal" *ngIf="this.advancementService.classChoices.length">
+  <div *ngFor="let classChoice of advancementService.classChoices"
+    (click)="chooseClass(classChoice.id)"
+    class="class-choice"
+    [class.hidden]="!classChoice || !classChoice.name">
+    <div *ngIf="classChoice && classChoice.name" >
+      <img [src]="'/assets/img/class/colour/' + classChoice.name + '.png'">
+      <span>Become {{classChoice?.indefiniteName()}}</span>
+    </div>
+  </div>
+  <div>
+    <button (click)="dismiss()">Back to game</button>
+    <button (click)="switchToBuySkills()">Buy skills</button>
+  </div>
+</div>

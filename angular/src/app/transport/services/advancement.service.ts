@@ -5,24 +5,27 @@ import { PacketService } from './packet.service';
 import { CharacterService } from './character.service';
 import { Packet } from '../models/packet';
 import { Learnable } from '../models/learnable';
+import { TierUp } from '../models/tier-up';
 import { SocketService } from './socket.service';
 
 @Injectable()
 export class AdvancementService extends PacketService {
 
-  handledPacketTypes = ["skill_tree"];
+  handledPacketTypes = ["skill_tree", "class_choices"];
   learnables: Learnable[] = [];
+  classChoices: TierUp[] = [];
 
   constructor(
     protected socketService: SocketService,
     protected characterService: CharacterService,
   ) {
     super(socketService);
-    this.characterService.doWhenCharacterIsKnown(() => this.getSkillTree());
+    this.characterService.doWhenCharacterIsKnown(() => this.refreshChoices());
   }
 
-  getSkillTree(): void {
+  refreshChoices(): void {
     this.send(new Packet("request_skill_tree"));
+    this.send(new Packet("request_classes"));
   }
 
   purchase(id: number): void {
@@ -30,13 +33,12 @@ export class AdvancementService extends PacketService {
   }
 
   protected handle(packet: Packet): void {
-    this.learnables = packet['tree'];
-  }
-
-  private flattenTree(learnable: Learnable): Learnable[] {
-    let meAndMine = [learnable].concat((learnable.children || [])
-      .map(child => this.flattenTree(child))
-      .reduce((all, learnables) => all.concat(learnables), []));
-    return meAndMine;
+    if(packet.type == 'skill_tree'){
+      this.learnables = packet['tree'];
+    }
+    if(packet.type == 'class_choices'){
+      this.classChoices = packet['classes']
+        .map(c => new TierUp(c));
+    }
   }
 }

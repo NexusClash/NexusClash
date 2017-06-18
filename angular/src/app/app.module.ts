@@ -23,7 +23,8 @@ import { TileComponent } from './components/tile/tile.component';
 import { DescriptionComponent } from './components/description/description.component';
 import { TargetableCharacterComponent } from './components/targetable-character/targetable-character.component';
 import { SpeechComponent } from './components/speech/speech.component';
-import { LearnableComponent } from './learnable/learnable.component';
+import { LearnableComponent } from './components/learnable/learnable.component';
+import { ChangeClassComponent } from './components/change-class/change-class.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { LearnableComponent } from './learnable/learnable.component';
     TargetableCharacterComponent,
     SpeechComponent,
     AdvancementComponent,
-    LearnableComponent
+    LearnableComponent,
+    ChangeClassComponent
   ],
   imports: [
     BrowserModule,

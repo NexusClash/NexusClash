@@ -1,0 +1,25 @@
+.class-choice {
+  width: 200px;
+  height: 200px;
+  position: relative;
+  text-align: center;
+  margin: 10px;
+  vertical-align: bottom;
+  display: inline-block;
+  border: 2px dashed black;
+  padding: 0px;
+}
+
+.class-choice img {
+  width: 80%;
+  heigh: 80%;
+  position: absolute;
+  left: 10%;
+}
+
+.class-choice span {
+  position: absolute;
+  bottom: 15px;
+  left: 0;
+  right: 0;
+}
