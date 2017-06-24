@@ -16,17 +16,23 @@ li {
 }
 
 .modal {
-  position: fixed;
-  top: 50%;
-  left: 50%;
+  position: absolute;
+  top: 10%;
+  left: 10%;
   max-height: 80%;
   overflow-y: auto;
-  transform: translate(-50%, -50%);
   background: white;
   border: 1px solid black;
   padding: 5px;
+  right: 10%;
+  bottom: 10%;
 }
 
+.modal-options {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+}
 .modal button {
   float: right;
 }

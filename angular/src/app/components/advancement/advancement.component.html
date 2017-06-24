@@ -4,7 +4,7 @@
       <app-learnable [learnable]="learnable" (learn)="advancementService.purchase($event)"></app-learnable>
     </li>
   </ul>
-  <div>
+  <div class="modal-options">
     <button (click)="dismiss()">Back to game</button>
     <button *ngIf="advancementService.classChoices.length"
       (click)="switchToClassSelection()">Choose class</button>
