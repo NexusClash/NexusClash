@@ -20,15 +20,11 @@ export class ChangeClassComponent {
 
   chooseClass(id: number): void {
     this.advancementService.purchase(id);
-    this.dismiss();
-    this.advancementService.refreshChoices();
-  }
-
-  dismiss(): void {
     this.router.navigate([{ outlets: {
       primary: ['game', this.characterService.myId],
       popup: null,
     }}], { relativeTo: this.route.root });
+    this.advancementService.refreshChoices();
   }
 
   switchToBuySkills(): void {

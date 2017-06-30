@@ -18,13 +18,6 @@ export class AdvancementComponent {
     private router: Router
   ) { }
 
-  dismiss(): void {
-    this.router.navigate([{ outlets: {
-      primary: ['game', this.characterService.myId],
-      popup: null,
-    }}], { relativeTo: this.route.root });
-  }
-
   switchToClassSelection(): void {
     this.router.navigate([{ outlets: {
       popup: 'choose-class'

@@ -5,7 +5,7 @@
     </li>
   </ul>
   <div class="modal-options">
-    <button (click)="dismiss()">Back to game</button>
+    <app-modal-dismissal [text]="'Back to game'"></app-modal-dismissal>
     <button *ngIf="advancementService.classChoices.length"
       (click)="switchToClassSelection()">Choose class</button>
   </div>

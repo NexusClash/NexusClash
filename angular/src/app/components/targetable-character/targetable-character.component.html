@@ -1,6 +1,6 @@
 <div *ngIf="!!character">
-  <a href="#" (click)="select.emit(chracter); false;">
-    {{character.name}}</a>
+  <a [routerLink]="[{ outlets: { popup: ['attack', character.id] } }]"
+  >{{character.name}}</a>
   <span
     [class]="'hp ' + character.hp_fuzzy"
   >&nbsp;</span>

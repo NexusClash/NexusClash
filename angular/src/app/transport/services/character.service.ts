@@ -42,6 +42,12 @@ export class CharacterService extends PacketService {
       );
   }
 
+  character(characterId: number): Observable<Character> {
+    return this.characters
+      .startWith(this.characterCache)
+      .map(map => map.get(characterId));
+  }
+
   selectTarget(characterId: number): void {
     this.send(new Packet('select_target', { char_id: characterId }));
   }

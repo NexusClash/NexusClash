@@ -1,0 +1,6 @@
+<div class="modal" *ngIf="target | async">
+  Attacking
+  {{ (target | async)?.name}}
+  {{ route.parent.url | async | json }}
+  <app-modal-dismissal [text]="'Stop Attacking'"></app-modal-dismissal>
+</div>

@@ -25,6 +25,8 @@ import { TargetableCharacterComponent } from './components/targetable-character/
 import { SpeechComponent } from './components/speech/speech.component';
 import { LearnableComponent } from './components/learnable/learnable.component';
 import { ChangeClassComponent } from './components/change-class/change-class.component';
+import { AttackComponent } from './components/attack/attack.component';
+import { ModalDismissalComponent } from './components/modal-dismissal/modal-dismissal.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +43,9 @@ import { ChangeClassComponent } from './components/change-class/change-class.com
     SpeechComponent,
     AdvancementComponent,
     LearnableComponent,
-    ChangeClassComponent
+    ChangeClassComponent,
+    AttackComponent,
+    ModalDismissalComponent
   ],
   imports: [
     BrowserModule,
