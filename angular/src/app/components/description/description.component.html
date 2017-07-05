@@ -20,7 +20,6 @@
     <app-targetable-character
       *ngFor="let other of (others | async)"
       [character]="other"
-      (select)="selectTarget($event)"
     ></app-targetable-character>
   </div>
 </div>

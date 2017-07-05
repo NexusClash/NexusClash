@@ -3,7 +3,7 @@ import { Status } from './status';
 
 export class Character extends Packet {
   id: number;
-  name: String;
+  name: string;
   hp: number;
   hp_max: number;
   ap: number;
@@ -17,11 +17,11 @@ export class Character extends Packet {
   y: number;
   z: number;
   plane: number
-  nexus_class: String;
+  nexus_class: string;
   sense_hp: Boolean;
   sense_mp: Boolean;
   sense_mo: Boolean;
-  alignment: String;
+  alignment: string;
   visible_statuses: Status[] = [];
 
   get locationId(): string {

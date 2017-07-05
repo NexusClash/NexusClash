@@ -48,10 +48,6 @@ export class CharacterService extends PacketService {
       .map(map => map.get(characterId));
   }
 
-  selectTarget(characterId: number): void {
-    this.send(new Packet('select_target', { char_id: characterId }));
-  }
-
   visibleTiles(viewDistance?: number): Observable<string[]> {
     viewDistance = viewDistance || 2;
     return this.myself

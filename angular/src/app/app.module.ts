@@ -5,6 +5,7 @@ import { HttpModule } from '@angular/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AdvancementService } from './transport/services/advancement.service';
+import { AttackService } from './transport/services/attack.service';
 import { AuthService } from './transport/services/auth.service';
 import { BasicService } from './transport/services/basic.service';
 import { CharacterService } from './transport/services/character.service';
@@ -54,7 +55,7 @@ import { ModalDismissalComponent } from './components/modal-dismissal/modal-dism
     AppRoutingModule
   ],
   providers: [
-    AdvancementService,
+    AdvancementService, AttackService,
     AuthService, BasicService, CharacterService,
     MessageService, SocketService, TileService
   ],

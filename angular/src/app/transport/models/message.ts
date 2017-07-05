@@ -11,8 +11,8 @@ export class Message extends Packet {
       : null;
   }
 
-  constructor(){
-    super("message");
+  constructor(data?: any){
+    super("message", data);
   }
 
 }

@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
 import { Character } from '../../transport/models/character';
+import { AttackService } from '../../transport/services/attack.service';
 import { CharacterService } from '../../transport/services/character.service';
 
 @Component({
@@ -13,9 +14,15 @@ import { CharacterService } from '../../transport/services/character.service';
 export class AttackComponent {
 
   private target: Observable<Character> = this.route.params
-    .switchMap(params => this.characterService.character(+params['other_id']));
+    .map(params => +params['other_id'])
+    .switchMap(targetId => {
+      this.characterService.doWhenCharacterIsKnown(() =>
+        this.attackService.selectTarget(targetId));
+      return this.characterService.character(targetId);
+    });
 
   constructor(
+      private attackService: AttackService,
       private characterService: CharacterService,
       private route: ActivatedRoute
   ) { }

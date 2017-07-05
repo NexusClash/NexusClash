@@ -1,6 +1,20 @@
-<div class="modal" *ngIf="target | async">
-  Attacking
-  {{ (target | async)?.name}}
-  {{ route.parent.url | async | json }}
+<div class="modal">
   <app-modal-dismissal [text]="'Stop Attacking'"></app-modal-dismissal>
+  Attack
+  {{ (target | async)?.name}}
+  with your:
+  <ul>
+    <li class="attack"
+      *ngFor="let attack of (attackService.possibleAttacks | async)"
+      (click)="attackService.attack(attack.id)"
+    >
+      <span class="name">{{ attack.name }}</span>
+      for a
+      {{ attack.hit_chance }}%
+      chance to do
+      {{ attack.damage }}
+      {{ attack.damage_type }}
+      damage
+    </li>
+  </ul>
 </div>

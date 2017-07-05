@@ -27,8 +27,4 @@ export class DescriptionComponent {
   constructor(
     private characterService: CharacterService
   ) { }
-
-  selectTarget(character: Character) {
-    this.characterService.selectTarget(character.id);
-  }
 }
