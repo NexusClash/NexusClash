@@ -5,8 +5,8 @@
   with your:
   <ul>
     <li class="attack"
-      *ngFor="let attack of (attackService.possibleAttacks | async)"
-      (click)="attackService.attack(attack.id)"
+      *ngFor="let attack of (attackService.availableAttacks | async)"
+      (click)="performAttack(attack.id)"
     >
       <span class="name">{{ attack.name }}</span>
       for a
@@ -17,4 +17,31 @@
       damage
     </li>
   </ul>
+  <div [class.hidden]="!(attackService.availableChargeAttacks | async)?.length">
+    charged up with:
+    <ul>
+      <li class="charge-attack">
+        <label>
+          <input type="radio"
+            name="selected-charge-attack"
+            [checked]="!selectedChargeAttackId"
+            (change)="selectedChargeAttackId = 0">
+          Nothing
+        </label>
+      </li>
+      <li class="charge-attack"
+        *ngFor="let chargeAttack of (attackService.availableChargeAttacks | async)"
+      >
+        <label [title]="chargeAttack.description">
+          <input type="radio"
+            name="selected-charge-attack"
+            [checked]="selectedChargeAttackId == chargeAttack.id"
+            (change)="selectedChargeAttackId = +chargeAttack.id"
+            [disabled]="!chargeAttack.possible"
+          >
+          {{ chargeAttack.name }}
+        </label>
+      </li>
+    </ul>
+  </div>
 </div>

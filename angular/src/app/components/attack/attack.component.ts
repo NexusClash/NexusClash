@@ -13,6 +13,7 @@ import { CharacterService } from '../../transport/services/character.service';
 })
 export class AttackComponent {
 
+  private selectedChargeAttackId:number = 0;
   private target: Observable<Character> = this.route.params
     .map(params => +params['other_id'])
     .switchMap(targetId => {
@@ -22,8 +23,12 @@ export class AttackComponent {
     });
 
   constructor(
-      private attackService: AttackService,
-      private characterService: CharacterService,
-      private route: ActivatedRoute
+    private attackService: AttackService,
+    private characterService: CharacterService,
+    private route: ActivatedRoute
   ) { }
+
+  private performAttack(attackId: number): void {
+    this.attackService.attack(attackId, this.selectedChargeAttackId);
+  }
 }
