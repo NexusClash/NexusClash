@@ -6,7 +6,7 @@
   <ul>
     <li class="attack"
       *ngFor="let attack of (attackService.availableAttacks | async)"
-      (click)="performAttack(attack.id)"
+      (click)="attackService.attack(attack.id, selectedChargeAttackId)"
     >
       <span class="name">{{ attack.name }}</span>
       for a
@@ -41,6 +41,19 @@
           >
           {{ chargeAttack.name }}
         </label>
+      </li>
+    </ul>
+  </div>
+  <hr>
+  <div [class.hidden]="!(attackService.availableAbilities | async)?.length">
+    OR
+    <ul>
+      <li class="ability"
+        *ngFor="let ability of (attackService.availableAbilities | async)"
+      >
+        <button (click)="attackService.useAbility(ability.id)">
+          {{ ability.name }}
+        </button>
       </li>
     </ul>
   </div>

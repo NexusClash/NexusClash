@@ -19,6 +19,7 @@ export class AttackService extends PacketService {
 
   combatMessages = new Subject<Message>();
   availableAttacks = new Subject<Attack[]>();
+  availableAbilities = new Subject<{name:string,id:number}[]>();
   availableChargeAttacks = new Subject<ChargeAttack[]>();
 
   handledPacketTypes = ["actions", "message"];
@@ -55,9 +56,18 @@ export class AttackService extends PacketService {
     this.send(attackPacket);
   }
 
+  useAbility(actionId: number): void {
+    this.send(new Packet('activate_target', {
+      target_type: 'character',
+      target: this.targetId,
+      status_id: actionId
+    }));
+  }
+
   private handleActionPacket(packet: Packet): void {
     this.deserializeAttacks(packet);
     this.deserializeChargeAttacks(packet);
+    this.deserializeAbilities(packet);
   }
 
   private handleMessagePacket(packet: Packet): void {
@@ -77,6 +87,17 @@ export class AttackService extends PacketService {
       availableAttacks.push(new Attack(attack));
     }
     this.availableAttacks.next(availableAttacks);
+  }
+
+  private deserializeAbilities(packet: Packet): void {
+    let availableAbilities = [];
+    let abilities = packet["actions"].abilities;
+    for(let abilityId in abilities){
+      let ability = abilities[abilityId];
+      ability["id"] = abilityId;
+      availableAbilities.push(ability);
+    }
+    this.availableAbilities.next(availableAbilities);
   }
 
   private deserializeChargeAttacks(packet: Packet): void {

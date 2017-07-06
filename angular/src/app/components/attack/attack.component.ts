@@ -27,8 +27,4 @@ export class AttackComponent {
     private characterService: CharacterService,
     private route: ActivatedRoute
   ) { }
-
-  private performAttack(attackId: number): void {
-    this.attackService.attack(attackId, this.selectedChargeAttackId);
-  }
 }

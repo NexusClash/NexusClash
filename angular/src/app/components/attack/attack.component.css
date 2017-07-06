@@ -3,12 +3,16 @@ ul {
   width: 100%;
 }
 
+li {
+  margin-top: 5px;
+}
+
 .attack {
   display: inline-block;
   border: 1px solid black;
   max-width: calc(50% - 72px);
   padding: 30px;
-  margin: 0 5px;
+  margin-left: 5px;
   cursor: crosshair;
 }
 
