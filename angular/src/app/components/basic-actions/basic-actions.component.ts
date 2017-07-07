@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 
+import { AbilityService } from '../../services/ability.service';
 import { BasicService } from '../../services/basic.service';
 
 @Component({
@@ -10,6 +11,7 @@ import { BasicService } from '../../services/basic.service';
 export class BasicActionsComponent {
 
   constructor(
-    private basicService: BasicService
+    private basicService: BasicService,
+    private abilityService: AbilityService
   ) { }
 }

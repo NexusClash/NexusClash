@@ -1,2 +1,9 @@
 <button (click)="basicService.search()">Search</button>
 <button (click)="basicService.hide()">Hide</button>
+<hr>
+<button
+  *ngFor="let ability of (abilityService.abilities | async)"
+  (click)="abilityService.useAbility(ability.status_id)"
+>
+ {{ ability.name }}
+</button>

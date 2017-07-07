@@ -24,6 +24,7 @@ import { AttackComponent } from './components/attack/attack.component';
 import { ModalDismissalComponent } from './components/modal-dismissal/modal-dismissal.component';
 import { InventoryComponent } from './components/inventory/inventory.component';
 
+import { AbilityService } from './services/ability.service';
 import { AdvancementService } from './services/advancement.service';
 import { AttackService } from './services/attack.service';
 import { AuthService } from './services/auth.service';
@@ -63,6 +64,7 @@ import { RefreshInventoryGuard } from './guards/refresh-inventory.guard';
     AppRoutingModule
   ],
   providers: [
+    AbilityService,
     AdvancementService, AttackService, AuthService,
     BasicService, CharacterService, InventoryService,
     MessageService, SocketService, TileService,
