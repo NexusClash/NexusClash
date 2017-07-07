@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { AdvancementService } from '../../transport/services/advancement.service';
-import { CharacterService } from '../../transport/services/character.service';
+import { AdvancementService } from '../../services/advancement.service';
+import { CharacterService } from '../../services/character.service';
 
 @Component({
   selector: 'app-change-class',

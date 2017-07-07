@@ -1,7 +1,7 @@
 import { Component, Input  } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { CharacterService } from '../../transport/services/character.service';
+import { CharacterService } from '../../services/character.service';
 
 @Component({
   selector: 'app-modal-dismissal',

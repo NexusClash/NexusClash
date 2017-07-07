@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { BasicService } from '../../transport/services/basic.service';
+import { BasicService } from '../../services/basic.service';
 
 @Component({
   selector: 'app-speech',

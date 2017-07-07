@@ -2,9 +2,9 @@ import { Component, Input } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 
-import { Character } from '../../transport/models/character';
-import { CharacterService } from '../../transport/services/character.service';
-import { Tile } from '../../transport/models/tile';
+import { Character } from '../../models/character';
+import { CharacterService } from '../../services/character.service';
+import { Tile } from '../../models/tile';
 
 @Component({
   selector: 'app-description',

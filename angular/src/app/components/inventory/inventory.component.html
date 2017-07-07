@@ -1,0 +1,36 @@
+<div class="modal">
+  <app-modal-dismissal></app-modal-dismissal>
+  Item count: {{ (inventoryService.items | async)?.length }}<br>
+  <span class="capacity">
+    Capacity:
+    {{ inventoryService.totalWeight || 0}}
+    of
+    {{ inventoryService.maxWeight || 50}}
+  </span>
+  <table>
+    <tr>
+      <th>Item</th>
+      <th>&nbsp;</th>
+      <th>Wt.</th>
+      <th>&nbsp;</th>
+    </tr>
+    <tr class="item-row"
+      *ngFor="let item of (items | async)"
+    >
+      <td>{{ item.name }}</td>
+      <td>
+        <button
+          *ngFor="let action of item.actions"
+          (click)="inventoryService.useItem(item.id, action.status_id)">
+          {{ action.name }}
+        </button>
+      </td>
+      <td>{{ item.weight }}</td>
+      <td>
+        <button (click)="inventoryService.drop(item.id)">
+          Drop
+        </button>
+      </td>
+    </tr>
+  </table>
+</div>

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
-import { Tile } from '../../transport/models/tile';
+import { Tile } from '../../models/tile';
 
 @Component({
   selector: 'app-tile',

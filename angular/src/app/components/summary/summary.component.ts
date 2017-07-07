@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 
-import { Character } from '../../transport/models/character';
+import { Character } from '../../models/character';
 
 @Component({
   selector: 'app-summary',

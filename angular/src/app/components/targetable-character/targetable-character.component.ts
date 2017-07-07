@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
-import { Character } from '../../transport/models/character';
+import { Character } from '../../models/character';
 
 @Component({
   selector: 'app-targetable-character',

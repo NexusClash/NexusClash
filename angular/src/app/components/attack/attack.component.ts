@@ -2,9 +2,9 @@ import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
-import { Character } from '../../transport/models/character';
-import { AttackService } from '../../transport/services/attack.service';
-import { CharacterService } from '../../transport/services/character.service';
+import { Character } from '../../models/character';
+import { AttackService } from '../../services/attack.service';
+import { CharacterService } from '../../services/character.service';
 
 @Component({
   selector: 'app-attack',

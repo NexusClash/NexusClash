@@ -3,10 +3,10 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/operator/switchMap';
 
-import { Character } from '../../transport/models/character';
-import { CharacterService } from '../../transport/services/character.service';
-import { Tile } from '../../transport/models/tile';
-import { TileService } from '../../transport/services/tile.service';
+import { Character } from '../../models/character';
+import { CharacterService } from '../../services/character.service';
+import { Tile } from '../../models/tile';
+import { TileService } from '../../services/tile.service';
 
 @Component({
   selector: 'app-map',

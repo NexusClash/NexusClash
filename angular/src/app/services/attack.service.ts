@@ -7,7 +7,6 @@ import 'rxjs/add/operator/take';
 import { Attack } from '../models/attack';
 import { ChargeAttack } from '../models/charge-attack';
 import { Character } from '../models/character';
-import { Message } from '../models/message';
 import { Packet } from '../models/packet';
 import { PacketService } from './packet.service';
 import { SocketService } from './socket.service';
@@ -17,7 +16,6 @@ export class AttackService extends PacketService {
 
   private targetId: number;
 
-  combatMessages = new Subject<Message>();
   availableAttacks = new Subject<Attack[]>();
   availableAbilities = new Subject<{name:string,id:number}[]>();
   availableChargeAttacks = new Subject<ChargeAttack[]>();
@@ -31,12 +29,9 @@ export class AttackService extends PacketService {
   }
 
   handle(packet: Packet): void {
-    switch(packet.type){
-      case "actions":
-        return this.handleActionPacket(packet);
-      case "message":
-        return this.handleMessagePacket(packet);
-    }
+    this.deserializeAttacks(packet);
+    this.deserializeChargeAttacks(packet);
+    this.deserializeAbilities(packet);
   }
 
   selectTarget(characterId: number): void {
@@ -62,20 +57,6 @@ export class AttackService extends PacketService {
       target: this.targetId,
       status_id: actionId
     }));
-  }
-
-  private handleActionPacket(packet: Packet): void {
-    this.deserializeAttacks(packet);
-    this.deserializeChargeAttacks(packet);
-    this.deserializeAbilities(packet);
-  }
-
-  private handleMessagePacket(packet: Packet): void {
-    let message = new Message(packet);
-    if(message.class != "combat-attack"){
-      return;
-    }
-    this.combatMessages.next(message);
   }
 
   private deserializeAttacks(packet: Packet): void {

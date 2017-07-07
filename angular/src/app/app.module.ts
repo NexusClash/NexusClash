@@ -3,15 +3,9 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
+
 import { AppRoutingModule } from './app-routing.module';
-import { AdvancementService } from './transport/services/advancement.service';
-import { AttackService } from './transport/services/attack.service';
-import { AuthService } from './transport/services/auth.service';
-import { BasicService } from './transport/services/basic.service';
-import { CharacterService } from './transport/services/character.service';
-import { MessageService } from './transport/services/message.service';
-import { SocketService } from './transport/services/socket.service';
-import { TileService } from './transport/services/tile.service';
+
 import { AppComponent } from './app.component';
 import { AdvancementComponent } from './components/advancement/advancement.component';
 import { BasicActionsComponent } from './components/basic-actions/basic-actions.component';
@@ -28,6 +22,19 @@ import { LearnableComponent } from './components/learnable/learnable.component';
 import { ChangeClassComponent } from './components/change-class/change-class.component';
 import { AttackComponent } from './components/attack/attack.component';
 import { ModalDismissalComponent } from './components/modal-dismissal/modal-dismissal.component';
+import { InventoryComponent } from './components/inventory/inventory.component';
+
+import { AdvancementService } from './services/advancement.service';
+import { AttackService } from './services/attack.service';
+import { AuthService } from './services/auth.service';
+import { BasicService } from './services/basic.service';
+import { CharacterService } from './services/character.service';
+import { InventoryService } from './services/inventory.service';
+import { MessageService } from './services/message.service';
+import { SocketService } from './services/socket.service';
+import { TileService } from './services/tile.service';
+
+import { RefreshInventoryGuard } from './guards/refresh-inventory.guard';
 
 @NgModule({
   declarations: [
@@ -46,7 +53,8 @@ import { ModalDismissalComponent } from './components/modal-dismissal/modal-dism
     LearnableComponent,
     ChangeClassComponent,
     AttackComponent,
-    ModalDismissalComponent
+    ModalDismissalComponent,
+    InventoryComponent
   ],
   imports: [
     BrowserModule,
@@ -55,9 +63,11 @@ import { ModalDismissalComponent } from './components/modal-dismissal/modal-dism
     AppRoutingModule
   ],
   providers: [
-    AdvancementService, AttackService,
-    AuthService, BasicService, CharacterService,
-    MessageService, SocketService, TileService
+    AdvancementService, AttackService, AuthService,
+    BasicService, CharacterService, InventoryService,
+    MessageService, SocketService, TileService,
+
+    RefreshInventoryGuard
   ],
   bootstrap: [AppComponent]
 })

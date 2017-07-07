@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
-import { Learnable } from '../../transport/models/learnable';
+import { Learnable } from '../../models/learnable';
 
 @Component({
   selector: 'app-learnable',
