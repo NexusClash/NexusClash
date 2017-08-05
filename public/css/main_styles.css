@@ -1,5 +1,10 @@
 @import url(https://fonts.googleapis.com/css?family=Raleway|Lustria);
 
+.ui-widget-overlay
+{
+	display:none;
+}
+
 .outlined
 {
 	text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;

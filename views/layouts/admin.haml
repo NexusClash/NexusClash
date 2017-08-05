@@ -5,13 +5,18 @@
 			Nexus Clash
 		%link(rel="stylesheet" href="/css/sass/absolution.css?1")
 		%link(rel="stylesheet" href="/css/main_styles.css?10")
-		%link(rel="stylesheet" href="/css/jquery.dataTables.min.css")
-		%link(rel="stylesheet" href="/css/dataTables.tableTools.min.css")
-		%link(rel="stylesheet" href="/css/dataTables.editor.min.css")
 		%script(src="/js/jquery.js")
-		%script(src="/js/jquery.dataTables.js")
-		%script(src="/js/dataTables.tableTools.js")
-		%script(src="/js/dataTables.editor.js")
+		-# Jquery UI is required by JTable, but not by DataTables
+		%link(rel="stylesheet" href="/jtable/themes/metro/lightgray/jtable.min.css")
+		%script(src="//code.jquery.com/ui/1.12.1/jquery-ui.min.js")
+		%script(src="/jtable/jquery.jtable.js")
+		-# DataTables - not used due to licensing issues
+			%link(rel="stylesheet" href="/css/jquery.dataTables.min.css")
+			%link(rel="stylesheet" href="/css/dataTables.tableTools.min.css")
+			%link(rel="stylesheet" href="/css/dataTables.editor.min.css")
+			%script(src="/js/jquery.dataTables.js")
+			%script(src="/js/dataTables.tableTools.js")
+			%script(src="/js/dataTables.editor.js")
 		%meta(charset="utf-8")
 	%body
 		.margin-10.padding-10(style="bottom:0px;padding-top:0px")

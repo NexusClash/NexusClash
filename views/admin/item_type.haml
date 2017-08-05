@@ -1,130 +1,75 @@
-%table#item_types.display
+%p
+	DATATABLES -> JTABLES: JTable sends only the primary key field when deleting and ignores the returned data from server on create/update - This may cause admin UI oddities until workarounds are implemented
+%p
+	Known Issue: You need to reload child tables after deleting a record within them, otherwise backend will delete/update the wrong records on subsequent changes (TODO: Add event handler to reload table data after a delete action)
+%table#item_types.display(style='width:100%')
 	%thead
 	%tbody
 	%tfoot
 :javascript
-	var subtable, item_type_sub_id;
-	var editor = new $.fn.dataTable.Editor( {
-		ajax: "/admin/editor/item_type",
-		idSrc: 'id',
-		table: '#item_types',
-		fields: [
-			{label: "Name",name: "name", type: 'text'},
-			{label: "Category",name: "category", type: 'select', ipOpts: ['alcohol', 'ammo', 'armour', 'clothing', 'component', 'food', 'mundane', 'mystic', 'potion', 'weapon']},
-			{label: "Weight",name: "weight", type: 'text'}
-		]
-		} );
-
-	var item_types = $('#item_types').DataTable({  "dom": '<"status_effect_buttons">T<"clear">lfrtip',
-		"tableTools": { "aButtons": [ { sExtends: "editor_create", editor: editor },{ sExtends: "editor_edit",   editor: editor }, 'xls', 'print' ],
-						"deferRender": true,
-						"sSwfPath": "/swf/copy_csv_xls.swf",
-						"sRowSelect": "single",
-					},
-		"order": [[2, "asc"]],"bJQueryUI": false,"bAutoWidth":false, "bPaginate": true,
-		"deferRender": true,
-		"ajax":'/admin/datasource/item_type',
-		"aoColumns": [
-			{
-				title: 'Edit',
-				data: null,
-				render: function(data, type, row){
-					return  '<a style="text-decoration:none;" href="#" class="DTTT_button DTTT_button_text details-control show_effects"><span>Effects</span></a>';
-				},
-				width: '30px'
-			},
-			{ title: "#", data:"id" },
-			{ title: "Name", data:"name" },
-			{ title: "Category", data:"category"},
-			{ title: "Weight", data:"weight"},
-			{ title: "Description", data:"game_effects"}
-		]
-		});
-
-		$('#item_types tbody').on('click', '.show_effects', function () {
-		var tr = $(this).closest('tr');
-		var row = item_types.row( tr );
-		var item_type_sub_id = row.data().id;
-
-		if ( row.child.isShown() ) {
-			// This row is already open - close it
-			row.child.hide();
-			tr.removeClass('shown');
-		}
-		else {
-			// Open this row
-
-			$('#item_types > tbody tr').each(function(tr2){
-
-				var srow = item_types.row( tr2 );
-
-				if ( srow.child.isShown() ) {
-					// This row is already open - close it
-					srow.child.hide();
-					$(tr2).removeClass('shown');
-				}
-
-			});
-
-			row.child( '<div id="item_type_sub_' + item_type_sub_id + '"><div class="sk-folding-cube"><div class="sk-cube sk-cube1"></div><div class="sk-cube sk-cube2"></div><div class="sk-cube sk-cube4"></div><div class="sk-cube sk-cube3"></div></div><div style="text-align:center">Loading...</div></div>' ).show();
-			$.ajax({
-				url: "/admin/item_type/" + item_type_sub_id + "/statuses"
-			})
-			.done(function( html ) {
-				$('#item_type_sub_' + item_type_sub_id).html(html);
-				var editor2 = new $.fn.dataTable.Editor( {
-					ajax: "/admin/editor/item_type/" + item_type_sub_id + "/statuses",
-					idSrc: 'index',
-					table: '#item_type_subtable_' + item_type_sub_id,
-					fields: [
-						{label: "Status", type: 'select', name: 'id'}
-					]
-					} );
-
-				$.getJSON( "/admin/statuses_by_id", function( data ) {
-					editor2.field('id').update(data);
-				});
-
-				subtable = $('#item_type_subtable_' + item_type_sub_id).DataTable({  "dom": 'T<"clear">lfrtip',
-						"tableTools": { "aButtons": [ { sExtends: "editor_create", editor: editor2 },{ sExtends: "editor_edit",   editor: editor2 },{ sExtends: "editor_remove", editor: editor2 }, 'xls', 'print' ],
-										"deferRender": true,
-										"sSwfPath": "/swf/copy_csv_xls.swf",
-										"sRowSelect": "single",
+	$('#item_types').jtable({
+		title: 'Item Types',
+		paging: false,
+		sorting: false,
+		actions:{
+			listAction: '/admin/datasource/item_type?jtable=true',
+			createAction: '/admin/editor/item_type?jtable=true&action=create',
+			updateAction: '/admin/editor/item_type?jtable=true&action=edit'
+		},
+		fields:{
+			id: {title: '#', key: true, list:true, create: false, edit: false},
+			effects: {
+				title: 'Statuses',
+				width: '5px',
+				sorting: false,
+				edit: false,
+				create: false,
+				display: function (statusData) {
+					var $button = $('<button class="ui-button ui-widget ui-corner-all ui-button-text-only">Statuses</button>');
+					//Open child table when user clicks the button
+					$button.click(function () {
+						$('#item_types').jtable('openChildTable',
+							$button.closest('tr'),
+							{
+								title: statusData.record.name + ' - Statuses',
+								actions: {
+									listAction: '/admin/datasource/item_type/' + statusData.record.id + '/statuses?jtable=true',
+									deleteAction: '/admin/editor/item_type/' + statusData.record.id + '/statuses?jtable=true&action=remove',
+									createAction: '/admin/editor/item_type/' + statusData.record.id + '/statuses?jtable=true&action=create',
+								},
+								fields: {
+									index: {
+										key: true,
+										list: false
 									},
-						"order": [],"bJQueryUI": false,"bAutoWidth":false, "bPaginate": true,
-						"deferRender": true,
-						"ajax":'/admin/datasource/item_type/' + item_type_sub_id + '/statuses',
-						"aoColumns": [
-							{ title: "Name", data:"name" },
-							{ title: "Description", data:"description" }
-						]
+									id: {
+										title: 'Name',
+										type: 'combobox',
+										options: '/admin/statuses_by_id?jtable=true'
+									},
+									description:{
+										title: 'Description',
+										edit: false,
+										create: false,
+										list: true
+								    }
+								}
+							}, function (data) { //opened handler
+								data.childTable.jtable('load');
+							});
 					});
-
-				editor2.on('postRemove', function(e, json, data){
-					var api = new $.fn.dataTable.Api('#item_type_subtable_' + item_type_sub_id);
-					api.ajax.reload();
-				});
-				editor2.on('postCreate postEdit postRemove', function(e, json, data){
-
-					$.getJSON( "/admin/datasource/item_type/" + item_type_sub_id, function( data ) {
-
-						var nData = data.data;
-
-						item_types.rows().eq(0).each(function(idx){
-
-	                        var row = item_types.row(idx);
-
-	                        if(row.data().id == nData.id)
-	                        {
-	                            row.data(nData);
-	                        }
-
-	                    });
-					});
-				});
-
-			});
-			tr.addClass('shown');
+					//Return button to show on the main row
+					return $button;
+				}
+			},
+			name: {title: 'Name'},
+			category: {title: 'Category', type:'combobox', options: ['alcohol', 'ammo', 'armour', 'clothing', 'component', 'food', 'mundane', 'mystic', 'potion', 'weapon']},
+			weight: {title: 'Weight'},
+			game_effects: {width:'50%', title: 'Description', create: false, edit: false, list: true}
 
 
-		}});
+		}
+	});
+
+
+	$('#item_types').jtable('load');

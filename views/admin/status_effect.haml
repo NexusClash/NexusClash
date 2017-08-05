@@ -1,142 +1,183 @@
 %p
 	Once you've finished editing statuses, you will need to synchronise active characters in order to apply the changes:
 	%a.ui-button.ui-widget.ui-corner-all.ui-button-text-only(href="/admin/sync") Synchronise Status Effects
-%table#status_effects.display
+%p
+	EXPECT BUGS - JTable REALLY doesn't support what the effect editor is trying to do, so its fudged together and probably pretty fragile at the moment
+%p
+	DATATABLES -> JTABLES: JTable sends only the primary key field when deleting and ignores the returned data from server on create/update - This may cause admin UI oddities until workarounds are implemented
+%p
+	Known Issue: You need to reload child tables after deleting a record within them, otherwise backend will delete/update the wrong records on subsequent changes (TODO: Add event handler to reload table data after a delete action)
+%table#status_effects.display(style='width:100%')
 	%thead
 	%tbody
 	%tfoot
 :javascript
-	var editor, subtable, status_effect_sub_id;
-	var status_editor = new $.fn.dataTable.Editor( {
-		ajax: "/admin/editor/status_type",
-		idSrc: 'id',
-		table: '#status_effects',
-		fields: [
-			{label: "Name",name: "name", type: 'text'},
-			{label: "Activation",name: "activation", type: 'select', ipOpts: ['standard'], def: 'standard'},
-			{label: "Family",name: "family", type: 'select', ipOpts: ['class', 'magical', 'mundane', 'skill'], def: 'skill'}
-		]
-		} );
-	var status_effects = $('#status_effects').DataTable({  "dom": '<"status_effect_buttons">T<"clear">lfrtip',
-		"tableTools": { aButtons: [{ sExtends: "editor_create", editor: status_editor },{ sExtends: "editor_edit",   editor: status_editor }, 'xls', 'print' ],
-						"deferRender": true,
-						"sSwfPath": "/swf/copy_csv_xls.swf",
-						"sRowSelect": "os"
-					},
-		"order": [[3, "asc"], [2, "asc"]],"bJQueryUI": false,"bAutoWidth":false, "bPaginate": true,
-		"deferRender": true,
-		"ajax":'/admin/datasource/status_effect',
-		"aoColumns": [
-			{
-				title: 'Edit',
-				data: null,
-				render: function(data, type, row){
-					return  '<a style="text-decoration:none;" href="#" class="DTTT_button DTTT_button_text details-control show_effects"><span>Effects</span></a>';
-				},
-				width: '30px'
-			},
-			{ title: "#", data:"id" },
-			{ title: "Name", data:"name" },
-			{ title: "Type", data:"family"},
-			{ title: "Effects", data:"impacts" }
-		]
-		});
-
-		$('#status_effects tbody').on('click', '.show_effects', function () {
-		var tr = $(this).closest('tr');
-		var row = status_effects.row( tr );
-		var status_effect_sub_id = row.data().id
-
-
-		if ( row.child.isShown() ) {
-			// This row is already open - close it
-			row.child.hide();
-			tr.removeClass('shown');
-		}
-		else {
-			// Open this row
-
-			$('#status_effects > tbody tr').each(function(tr2){
-
-				var srow = status_effects.row( tr2 );
-
-				if ( srow.child.isShown() ) {
-					// This row is already open - close it
-					srow.child.hide();
-					$(tr2).removeClass('shown');
-				}
-
-			});
-
-			row.child( '<div id="status_effect_sub_' + status_effect_sub_id + '"><div class="sk-folding-cube"><div class="sk-cube sk-cube1"></div><div class="sk-cube sk-cube2"></div><div class="sk-cube sk-cube4"></div><div class="sk-cube sk-cube3"></div></div><div style="text-align:center">Loading...</div></div>' ).show();
-			$.ajax({
-				url: "/admin/status_effect/" + status_effect_sub_id + "/effects"
-			})
-			.done(function( html ) {
-				$('#status_effect_sub_' + status_effect_sub_id).html(html);
-				editor = new $.fn.dataTable.Editor( {
-					ajax: "/admin/editor/status_effect/" + status_effect_sub_id + "/effects",
-					idSrc: 'index',
-					table: '#status_effect_subtable_' + status_effect_sub_id,
-					fields: [
-						{label: "Type",name: "type", type: 'select', ipOpts:['Activated', 'ActivatedTarget', 'AlonaiAegisAbility', 'Ammo', 'Armour', 'AttackHitIncreasesDuration',  'BloodClaws', 'BloodTaste', 'ChargeAttack', 'ClassTier', 'CombinationAttack', 'Component', 'CraftingRecipe', 'CriticalHit', 'CustomText', 'DamageReducesDuration', 'Defence', 'Duration', 'Equippable', 'ExplosiveMurder', 'ExplosiveMurderManualActivation', 'FirstAidKit', 'GrantStatus', 'HandOfZealotry', 'HealingOnTick', 'HolierThanThou', 'IncreaseHealing', 'IncreaseMaxEncumbrance', 'IncreaseMaxHitpoints', 'LimitedUses', 'MoralityRestriction', 'MoralityRestrictionTarget', 'Regen', 'Reloadable', 'RendFlesh', 'SeeHitPoints', 'SeePowerState', 'SendMessage', 'SenseMorality', 'SenseMagic', 'ShieldOfFaith', 'SkillPrerequisite', 'SkillPurchasable', 'Smite', 'TogglePower', 'Weapon', 'WeaponBuff', 'WeaponWithAmmo'], def: 'Regen'},
-						{label: "",name: "select_1", type: 'select'},
-						{label: "",name: "text_1", type: 'text'},
-						{label: "",name: "select_2", type: 'select'},
-						{label: "",name: "text_2", type: 'text'},
-						{label: "",name: "select_3", type: 'select'},
-						{label: "",name: "text_3", type: 'text'},
-						{label: "",name: "select_4", type: 'select'},
-						{label: "",name: "text_4", type: 'text'},
-						{label: "",name: "select_5", type: 'select'},
-						{label: "",name: "text_5", type: 'text'},
-						{label: "",name: "text_6", type: 'text'},
-						{label: "",name: "text_7", type: 'text'}
-					]
-					} );
-
-				editor.dependent('type', '/admin/datatable/effect/define');
-				subtable = $('#status_effect_subtable_' + status_effect_sub_id).DataTable({  "dom": 'T<"clear">lfrtip',
-						"tableTools": { "aButtons": [ { sExtends: "editor_create", editor: editor },{ sExtends: "editor_edit",   editor: editor },{ sExtends: "editor_remove", editor: editor }, 'xls', 'print' ],
-										"deferRender": true,
-										"sSwfPath": "/swf/copy_csv_xls.swf",
-										"sRowSelect": "os",
+	$('#status_effects').jtable({
+		title: 'Status Effects',
+		paging: false,
+		sorting: false,
+		actions:{
+			listAction: '/admin/datasource/status_effect?jtable=true',
+			createAction: '/admin/editor/status_type?jtable=true&action=create',
+			updateAction: '/admin/editor/status_type?jtable=true&action=edit'
+		},
+		fields:{
+			id: {title: '#', key: true, list:true, create: false, edit: false},
+			effects: {
+				title: 'Effects',
+				width: '5px',
+				sorting: false,
+				edit: false,
+				create: false,
+				display: function (statusData) {
+					var $button = $('<button class="ui-button ui-widget ui-corner-all ui-button-text-only">Effects</button>');
+					//Open child table when user clicks the button
+					$button.click(function () {
+						$('#status_effects').jtable('openChildTable',
+							$button.closest('tr'),
+							{
+								title: statusData.record.name + ' - Effects',
+								actions: {
+									listAction: '/admin/datasource/status_effect/' + statusData.record.id + '/effects?jtable=true',
+									deleteAction: '/admin/editor/status_effect/' + statusData.record.id + '/effects?jtable=true&action=remove',
+									createAction: '/admin/editor/status_effect/' + statusData.record.id + '/effects?jtable=true&action=create',
+									updateAction: '/admin/editor/status_effect/' + statusData.record.id + '/effects?jtable=true&action=edit',
+								},
+								fields: {
+									index: {
+										key: true,
+										list: false
 									},
-						"order": [],"bJQueryUI": false,"bAutoWidth":false, "bPaginate": true,
-						"deferRender": true,
-						"ajax":'/admin/datasource/status_effect/' + status_effect_sub_id + '/effects',
-						"aoColumns": [
-							{ title: "Type", data:"type" },
-							{ title: "Description", data:"description" }
-						]
+									type:{
+										title:'Type',
+										type:'combobox',
+										options: ['Activated', 'ActivatedTarget', 'AlonaiAegisAbility', 'Ammo', 'Armour', 'AttackHitIncreasesDuration',  'BloodClaws', 'BloodTaste', 'ChargeAttack', 'ClassTier', 'CombinationAttack', 'Component', 'CraftingRecipe', 'CriticalHit', 'CustomText', 'DamageReducesDuration', 'Defence', 'Duration', 'Equippable', 'ExplosiveMurder', 'ExplosiveMurderManualActivation', 'FirstAidKit', 'GrantStatus', 'HandOfZealotry', 'HealingOnTick', 'HolierThanThou', 'IncreaseHealing', 'IncreaseMaxEncumbrance', 'IncreaseMaxHitpoints', 'LimitedUses', 'MoralityRestriction', 'MoralityRestrictionTarget', 'Regen', 'Reloadable', 'RendFlesh', 'SeeHitPoints', 'SeePowerState', 'SendMessage', 'SenseMorality', 'SenseMagic', 'ShieldOfFaith', 'SkillPrerequisite', 'SkillPurchasable', 'Smite', 'TogglePower', 'Weapon', 'WeaponBuff', 'WeaponWithAmmo'],
+										defaultValue: 'Regen'
+									},
+									description: {
+										title:'Description',
+										edit:false,
+										create:false
+									},
+									select_1: {
+										title:'select_1',
+										type:'combobox',
+										list:false
+									},
+									text_1: {
+										title:'text_1',
+										list:false
+									},
+									select_2: {
+										title:'select_2',
+										type:'combobox',
+										list:false
+									},
+									text_2: {
+										title:'text_2',
+										list:false
+									},
+									select_3: {
+										title:'select_3',
+										type:'combobox',
+										list:false
+									},
+									text_3: {
+										title:'text_3',
+										list:false
+									},
+									select_4: {
+										title:'select_5',
+										type:'combobox',
+										list:false
+									},
+									text_4: {
+										title:'text_4',
+										list:false
+									},
+									select_5: {
+										title:'select_5',
+										type:'combobox',
+										list:false
+									},
+									text_5: {
+										title:'text_5',
+										list:false
+									},
+									text_6: {
+										title:'text_6',
+										list:false
+									},
+									text_7: {
+										title:'text_7',
+										list:false
+									}
+								},
+								formCreated: function(event, data){
+									if(data.formType == 'edit')
+									{
+										setTimeout(function(){emulateDTEDependentFields($('.jtable-dialog-form select[name=type]').val())}, 500);
+									}
+									else
+									{
+										emulateDTEDependentFields('Regen');
+									}
+								}
+							} , function (data) { //opened handler
+								data.childTable.jtable('load');
+							});
 					});
+					//Return button to show on the main row
+					return $button;
+				}
+			},
+			name: {title: 'Name'},
+			activation: {title: 'Activation', type:'combobox', options:['standard'], list:false},
+			family: {title: 'Type', type:'combobox', options: ['class', 'magical', 'mundane', 'skill'], defaultValue: 'skill'},
+			impacts: {width:'50%', title: 'Effects', create: false, edit: false, list: true}
+		}
+	});
 
-				editor.on('postRemove', function(e, json, data){
-					var api = new $.fn.dataTable.Api('#status_effect_subtable_' + status_effect_sub_id);
-					api.ajax.reload();
-				});
+	$(document).on('change', '.jtable-dialog-form select[name=type]', function(){
+		emulateDTEDependentFields($(this).val())
+	});
 
-				editor.on('postCreate postEdit postRemove', function(e, json, data){
+	function emulateDTEDependentFields(effect)
+	{
+		$.getJSON( "/admin/datatable/effect/define?jtable=true&type=" + effect, function( data ) {
 
-					$.getJSON( "/admin/datasource/status_effect/" + status_effect_sub_id, function( data ) {
-
-						var nData = data.data;
-
-						status_effects.rows().eq(0).each(function(idx){
-
-	                        var row = status_effects.row(idx);
-
-	                        if(row.data().id == nData.id)
-	                        {
-	                            row.data(nData);
-	                        }
-
-	                    });
-					});
-				});
-
+			// Emulate dependent fields hiding
+			$(data.hide).each(function(_, e){
+				$('.jtable-dialog-form .jtable-input-field-container .jtable-input [name=' + e + ']').parent().parent().hide();
 			});
-			tr.addClass('shown');
+			// Emulate dependent fields labels
+			$.each(data.labels, function(k, v){
+				$('.jtable-dialog-form .jtable-input-field-container .jtable-input [name=' + k + ']').parent().parent().find('.jtable-input-label').html(v);
+			});
+			// Emulate options
+			$.each(data.options, function(k, v){
+				// Attempt to fetch the value from the current field if available
+				field = $('.jtable-dialog-form .jtable-input-field-container .jtable-input [name=' + k + ']');
+				currentValue = field.val();
+				// Build select
+				select = $('<select id="Edit-' + k + '" name="' + k + '"></select>')
+				// DataTables Editor supported a wide range of options list formats, so we need to check if its a hash or array and treat appropriately
+				useKey = !(v instanceof Array);
+				$(v).each(function(key,optionLabel){
+					optionKey = useKey ? key : optionLabel;
+					select.append('<option ' + (optionKey == currentValue ? 'selected' : '') + ' value="' + optionKey + '">' + optionLabel + '</option>');
+				});
+				field.replaceWith(select);
+			});
+			// Emulate values (not implemented)
+			// Emulate dependent fields showing
+			$(data.show).each(function(_, e){
+				$('.jtable-dialog-form .jtable-input-field-container .jtable-input [name=' + e + ']').parent().parent().show();
+			});
 
 
-		}});
+		});
+	}
+
+
+	$('#status_effects').jtable('load');

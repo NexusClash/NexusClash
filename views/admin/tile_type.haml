@@ -1,176 +1,127 @@
 %p
 	Tile type changes get saved straight away, but aren't sent through to players until they move
-%table#tile_types.display
+%p
+	DATATABLES -> JTABLES: JTable sends only the primary key field when deleting and ignores the returned data from server on create/update - This may cause admin UI oddities until workarounds are implemented
+%p
+	Known issue: Try to avoid adding multiple search odds to a tile for the same item, otherwise it'll break
+%p
+	Known Issue: You need to reload the statuses child table after deleting a record, otherwise backend will delete/update the wrong records on subsequent changes  (TODO: Add event handler to reload table data after a delete action)
+%table#tile_types.display(style='width:100%')
 	%thead
 	%tbody
 	%tfoot
 :javascript
-	var subtable, item_type_sub_id;
-	var editor = new $.fn.dataTable.Editor( {
-		ajax: "/admin/editor/tile_type",
-		idSrc: 'id',
-		table: '#tile_types',
-		fields: [
-			{label: "Name",name: "name", type: 'text'},
-			{label: "Search success rate %",name: "search_rate", type: 'text'},
-			{label: "Hide success rate %",name: "hide_rate", type: 'text'},
-			{label: "Description",name: "description", type: 'textarea'},
-			{label: "Tile appearance (CSS)",name: "css", type: 'textarea'}
-		]
-		} );
-
-	var tile_types = $('#tile_types').DataTable({  "dom": '<"status_effect_buttons">T<"clear">lfrtip',
-		"tableTools": { "aButtons": [ { sExtends: "editor_create", editor: editor },{ sExtends: "editor_edit",   editor: editor }, 'xls', 'print' ],
-						"deferRender": true,
-						"sSwfPath": "/swf/copy_csv_xls.swf",
-						"sRowSelect": "single",
-					},
-		"order": [[1, "asc"]],"bJQueryUI": false,"bAutoWidth":false, "bPaginate": true,
-		"deferRender": true,
-		"ajax":'/admin/datasource/tile_type',
-		"aoColumns": [
-			{
-				title: 'Edit',
-				data: null,
-				render: function(data, type, row){
-					return  '<a style="text-decoration:none;" href="#" class="DTTT_button DTTT_button_text details-control show_effects"><span>Search Odds</span></a><a style="text-decoration:none;" href="#" class="DTTT_button DTTT_button_text details-control2 show_statuses"><span>Statuses</span></a>';
-				},
-				width: '75px'
+	$('#tile_types').jtable({
+		title: 'Tile Types',
+		paging: false,
+		sorting: false,
+		actions:{
+			listAction: '/admin/datasource/tile_type?jtable=true',
+			createAction: '/admin/editor/tile_type?jtable=true&action=create',
+			updateAction: '/admin/editor/tile_type?jtable=true&action=edit'
+		},
+		fields:{
+			id: {key: true, list:false},
+			effects: {
+				title: 'Statuses',
+				width: '5px',
+				sorting: false,
+				edit: false,
+				create: false,
+				display: function (statusData) {
+					var $button = $('<button class="ui-button ui-widget ui-corner-all ui-button-text-only">Statuses</button>');
+					//Open child table when user clicks the button
+					$button.click(function () {
+						$('#tile_types').jtable('openChildTable',
+							$button.closest('tr'),
+							{
+								title: statusData.record.name + ' - Statuses',
+								actions: {
+									listAction: '/admin/datasource/tile_type/' + statusData.record.id + '/statuses?jtable=true',
+									deleteAction: '/admin/editor/tile_type/' + statusData.record.id + '/statuses?jtable=true&action=remove',
+									createAction: '/admin/editor/tile_type/' + statusData.record.id + '/statuses?jtable=true&action=create',
+								},
+								fields: {
+									index: {
+										key: true,
+										list: false
+									},
+									id: {
+										title: 'Name',
+										type: 'combobox',
+										options: '/admin/statuses_by_id'
+									},
+									description:{
+										title: 'Description',
+										edit: false,
+										create: false,
+										list: true
+								    }
+								}
+							}, function (data) { //opened handler
+								data.childTable.jtable('load');
+							});
+					});
+					//Return button to show on the main row
+					return $button;
+				}
 			},
-			{ title: "Name", data:"name" },
-			{ title: "Statuses", data:"game_effects" },
-			{ title: "Description", data:"description"},
-			{ title: "Preview", width:"75px", data: null, render: function(data, type, row){
-				return '<div class="tile" data-type="' + row.name + '"></div><style>' + row.css + '</style>';
-			}}
-		]
-		});
-
-		$('#tile_types tbody').on('click', '.show_effects', function () {
-		var tr = $(this).closest('tr');
-		var row = tile_types.row( tr );
-		var tile_type_sub_id = row.data().id;
-
-		if ( row.child.isShown() ) {
-			// This row is already open - close it
-			row.child.hide();
-			tr.removeClass('shown');
-		}
-		else {
-			// Open this row
-
-			$('#tile_types > tbody tr').each(function(tr2){
-
-				var srow = tile_types.row( tr2 );
-
-				if ( srow.child.isShown() ) {
-					// This row is already open - close it
-					srow.child.hide();
-					$(tr2).removeClass('shown');
-				}
-
-			});
-
-			row.child( '<div id="tile_search_odds_sub_' + tile_type_sub_id + '"><div class="sk-folding-cube"><div class="sk-cube sk-cube1"></div><div class="sk-cube sk-cube2"></div><div class="sk-cube sk-cube4"></div><div class="sk-cube sk-cube3"></div></div><div style="text-align:center">Loading...</div></div>' ).show();
-			$.ajax({
-				url: "/admin/tile_type/" + tile_type_sub_id + "/search_odds"
-			})
-			.done(function( html ) {
-				$('#tile_search_odds_sub_' + tile_type_sub_id).html(html);
-				var editor2 = new $.fn.dataTable.Editor( {
-					ajax: "/admin/editor/tile_type/" + tile_type_sub_id + "/search_odds",
-					idSrc: 'index',
-					table: '#tile_search_odds_' + tile_type_sub_id,
-					fields: [
-						{label: "Item", type: 'select', name: 'id'},
-						{label: "Find Weight", type: 'text', name: 'rate'}
-					]
-					} );
-
-				$.getJSON( "/admin/item_types_by_id", function( data ) {
-					editor2.field('id').update(data);
-				});
-
-				subtable = $('#tile_search_odds_' + tile_type_sub_id).DataTable({  "dom": 'T<"clear">lfrtip',
-						"tableTools": { "aButtons": [ { sExtends: "editor_create", editor: editor2 },{ sExtends: "editor_edit",   editor: editor2 },{ sExtends: "editor_remove", editor: editor2 }, 'xls', 'print' ],
-										"deferRender": true,
-										"sSwfPath": "/swf/copy_csv_xls.swf",
-										"sRowSelect": "single",
+			odds: {
+				title: 'Search Odds',
+				width: '5px',
+				sorting: false,
+				edit: false,
+				create: false,
+				display: function (statusData) {
+					var $button = $('<button class="ui-button ui-widget ui-corner-all ui-button-text-only">Search</button>');
+					//Open child table when user clicks the button
+					$button.click(function () {
+						$('#tile_types').jtable('openChildTable',
+							$button.closest('tr'),
+							{
+								title: statusData.record.name + ' - Search Odds',
+								actions: {
+									listAction: '/admin/datasource/tile_type/' + statusData.record.id + '/search_odds?jtable=true',
+									deleteAction: '/admin/editor/tile_type/' + statusData.record.id + '/search_odds?jtable=true&action=remove',
+									updateAction: '/admin/editor/tile_type/' + statusData.record.id + '/search_odds?jtable=true&action=edit',
+									createAction: '/admin/editor/tile_type/' + statusData.record.id + '/search_odds?jtable=true&action=create',
+								},
+								fields: {
+									id: {
+										key:true,
+										create: true,
+										title: 'Item',
+										type: 'combobox',
+										options: '/admin/item_types_by_id?jtable=true'
 									},
-						"order": [[0, "desc"]],"bJQueryUI": false,"bAutoWidth":false, "bPaginate": true,
-						"deferRender": true,
-						"ajax":'/admin/datasource/tile_type/' + tile_type_sub_id + '/search_odds',
-						"aoColumns": [
-							{ title: "Weight", data:"rate", width:"75px" },
-							{ title: "Item", data:"name" }
-						]
+									rate:{
+										title: 'Find Weight'
+									}
+								}
+							}, function (data) { //opened handler
+								data.childTable.jtable('load');
+							});
 					});
-			});
-			tr.addClass('shown');
-
-
-		}});
-
-		$('#tile_types tbody').on('click', '.show_statuses', function () {
-		var tr = $(this).closest('tr');
-		var row = tile_types.row( tr );
-		var tile_type_sub_id = row.data().id;
-
-		if ( row.child.isShown() ) {
-			// This row is already open - close it
-			row.child.hide();
-			tr.removeClass('shown');
-		}
-		else {
-			// Open this row
-
-			$('#tile_types > tbody tr').each(function(tr2){
-
-				var srow = tile_types.row( tr2 );
-
-				if ( srow.child.isShown() ) {
-					// This row is already open - close it
-					srow.child.hide();
-					$(tr2).removeClass('shown');
+					return $button;
 				}
+			},
+			name: {title: 'Name'},
+			search_rate: {title: 'Search success %'},
+			hide_rate: {title: 'Hide success %'},
+			description: {title: 'Description', type: 'textarea'},
+			css: {width:'1%', title: 'Tile CSS', type:'textarea',display:function(data){
+				if(data.record)
+				{
+					return '<div class="tile" data-type="' + data.record.name + '"></div><style>' + data.record.css + '</style>';
+				}
+				else
+				{
+					return '<div class="tile"></div>';
+				}
+			}},
 
-			});
-
-			row.child( '<div id="tile_type_sub_' + tile_type_sub_id + '"><div class="sk-folding-cube"><div class="sk-cube sk-cube1"></div><div class="sk-cube sk-cube2"></div><div class="sk-cube sk-cube4"></div><div class="sk-cube sk-cube3"></div></div><div style="text-align:center">Loading...</div></div>' ).show();
-			$.ajax({
-				url: "/admin/tile_type/" + tile_type_sub_id + "/statuses"
-			})
-			.done(function( html ) {
-				$('#tile_type_sub_' + tile_type_sub_id).html(html);
-				var editor2 = new $.fn.dataTable.Editor( {
-					ajax: "/admin/editor/tile_type/" + tile_type_sub_id + "/statuses",
-					idSrc: 'index',
-					table: '#tile_type_subtable_' + tile_type_sub_id,
-					fields: [
-						{label: "Status", type: 'select', name: 'id'}
-					]
-					} );
-
-				$.getJSON( "/admin/statuses_by_id", function( data ) {
-					editor2.field('id').update(data);
-				});
-
-				subtable = $('#tile_type_subtable_' + tile_type_sub_id).DataTable({  "dom": 'T<"clear">lfrtip',
-						"tableTools": { "aButtons": [ { sExtends: "editor_create", editor: editor2 },{ sExtends: "editor_edit",   editor: editor2 },{ sExtends: "editor_remove", editor: editor2 }, 'xls', 'print' ],
-										"deferRender": true,
-										"sSwfPath": "/swf/copy_csv_xls.swf",
-										"sRowSelect": "single",
-									},
-						"order": [],"bJQueryUI": false,"bAutoWidth":false, "bPaginate": true,
-						"deferRender": true,
-						"ajax":'/admin/datasource/tile_type/' + tile_type_sub_id + '/statuses',
-						"aoColumns": [
-							{ title: "Name", data:"name" },
-							{ title: "Description", data:"description" }
-						]
-					});
-			});
-			tr.addClass('shown');
+		}
+	});
 
 
-		}});
+	$('#tile_types').jtable('load');
