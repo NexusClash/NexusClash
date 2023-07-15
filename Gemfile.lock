@@ -41,8 +41,8 @@ GEM
       tilt
     hike (1.2.3)
     i18n (0.8.1)
-    json (2.0.3)
-    json (2.0.3-java)
+    json (2.6.3)
+    json (2.6.3-java)
     method_source (0.8.2)
     minitest (5.10.1)
     mongoid (4.0.2)
