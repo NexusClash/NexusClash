@@ -81,7 +81,7 @@ GEM
       spoon (~> 0.0)
     puma (3.8.2)
     puma (3.8.2-java)
-    rack (1.6.5)
+    rack (1.6.13)
     rack-protection (1.5.3)
       rack
     require_all (1.4.0)
