@@ -1,3 +1,18 @@
+# Nexus Clash - Ruby [Archive]
+
+This branch is for historical reference only and does not reflect the code that is in place on www.nexusclash.com
+We don't actually even run anything in this language at this time. This is an old and unmaintained public repository
+which is here mostly for historical context only. It may have security vulnerabilities and it may not even run
+at this point in time. Please don't try to install and run it.
+
+If you are poking around here looking for the active code, thanks for taking an interest! If you'd like to
+apply as a Nexus Clash developer, please type out a little something about why you'd like to become a
+Nexus Clash developer, what areas you think you'd like to work on, and just a little introduction to yourself
+and your Nexus Clash history. Then please drop an admin a forums PM on https://www.nexusclash.com or hop into
+our [discord server](https://discord.gg/gf87Umw) and send a DM to any member of the team.
+
+## Historical README.md
+
 To get set up as a developer,
 
  * start with a clean Linux Mint install: https://www.linuxmint.com/download.php
