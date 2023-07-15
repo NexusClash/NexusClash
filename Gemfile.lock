@@ -124,7 +124,7 @@ GEM
       websocket-extensions (>= 0.1.0)
     websocket-driver (0.7.5-java)
       websocket-extensions (>= 0.1.0)
-    websocket-extensions (0.1.2)
+    websocket-extensions (0.1.5)
 
 PLATFORMS
   java
